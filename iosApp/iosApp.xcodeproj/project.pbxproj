@@ -367,9 +367,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		2722A17D2F0845010031DA00 /* XCLocalSwiftPackageReference "../maps-compose-mp/exportedGoogleMapsBridge" */ = {
+		2722A17D2F0845010031DA00 /* XCLocalSwiftPackageReference "../kmp-maps-compose/exportedGoogleMapsBridge" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = "../maps-compose-mp/exportedGoogleMapsBridge";
+			relativePath = "../kmp-maps-compose/exportedGoogleMapsBridge";
 		};
 /* End XCLocalSwiftPackageReference section */
 

@@ -1,0 +1,382 @@
+# Maps Compose Multiplatform
+
+A Kotlin Compose Multiplatform library providing Google Maps integration for Android and iOS with a unified API. Designed as a drop-in multiplatform replacement for [android-maps-compose](https://github.com/googlemaps/android-maps-compose).
+
+## Installation
+
+Add the dependency to your `build.gradle.kts`:
+
+```kotlin
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation("eu.buney.maps:kmp-maps-compose:0.1.0")
+        }
+    }
+}
+```
+
+### API Key Setup
+
+Get a Google Maps API key from [Google Cloud Console](https://console.cloud.google.com/google/maps-apis).
+
+Each platform requires the API key to be configured differently:
+
+- **Android**: Add a `<meta-data>` entry in your `AndroidManifest.xml`
+- **iOS**: Call `GMSServices.provideAPIKey(key)` before using maps
+
+#### Example using BuildKonfig
+
+[BuildKonfig](https://github.com/yshrsmz/BuildKonfig) is a convenient way to manage secrets in KMP projects. Here's a complete setup:
+
+**1. Add BuildKonfig plugin** to your app's `build.gradle.kts`:
+
+```kotlin
+plugins {
+    // ...
+    id("com.codingfeline.buildkonfig") version "0.15.1"
+}
+```
+
+**2. Create `secrets.properties`** in your project root (add to `.gitignore`):
+
+```properties
+MAPS_API_KEY=your_api_key_here
+```
+
+**3. Configure BuildKonfig and Android manifest** in your app's `build.gradle.kts`:
+
+```kotlin
+import java.util.Properties
+
+// load secrets
+val secretsFile = rootProject.file("secrets.properties")
+val secrets = Properties().apply {
+    if (secretsFile.exists()) load(secretsFile.inputStream())
+}
+val mapsApiKey = secrets.getProperty("MAPS_API_KEY", "")
+
+android {
+    defaultConfig {
+        // make key available in AndroidManifest.xml as ${MAPS_API_KEY}
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
+    }
+}
+
+buildkonfig {
+    packageName = "com.example.myapp"
+    defaultConfigs {
+        buildConfigField(STRING, "MAPS_API_KEY", mapsApiKey)
+    }
+}
+```
+
+**4. Add to `AndroidManifest.xml`**:
+
+```xml
+<application>
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="${MAPS_API_KEY}" />
+</application>
+```
+
+**5. Initialize iOS** in your `MainViewController.kt`:
+
+```kotlin
+import GoogleMaps.GMSServices
+
+fun MainViewController() = ComposeUIViewController(
+    configure = {
+        GMSServices.provideAPIKey(BuildKonfig.MAPS_API_KEY)
+    }
+) {
+    App()
+}
+```
+
+## Quick Start
+
+```kotlin
+import eu.buney.maps.*
+
+@Composable
+fun MapScreen() {
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition(
+            target = LatLng(37.7749, -122.4194), // San Francisco
+            zoom = 12f
+        )
+    }
+
+    GoogleMap(
+        modifier = Modifier.fillMaxSize(),
+        cameraPositionState = cameraPositionState,
+        properties = MapProperties(mapType = MapType.NORMAL),
+        uiSettings = MapUiSettings(zoomControlsEnabled = true),
+        onMapClick = { latLng -> println("Clicked: $latLng") }
+    ) {
+        Marker(
+            state = rememberUpdatedMarkerState(position = LatLng(37.7749, -122.4194)),
+            title = "San Francisco",
+            snippet = "Welcome!"
+        )
+    }
+}
+```
+
+## Features
+
+### Map Display
+
+```kotlin
+GoogleMap(
+    modifier = Modifier.fillMaxSize(),
+    cameraPositionState = rememberCameraPositionState(),
+    properties = MapProperties(
+        mapType = MapType.HYBRID,
+        isTrafficEnabled = true,
+        isBuildingEnabled = true
+    ),
+    uiSettings = MapUiSettings(
+        compassEnabled = true,
+        rotationGesturesEnabled = true
+    ),
+    contentPadding = PaddingValues(bottom = 80.dp),
+    onMapClick = { latLng -> /* handle click */ },
+    onMapLongClick = { latLng -> /* handle long click */ },
+    onPOIClick = { poi -> /* handle POI click */ },
+    onMapLoaded = { /* map ready */ }
+) {
+    // add markers, polylines, etc.
+}
+```
+
+### Markers
+
+```kotlin
+// basic marker
+Marker(
+    state = rememberUpdatedMarkerState(position = LatLng(37.7749, -122.4194)),
+    title = "Title",
+    snippet = "Description",
+    alpha = 0.8f,
+    rotation = 45f,
+    draggable = true,
+    onClick = { marker -> false } // return true to consume
+)
+
+// custom info window
+MarkerInfoWindow(
+    state = rememberUpdatedMarkerState(position = latLng),
+    onClick = { false }
+) { marker ->
+    Column(
+        modifier = Modifier.background(Color.White).padding(8.dp)
+    ) {
+        Text("Custom Window", fontWeight = FontWeight.Bold)
+        Text("Any Compose content!")
+    }
+}
+
+// compose content as marker icon
+MarkerComposable(
+    keys = arrayOf(count),
+    state = rememberUpdatedMarkerState(position = latLng)
+) {
+    Box(
+        modifier = Modifier
+            .size(40.dp)
+            .background(Color.Red, CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        Text("$count", color = Color.White)
+    }
+}
+```
+
+### Shapes
+
+```kotlin
+// polyline
+Polyline(
+    points = listOf(LatLng(37.77, -122.42), LatLng(37.78, -122.41)),
+    color = Color.Blue,
+    width = 5f,
+    geodesic = true
+)
+
+// polygon with holes
+Polygon(
+    points = outerPoints,
+    holes = listOf(holePoints),
+    fillColor = Color.Red.copy(alpha = 0.3f),
+    strokeColor = Color.Red,
+    strokeWidth = 2f
+)
+
+// circle
+Circle(
+    center = LatLng(37.7749, -122.4194),
+    radius = 1000.0, // meters
+    fillColor = Color.Blue.copy(alpha = 0.2f),
+    strokeColor = Color.Blue
+)
+
+// ground overlay
+GroundOverlay(
+    position = GroundOverlayPosition.create(bounds),
+    image = BitmapDescriptorFactory.fromEncodedImage(imageBytes),
+    transparency = 0.3f
+)
+```
+
+### Camera Control
+
+```kotlin
+val cameraPositionState = rememberCameraPositionState()
+
+// animate to position
+LaunchedEffect(targetLocation) {
+    cameraPositionState.animate(
+        CameraPosition(target = targetLocation, zoom = 15f),
+        durationMs = 1000
+    )
+}
+
+// animate to bounds
+LaunchedEffect(markers) {
+    val bounds = LatLngBounds.Builder().apply {
+        markers.forEach { include(it.position) }
+    }.build()
+    cameraPositionState.animateToBounds(bounds, padding = 100)
+}
+
+// instant move
+cameraPositionState.move(CameraPosition(target = latLng, zoom = 10f))
+
+// check camera state
+if (cameraPositionState.isMoving) {
+    // camera is animating or user is panning
+}
+```
+
+### Custom Marker Icons
+
+```kotlin
+// from PNG/JPEG bytes
+val icon = BitmapDescriptorFactory.fromEncodedImage(imageBytes)
+
+// from Compose content
+val icon = rememberComposeBitmapDescriptor(key1, key2) {
+    Icon(Icons.Default.Place, contentDescription = null, tint = Color.Red)
+}
+
+Marker(
+    state = markerState,
+    icon = icon
+)
+```
+
+## Feature Parity with android-maps-compose
+
+This table shows feature compatibility between `android-maps-compose` and this library.
+
+### Core Map Features
+
+| Feature | android-maps-compose | kmp-maps-compose | Notes |
+|---------|:--------------------:|:----------------:|-------|
+| GoogleMap composable | Yes | Yes | |
+| MapProperties | Yes | Yes | |
+| MapUiSettings | Yes | Yes | Some controls Android-only |
+| MapType (Normal, Satellite, Hybrid, Terrain) | Yes | Yes | Terrain falls back to Normal on iOS |
+| Content padding | Yes | Yes | |
+| onMapClick / onMapLongClick | Yes | Yes | |
+| onPOIClick | Yes | Yes | |
+| onMapLoaded | Yes | Yes | |
+| mapStyleOptions (custom JSON styling) | Yes | No | |
+| latLngBoundsForCameraTarget | Yes | No | |
+| MapColorScheme | Yes | No | |
+| LocationSource | Yes | No | |
+
+### Camera
+
+| Feature | android-maps-compose | kmp-maps-compose | Notes |
+|---------|:--------------------:|:----------------:|-------|
+| CameraPositionState | Yes | Yes | |
+| CameraPosition (target, zoom, bearing, tilt) | Yes | Yes | |
+| animate() | Yes | Yes | |
+| animateToBounds() | Yes | Yes | |
+| move() | Yes | Yes | |
+| isMoving | Yes | Yes | |
+| cameraMoveStartedReason | Yes | Yes | |
+| projection | Yes | No | |
+
+### Markers
+
+| Feature | android-maps-compose | kmp-maps-compose | Notes |
+|---------|:--------------------:|:----------------:|-------|
+| Marker | Yes | Yes | |
+| MarkerInfoWindow | Yes | Yes | |
+| MarkerInfoWindowContent | Yes | Yes | |
+| MarkerComposable | Yes | Yes | |
+| AdvancedMarker (PinConfig) | Yes | No | |
+| MarkerState | Yes | Yes | |
+| showInfoWindow / hideInfoWindow | Yes | Yes | |
+| Draggable markers | Yes | Yes | |
+| Custom BitmapDescriptor icons | Yes | Yes | |
+| onClick, onInfoWindowClick, etc. | Yes | Yes | |
+
+### Shapes & Overlays
+
+| Feature | android-maps-compose | kmp-maps-compose | Notes |
+|---------|:--------------------:|:----------------:|-------|
+| Polyline | Yes | Yes | |
+| Polyline pattern/cap/jointType | Yes | Partial | Android only |
+| Polygon | Yes | Yes | |
+| Polygon holes | Yes | Yes | |
+| Polygon pattern/jointType | Yes | Partial | Android only |
+| Circle | Yes | Yes | |
+| Circle pattern | Yes | Partial | Android only |
+| GroundOverlay | Yes | Yes | |
+| TileOverlay | Yes | No | |
+
+### Advanced Features
+
+| Feature | android-maps-compose | kmp-maps-compose | Notes |
+|---------|:--------------------:|:----------------:|-------|
+| StreetView | Yes | No | |
+| Clustering | Yes | No | |
+| ScaleBar widget | Yes | No | |
+| MapEffect | Yes | No | |
+| IndoorStateChangeListener | Yes | No | |
+
+**Legend:** Yes = Supported | Partial = See notes | No = Not supported
+
+## Platform-Specific Notes
+
+### Android
+- Full feature parity with `android-maps-compose`
+- All styling options (patterns, caps, joints) work as expected
+- Uses Google Maps Compose library under the hood
+
+### iOS
+- Uses Google Maps iOS SDK via Swift Package Manager
+- Some styling features not supported by iOS SDK:
+  - Polyline/polygon stroke patterns
+  - Line caps and joint types
+  - Map toolbar and zoom controls
+- TERRAIN map type falls back to NORMAL
+- Z-index values are truncated to integers
+- Custom info window Compose content rendered as bitmap
+
+## Requirements
+
+- Kotlin 2.0+
+- Compose Multiplatform 1.7+
+- Android: minSdk 24, Google Play Services
+- iOS: iOS 14+
+
+## License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.

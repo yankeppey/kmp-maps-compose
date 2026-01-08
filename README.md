@@ -2,6 +2,8 @@
 
 A Kotlin Compose Multiplatform library providing Google Maps integration for Android and iOS with a unified API. Designed as a drop-in multiplatform replacement for [android-maps-compose](https://github.com/googlemaps/android-maps-compose).
 
+![Sample app running on iOS and Android](images/demo-android-ios.jpg)
+
 ## Installation
 
 Add the dependency to your `build.gradle.kts`:

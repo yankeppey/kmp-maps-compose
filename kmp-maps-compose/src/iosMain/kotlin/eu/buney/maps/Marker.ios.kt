@@ -13,9 +13,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.coroutineContext
 import platform.CoreGraphics.CGPointMake
 import platform.CoreLocation.CLLocationCoordinate2DMake
 import platform.UIKit.UIImage
@@ -190,9 +194,14 @@ actual fun MarkerInfoWindow(
                         content(Marker(gmsMarkerRef.value!!))
                     }
                 }
+                coroutineContext.ensureActive()
                 cachedImage = image
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
-                println("MarkerInfoWindow: Failed to capture info window: ${e.message}")
+                if (coroutineContext.isActive) {
+                    println("MarkerInfoWindow: Failed to capture info window: ${e.message}")
+                }
             }
         }
     }
@@ -232,9 +241,14 @@ actual fun MarkerInfoWindow(
                                 content(Marker(gmsMarker))
                             }
                         }
+                        ensureActive()
                         cachedImage = image
+                    } catch (e: CancellationException) {
+                        // Expected during rapid updates, don't log
                     } catch (e: Exception) {
-                        println("MarkerInfoWindow: Failed to capture info window: ${e.message}")
+                        if (isActive) {
+                            println("MarkerInfoWindow: Failed to capture info window: ${e.message}")
+                        }
                     }
                 }
             }
@@ -343,9 +357,14 @@ actual fun MarkerInfoWindowContent(
                         content(Marker(gmsMarkerRef.value!!))
                     }
                 }
+                coroutineContext.ensureActive()
                 cachedImage = image
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
-                println("MarkerInfoWindowContent: Failed to capture info window: ${e.message}")
+                if (coroutineContext.isActive) {
+                    println("MarkerInfoWindowContent: Failed to capture info window: ${e.message}")
+                }
             }
         }
     }
@@ -385,9 +404,14 @@ actual fun MarkerInfoWindowContent(
                                 content(Marker(gmsMarker))
                             }
                         }
+                        ensureActive()
                         cachedImage = image
+                    } catch (e: CancellationException) {
+                        // Expected during rapid updates, don't log
                     } catch (e: Exception) {
-                        println("MarkerInfoWindowContent: Failed to capture info window: ${e.message}")
+                        if (isActive) {
+                            println("MarkerInfoWindowContent: Failed to capture info window: ${e.message}")
+                        }
                     }
                 }
             }

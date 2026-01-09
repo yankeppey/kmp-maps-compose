@@ -19,9 +19,13 @@ import androidx.compose.ui.window.ComposeUIViewController
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.coroutineContext
 import platform.CoreGraphics.CGBitmapContextCreate
 import platform.CoreGraphics.CGBitmapContextCreateImage
 import platform.CoreGraphics.CGColorSpaceCreateDeviceRGB
@@ -63,9 +67,19 @@ actual fun rememberComposeBitmapDescriptor(
             val image = withContext(Dispatchers.Main) {
                 captureComposableToUIImage(content)
             }
+            // Check if still active before updating state to avoid race conditions
+            // during rapid marker addition/removal
+            coroutineContext.ensureActive()
             capturedImage = image
+        } catch (e: CancellationException) {
+            // Don't log cancellation - it's expected during rapid marker updates
+            // Re-throw to properly propagate cancellation
+            throw e
         } catch (e: Exception) {
-            println("MarkerComposable: Failed to capture composable: ${e.message}")
+            // Only log if still active (not cancelled)
+            if (coroutineContext.isActive) {
+                println("MarkerComposable: Failed to capture composable: ${e.message}")
+            }
         }
     }
 
@@ -78,6 +92,9 @@ actual fun rememberComposeBitmapDescriptor(
 /**
  * Captures Compose content to a UIImage using GraphicsLayer inside a ComposeUIViewController.
  * The ComposeUIViewController provides a separate composition context.
+ *
+ * This function properly handles cancellation to avoid "coroutine scope left composition" errors
+ * that can occur during rapid marker addition/removal.
  */
 @OptIn(ExperimentalForeignApi::class, ExperimentalComposeUiApi::class)
 internal suspend fun captureComposableToUIImage(
@@ -122,6 +139,9 @@ internal suspend fun captureComposableToUIImage(
                 try {
                     val bitmap = graphicsLayer.toImageBitmap()
                     captureComplete.complete(bitmap)
+                } catch (e: CancellationException) {
+                    // Propagate cancellation without completing exceptionally
+                    throw e
                 } catch (e: Exception) {
                     captureComplete.completeExceptionally(e)
                 }
@@ -141,34 +161,48 @@ internal suspend fun captureComposableToUIImage(
     val initialSize = 200.0
 
     val keyWindow = platform.UIKit.UIApplication.sharedApplication.keyWindow
-    if (keyWindow != null) {
-        view.setFrame(CGRectMake(-1000.0, -1000.0, initialSize, initialSize))
-        keyWindow.addSubview(view)
-    }
 
-    view.setNeedsLayout()
-    view.layoutIfNeeded()
-    kotlinx.coroutines.delay(100)
+    try {
+        if (keyWindow != null) {
+            view.setFrame(CGRectMake(-1000.0, -1000.0, initialSize, initialSize))
+            keyWindow.addSubview(view)
+        }
 
-    val measuredSize = kotlinx.coroutines.withTimeoutOrNull(5000) {
-        sizeDeferred.await()
-    } ?: error("Composable content failed to measure within 5s - ensure it has non-zero intrinsic size")
+        // Check for cancellation before each potentially blocking operation
+        coroutineContext.ensureActive()
 
-    val widthPoints = measuredSize.width.toDouble() / scale
-    val heightPoints = measuredSize.height.toDouble() / scale
-    view.setFrame(CGRectMake(-1000.0, -1000.0, widthPoints, heightPoints))
-    view.setNeedsLayout()
-    view.layoutIfNeeded()
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+        kotlinx.coroutines.delay(100)
 
-    val bitmap = try {
-        kotlinx.coroutines.withTimeoutOrNull(5000) {
+        coroutineContext.ensureActive()
+
+        val measuredSize = kotlinx.coroutines.withTimeoutOrNull(5000) {
+            sizeDeferred.await()
+        } ?: error("Composable content failed to measure within 5s - ensure it has non-zero intrinsic size")
+
+        coroutineContext.ensureActive()
+
+        val widthPoints = measuredSize.width.toDouble() / scale
+        val heightPoints = measuredSize.height.toDouble() / scale
+        view.setFrame(CGRectMake(-1000.0, -1000.0, widthPoints, heightPoints))
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+
+        coroutineContext.ensureActive()
+
+        val bitmap = kotlinx.coroutines.withTimeoutOrNull(5000) {
             captureComplete.await()
         } ?: error("GraphicsLayer capture failed to complete within 5s - content may not be rendering correctly")
+
+        return bitmap.toUIImage()
     } finally {
+        // Always clean up the view, even on cancellation
+        // Cancel any pending operations first
+        sizeDeferred.cancel()
+        captureComplete.cancel()
         view.removeFromSuperview()
     }
-
-    return bitmap.toUIImage()
 }
 
 /**

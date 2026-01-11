@@ -1,3 +1,5 @@
+[![Maven Central](https://img.shields.io/maven-central/v/eu.buney.maps/kmp-maps-compose)](https://central.sonatype.com/artifact/eu.buney.maps/kmp-maps-compose)
+
 # Maps Compose Multiplatform
 
 A Kotlin Compose Multiplatform library providing Google Maps integration for Android and iOS with a unified API. Designed as a drop-in multiplatform replacement for [android-maps-compose](https://github.com/googlemaps/android-maps-compose).

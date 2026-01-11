@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "eu.buney.maps"
-version = "0.1.1-SNAPSHOT"
+version = libs.versions.kmp.maps.compose.get()
 
 kotlin {
     // Suppress warnings about expect/actual classes being in Beta

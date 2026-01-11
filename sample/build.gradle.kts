@@ -40,7 +40,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // implementation(projects.kmpMapsCompose)
-            implementation("eu.buney.maps:kmp-maps-compose:0.1.0")
+            implementation(libs.kmp.maps.compose)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)

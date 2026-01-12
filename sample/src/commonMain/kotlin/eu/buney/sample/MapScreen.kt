@@ -113,6 +113,13 @@ fun MapScreen(modifier: Modifier = Modifier) {
     // coroutine scope for animated camera movements
     val coroutineScope = rememberCoroutineScope()
 
+    // ground overlay image state - loaded from resources
+    var groundOverlayImage by remember { mutableStateOf<BitmapDescriptor?>(null) }
+    LaunchedEffect(Unit) {
+        val imageBytes = Res.readBytes("drawable/overlay_image.jpg")
+        groundOverlayImage = BitmapDescriptorFactory.fromEncodedImage(imageBytes)
+    }
+
     Column(modifier = modifier) {
         // map
         GoogleMap(
@@ -286,12 +293,6 @@ fun MapScreen(modifier: Modifier = Modifier) {
             )
 
             // ground overlay near Central Park, NYC
-            // load image from resources
-            var groundOverlayImage by remember { mutableStateOf<BitmapDescriptor?>(null) }
-            LaunchedEffect(Unit) {
-                val imageBytes = Res.readBytes("drawable/overlay_image.jpg")
-                groundOverlayImage = BitmapDescriptorFactory.fromEncodedImage(imageBytes)
-            }
             groundOverlayImage?.let { image ->
                 GroundOverlay(
                     position = GroundOverlayPosition.create(groundOverlayBounds),

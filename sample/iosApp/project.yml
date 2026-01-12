@@ -29,7 +29,7 @@ targets:
         INFOPLIST_FILE: iosApp/Info.plist
         FRAMEWORK_SEARCH_PATHS:
           - $(inherited)
-          - $(SRCROOT)/../sample/build/xcode-frameworks/$(CONFIGURATION)/$(PLATFORM_NAME)
+          - $(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(PLATFORM_NAME)
         SWIFT_VERSION: 5.0
         TARGETED_DEVICE_FAMILY: "1,2"
         LD_RUNPATH_SEARCH_PATHS:
@@ -40,11 +40,11 @@ targets:
       - name: Build Kotlin Framework
         script: |
           export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
-          cd "$SRCROOT/.."
-          ./gradlew :sample:embedAndSignAppleFrameworkForXcode
+          cd "$SRCROOT/../.."
+          ./gradlew :sample:shared:embedAndSignAppleFrameworkForXcode
 
           # Create symlink to framework for easier linking
-          FRAMEWORK_DIR="sample/build/xcode-frameworks/$CONFIGURATION"
+          FRAMEWORK_DIR="sample/shared/build/xcode-frameworks/$CONFIGURATION"
           if [ -d "$FRAMEWORK_DIR" ]; then
             # Find the actual framework directory (with SDK version)
             ACTUAL_DIR=$(find "$FRAMEWORK_DIR" -type d -name "${PLATFORM_NAME}*" -maxdepth 1 | head -n 1)
@@ -56,8 +56,14 @@ targets:
         basedOnDependencyAnalysis: false
 
     dependencies:
-      - framework: ../sample/build/xcode-frameworks/$(CONFIGURATION)/$(PLATFORM_NAME)/SampleApp.framework
+      - framework: ../shared/build/xcode-frameworks/$(CONFIGURATION)/$(PLATFORM_NAME)/SampleApp.framework
         embed: true
+      - package: exportedGoogleMapsBridge
+        product: exportedGoogleMapsBridge
+
+packages:
+  exportedGoogleMapsBridge:
+    path: ../../kmp-maps-compose/exportedGoogleMapsBridge
 
 schemes:
   iosApp:

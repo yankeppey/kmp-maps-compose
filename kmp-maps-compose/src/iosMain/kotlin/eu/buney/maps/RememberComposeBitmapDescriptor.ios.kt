@@ -56,6 +56,7 @@ import platform.UIKit.UIScreen
  */
 @OptIn(ExperimentalForeignApi::class)
 @Composable
+@GoogleMapComposable
 actual fun rememberComposeBitmapDescriptor(
     vararg keys: Any,
     content: @Composable () -> Unit,

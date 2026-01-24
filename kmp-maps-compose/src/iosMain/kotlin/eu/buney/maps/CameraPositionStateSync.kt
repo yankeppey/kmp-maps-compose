@@ -74,6 +74,13 @@ internal fun SetupCameraPositionStateSync(
             lastSetPosition = position
         }
     }
+
+    // Set up projection provider
+    LaunchedEffect(Unit) {
+        cameraPositionState.projectionProvider = {
+            IOSProjection(mapView.projection)
+        }
+    }
 }
 
 /**

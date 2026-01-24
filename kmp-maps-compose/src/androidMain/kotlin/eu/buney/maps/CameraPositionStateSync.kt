@@ -123,6 +123,13 @@ internal fun rememberSyncedGoogleCameraPositionState(
         }
     }
 
+    // Set up projection provider
+    LaunchedEffect(Unit) {
+        cameraPositionState.projectionProvider = {
+            googleCameraPositionState.projection?.let { AndroidProjection(it) }
+        }
+    }
+
     return googleCameraPositionState
 }
 

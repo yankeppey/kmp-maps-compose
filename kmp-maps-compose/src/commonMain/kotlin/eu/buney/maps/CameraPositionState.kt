@@ -99,6 +99,29 @@ class CameraPositionState(
         internal set
 
     /**
+     * Internal projection provider set by platform implementations.
+     * Returns a snapshot of the current projection, or null if the map
+     * hasn't been laid out yet.
+     */
+    internal var projectionProvider: (() -> Projection?)? = null
+
+    /**
+     * Returns a snapshot of the current map projection for converting between
+     * screen coordinates and geographic coordinates.
+     *
+     * May be null if the map hasn't been laid out yet or is not currently
+     * associated with a [GoogleMap] composable.
+     *
+     * Note: This is a snapshot that does not automatically update when the
+     * camera moves. Access this property again after camera movement to get
+     * an updated projection.
+     *
+     * @see Projection
+     */
+    val projection: Projection?
+        get() = projectionProvider?.invoke()
+
+    /**
      * Internal flow for animation requests.
      */
     private val _animationRequests = MutableSharedFlow<CameraAnimationRequest>(extraBufferCapacity = 1)

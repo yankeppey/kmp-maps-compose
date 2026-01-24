@@ -88,6 +88,17 @@ class CameraPositionState(
     var position: CameraPosition by mutableStateOf(position)
 
     /**
+     * The visible region bounds of the map as a bounding rectangle.
+     * Updated when the camera stops moving (idle state).
+     * May be null if the map hasn't been laid out yet.
+     *
+     * Note: For tilted maps, this is the bounding rectangle of the visible
+     * trapezoid, which may include areas outside the actual visible region.
+     */
+    var visibleBounds: LatLngBounds? by mutableStateOf(null)
+        internal set
+
+    /**
      * Internal flow for animation requests.
      */
     private val _animationRequests = MutableSharedFlow<CameraAnimationRequest>(extraBufferCapacity = 1)

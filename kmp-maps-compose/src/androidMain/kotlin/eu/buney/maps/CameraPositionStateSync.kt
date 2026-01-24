@@ -52,8 +52,25 @@ internal fun rememberSyncedGoogleCameraPositionState(
     }
 
     // Sync isMoving: Google's state → our state
+    // Also update visible bounds when camera becomes idle
     LaunchedEffect(googleCameraPositionState.isMoving) {
         cameraPositionState.isMoving = googleCameraPositionState.isMoving
+
+        // Update visible bounds when camera stops moving
+        if (!googleCameraPositionState.isMoving) {
+            googleCameraPositionState.projection?.visibleRegion?.latLngBounds?.let { googleBounds ->
+                cameraPositionState.visibleBounds = LatLngBounds(
+                    southwest = LatLng(
+                        googleBounds.southwest.latitude,
+                        googleBounds.southwest.longitude
+                    ),
+                    northeast = LatLng(
+                        googleBounds.northeast.latitude,
+                        googleBounds.northeast.longitude
+                    )
+                )
+            }
+        }
     }
 
     // Sync cameraMoveStartedReason: Google's state → our state

@@ -2,7 +2,6 @@ package eu.buney.maps
 
 import GoogleMaps.GMSCameraPosition
 import GoogleMaps.GMSCircle
-import GoogleMaps.GMSCoordinateBounds
 import GoogleMaps.GMSGroundOverlay
 import GoogleMaps.GMSMapView
 import GoogleMaps.GMSMapViewDelegateProtocol
@@ -11,7 +10,6 @@ import GoogleMaps.GMSMarker
 import GoogleMaps.GMSOverlay
 import GoogleMaps.GMSPolygon
 import GoogleMaps.GMSPolyline
-import GoogleMaps.animateToCameraPosition
 import GoogleMaps.kGMSTypeHybrid
 import GoogleMaps.kGMSTypeNone
 import GoogleMaps.kGMSTypeNormal
@@ -20,14 +18,11 @@ import GoogleMaps.kGMSTypeTerrain
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
-import androidx.compose.runtime.CompositionContext
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCompositionContext
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -37,10 +32,6 @@ import kotlinx.cinterop.CValue
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.ObjCSignatureOverride
 import kotlinx.cinterop.useContents
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.awaitCancellation
-import kotlinx.coroutines.launch
 import platform.CoreLocation.CLLocationCoordinate2D
 import platform.CoreLocation.CLLocationCoordinate2DMake
 import platform.UIKit.UIEdgeInsets
@@ -107,16 +98,7 @@ private class GMSMapViewDelegate(
     }
 
     override fun mapView(mapView: GMSMapView, idleAtCameraPosition: GMSCameraPosition) {
-        cameraPositionState.isMoving = false
-        // update the camera position state from the map
-        idleAtCameraPosition.target.useContents {
-            cameraPositionState.position = CameraPosition(
-                target = LatLng(latitude, longitude),
-                zoom = idleAtCameraPosition.zoom,
-                bearing = idleAtCameraPosition.bearing.toFloat(),
-                tilt = idleAtCameraPosition.viewingAngle.toFloat()
-            )
-        }
+        updateCameraPositionStateOnIdle(cameraPositionState, mapView, idleAtCameraPosition)
     }
 
     // marker tap handling - route to the correct MarkerNode via MapApplier
@@ -277,92 +259,12 @@ actual fun GoogleMap(
     // subcomposition setup
     val parentComposition = rememberCompositionContext()
     val currentContent by rememberUpdatedState(content)
-    val coroutineScope = rememberCoroutineScope()
 
-    // handle animation requests
-    LaunchedEffect(Unit) {
-        cameraPositionState.animationRequests.collect { request ->
-            cameraPositionState.cameraMoveStartedReason = CameraMoveStartedReason.DEVELOPER_ANIMATION
-            when (request) {
-                is CameraAnimationRequest.ToPosition -> {
-                    val coordinate = CLLocationCoordinate2DMake(
-                        latitude = request.position.target.latitude,
-                        longitude = request.position.target.longitude
-                    )
-                    val cameraPosition = GMSCameraPosition.cameraWithTarget(
-                        target = coordinate,
-                        zoom = request.position.zoom,
-                        bearing = request.position.bearing.toDouble(),
-                        viewingAngle = request.position.tilt.toDouble()
-                    )
-                    // use GMSMapView+Animation category method
-                    mapView.animateToCameraPosition(cameraPosition)
-                }
-                is CameraAnimationRequest.ToBounds -> {
-                    val swCoord = CLLocationCoordinate2DMake(
-                        latitude = request.bounds.southwest.latitude,
-                        longitude = request.bounds.southwest.longitude
-                    )
-                    val neCoord = CLLocationCoordinate2DMake(
-                        latitude = request.bounds.northeast.latitude,
-                        longitude = request.bounds.northeast.longitude
-                    )
-                    // build bounds using includingCoordinate to avoid constructor parameter issues
-                    val gmsBounds = GMSCoordinateBounds()
-                        .includingCoordinate(swCoord)
-                        .includingCoordinate(neCoord)
-                    val padding = request.padding.toDouble()
-                    val insets = UIEdgeInsetsMake(padding, padding, padding, padding)
-                    val cameraPosition = mapView.cameraForBounds(gmsBounds, insets = insets)
-                    if (cameraPosition != null) {
-                        // use GMSMapView+Animation category method
-                        mapView.animateToCameraPosition(cameraPosition)
-                    }
-                }
-            }
-        }
-    }
-
-    // handle move requests
-    LaunchedEffect(Unit) {
-        cameraPositionState.moveRequests.collect { position ->
-            val coordinate = CLLocationCoordinate2DMake(
-                latitude = position.target.latitude,
-                longitude = position.target.longitude
-            )
-            val cameraPosition = GMSCameraPosition.cameraWithTarget(
-                target = coordinate,
-                zoom = position.zoom,
-                bearing = position.bearing.toDouble(),
-                viewingAngle = position.tilt.toDouble()
-            )
-            mapView.camera = cameraPosition
-            cameraPositionState.position = position
-        }
-    }
-
-    // track the last position we set programmatically to avoid feedback loops
-    var lastSetPosition by remember { mutableStateOf<CameraPosition?>(null) }
-
-    // sync direct position assignments from cameraPositionState to mapView
-    // this handles cases like: cameraPositionState.position = CameraPosition(target, zoom)
-    LaunchedEffect(cameraPositionState.position) {
-        val position = cameraPositionState.position
-        // only update if this is a new position we haven't set yet
-        // (to avoid feedback loop with idleAtCameraPosition delegate)
-        if (lastSetPosition != position) {
-            val coordinate = CLLocationCoordinate2DMake(
-                latitude = position.target.latitude,
-                longitude = position.target.longitude
-            )
-            val cameraPosition = GMSCameraPosition.cameraWithTarget(
-                target = coordinate,
-                zoom = position.zoom
-            )
-            mapView.camera = cameraPosition
-            lastSetPosition = position
-        }
-    }
+    // Setup camera position state sync (animation, move, position)
+    SetupCameraPositionStateSync(
+        cameraPositionState = cameraPositionState,
+        mapView = mapView,
+    )
 
     // clean up delegate when composable is disposed
     DisposableEffect(delegate) {
@@ -393,12 +295,6 @@ actual fun GoogleMap(
             composition?.dispose()
             mapApplier = null
         }
-    }
-
-    // update subcomposition content when it changes
-    LaunchedEffect(currentContent) {
-        // content updates are handled by the Composition automatically
-        // since we're using rememberUpdatedState for currentContent
     }
 
     UIKitView(

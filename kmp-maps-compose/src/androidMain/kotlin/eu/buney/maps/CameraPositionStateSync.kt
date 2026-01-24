@@ -35,29 +35,28 @@ internal fun rememberSyncedGoogleCameraPositionState(
         )
     }
 
-    // Sync position: our state → Google's state
+    // Sync position: our state → Google's state (for programmatic updates)
     LaunchedEffect(cameraPositionState.position) {
-        googleCameraPositionState.position = cameraPositionState.position.toGoogleCameraPosition()
-    }
-
-    // Sync position: Google's state → our state (handles user gestures)
-    LaunchedEffect(googleCameraPositionState.position) {
-        val googlePos = googleCameraPositionState.position
-        val ourPos = cameraPositionState.position
-
-        // Only update if position actually differs (avoid feedback loops)
-        if (!googlePos.matches(ourPos)) {
-            cameraPositionState.position = googlePos.toCameraPosition()
+        // Only sync if camera is not moving (i.e., this is a programmatic change)
+        // During gestures, Google's state is the source of truth
+        if (!googleCameraPositionState.isMoving) {
+            googleCameraPositionState.position = cameraPositionState.position.toGoogleCameraPosition()
         }
     }
 
-    // Sync isMoving: Google's state → our state
-    // Also update visible bounds when camera becomes idle
+    // Sync isMoving and position when camera becomes idle
     LaunchedEffect(googleCameraPositionState.isMoving) {
         cameraPositionState.isMoving = googleCameraPositionState.isMoving
 
-        // Update visible bounds when camera stops moving
+        // When camera becomes idle, sync position and visible bounds from Google's state
         if (!googleCameraPositionState.isMoving) {
+            // Update position from Google's state (captures gesture result)
+            val googlePos = googleCameraPositionState.position
+            if (!googlePos.matches(cameraPositionState.position)) {
+                cameraPositionState.position = googlePos.toCameraPosition()
+            }
+
+            // Update visible bounds
             googleCameraPositionState.projection?.visibleRegion?.latLngBounds?.let { googleBounds ->
                 cameraPositionState.visibleBounds = LatLngBounds(
                     southwest = LatLng(

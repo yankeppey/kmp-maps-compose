@@ -336,7 +336,8 @@ This table shows feature compatibility between `android-maps-compose` and this l
 | move() | Yes | Yes | |
 | isMoving | Yes | Yes | |
 | cameraMoveStartedReason | Yes | Yes | |
-| projection | Yes | No | |
+| projection | Yes | Yes | |
+| visibleBounds | Yes | Yes | |
 
 ### Markers
 

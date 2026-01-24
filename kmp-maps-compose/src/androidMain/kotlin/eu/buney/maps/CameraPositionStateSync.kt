@@ -2,6 +2,7 @@ package eu.buney.maps
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,10 +20,14 @@ import com.google.maps.android.compose.CameraPositionState as GoogleCameraPositi
  * with the given [CameraPositionState].
  *
  * This handles:
- * - Bidirectional position sync (our state ↔ Google's state)
+ * - Position sync via positionUpdater (our state → Google's state)
  * - State sync (isMoving, cameraMoveStartedReason)
  * - Animation and move request forwarding
  * - Padding change handling
+ *
+ * Note: On Android, we're limited by android-maps-compose - we only get position
+ * updates when the camera becomes idle, not during gestures. This is different
+ * from iOS where we have direct access to the native map and can get realtime updates.
  */
 @Composable
 internal fun rememberSyncedGoogleCameraPositionState(
@@ -35,12 +40,15 @@ internal fun rememberSyncedGoogleCameraPositionState(
         )
     }
 
-    // Sync position: our state → Google's state (for programmatic updates)
-    LaunchedEffect(cameraPositionState.position) {
-        // Only sync if camera is not moving (i.e., this is a programmatic change)
-        // During gestures, Google's state is the source of truth
-        if (!googleCameraPositionState.isMoving) {
-            googleCameraPositionState.position = cameraPositionState.position.toGoogleCameraPosition()
+    // Set up position updater - called when user sets cameraPositionState.position
+    DisposableEffect(googleCameraPositionState) {
+        cameraPositionState.positionUpdater = { position ->
+            googleCameraPositionState.position = position.toGoogleCameraPosition()
+            // Also update rawPosition so getter returns the new value immediately
+            cameraPositionState.rawPosition = position
+        }
+        onDispose {
+            cameraPositionState.positionUpdater = null
         }
     }
 
@@ -50,11 +58,9 @@ internal fun rememberSyncedGoogleCameraPositionState(
 
         // When camera becomes idle, sync position and visible bounds from Google's state
         if (!googleCameraPositionState.isMoving) {
-            // Update position from Google's state (captures gesture result)
+            // Update rawPosition from Google's state (no side effects, no feedback loop)
             val googlePos = googleCameraPositionState.position
-            if (!googlePos.matches(cameraPositionState.position)) {
-                cameraPositionState.position = googlePos.toCameraPosition()
-            }
+            cameraPositionState.rawPosition = googlePos.toCameraPosition()
 
             // Update visible bounds
             googleCameraPositionState.projection?.visibleRegion?.latLngBounds?.let { googleBounds ->
@@ -108,6 +114,8 @@ internal fun rememberSyncedGoogleCameraPositionState(
             googleCameraPositionState.move(
                 CameraUpdateFactory.newCameraPosition(position.toGoogleCameraPosition())
             )
+            // Update rawPosition immediately
+            cameraPositionState.rawPosition = position
         }
     }
 
@@ -149,13 +157,6 @@ private fun GoogleCameraPosition.toCameraPosition() = CameraPosition(
 )
 
 internal fun LatLng.toGoogleLatLng() = GoogleLatLng(latitude, longitude)
-
-private fun GoogleCameraPosition.matches(other: CameraPosition): Boolean =
-    target.latitude == other.target.latitude &&
-        target.longitude == other.target.longitude &&
-        zoom == other.zoom &&
-        tilt == other.tilt &&
-        bearing == other.bearing
 
 private fun GoogleCameraMoveStartedReason.toCameraMoveStartedReason() = when (this) {
     GoogleCameraMoveStartedReason.GESTURE -> CameraMoveStartedReason.GESTURE

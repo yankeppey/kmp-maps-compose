@@ -5,11 +5,8 @@ import GoogleMaps.GMSCoordinateBounds
 import GoogleMaps.GMSMapView
 import GoogleMaps.animateToCameraPosition
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import platform.CoreLocation.CLLocationCoordinate2DMake
@@ -19,11 +16,13 @@ import platform.UIKit.UIEdgeInsetsMake
  * Sets up synchronization between [CameraPositionState] and [GMSMapView].
  *
  * This handles:
- * - Syncing position changes from our state to the map
+ * - Setting up the position updater for programmatic camera changes
  * - Animation and move request forwarding
+ * - Projection provider setup
  *
  * Note: The reverse sync (map → our state) is handled by [GMSMapViewDelegate]
- * through the `willMove` and `idleAtCameraPosition` delegate callbacks.
+ * through the `willMove`, `didChangeCameraPosition`, and `idleAtCameraPosition`
+ * delegate callbacks, which write directly to [CameraPositionState.rawPosition].
  */
 @OptIn(ExperimentalForeignApi::class)
 @Composable
@@ -31,6 +30,18 @@ internal fun SetupCameraPositionStateSync(
     cameraPositionState: CameraPositionState,
     mapView: GMSMapView,
 ) {
+    // Set up position updater - called when user sets cameraPositionState.position
+    DisposableEffect(mapView) {
+        cameraPositionState.positionUpdater = { position ->
+            mapView.camera = position.toGMSCameraPosition()
+            // Also update rawPosition so getter returns the new value immediately
+            cameraPositionState.rawPosition = position
+        }
+        onDispose {
+            cameraPositionState.positionUpdater = null
+        }
+    }
+
     // Handle animation requests
     LaunchedEffect(Unit) {
         cameraPositionState.animationRequests.collect { request ->
@@ -56,22 +67,7 @@ internal fun SetupCameraPositionStateSync(
     LaunchedEffect(Unit) {
         cameraPositionState.moveRequests.collect { position ->
             mapView.camera = position.toGMSCameraPosition()
-            cameraPositionState.position = position
-        }
-    }
-
-    // Track the last position we set programmatically to avoid feedback loops
-    var lastSetPosition by remember { mutableStateOf<CameraPosition?>(null) }
-
-    // Sync direct position assignments from cameraPositionState to mapView
-    // This handles cases like: cameraPositionState.position = CameraPosition(target, zoom)
-    LaunchedEffect(cameraPositionState.position) {
-        val position = cameraPositionState.position
-        // Only update if this is a new position we haven't set yet
-        // (to avoid feedback loop with idleAtCameraPosition delegate)
-        if (lastSetPosition != position) {
-            mapView.camera = position.toGMSCameraPosition()
-            lastSetPosition = position
+            cameraPositionState.rawPosition = position
         }
     }
 
@@ -95,9 +91,9 @@ internal fun updateCameraPositionStateOnIdle(
 ) {
     cameraPositionState.isMoving = false
 
-    // Update the camera position state from the map
+    // Update rawPosition directly (no side effects, no feedback loop)
     idleAtCameraPosition.target.useContents {
-        cameraPositionState.position = CameraPosition(
+        cameraPositionState.rawPosition = CameraPosition(
             target = LatLng(latitude, longitude),
             zoom = idleAtCameraPosition.zoom,
             bearing = idleAtCameraPosition.bearing.toFloat(),
@@ -107,6 +103,26 @@ internal fun updateCameraPositionStateOnIdle(
 
     // Update visible bounds from the map's projection
     updateVisibleBounds(cameraPositionState, mapView)
+}
+
+/**
+ * Updates [CameraPositionState] from the map during camera movement (realtime).
+ * Called from [GMSMapViewDelegate.mapView:didChangeCameraPosition:].
+ */
+@OptIn(ExperimentalForeignApi::class)
+internal fun updateCameraPositionStateOnMove(
+    cameraPositionState: CameraPositionState,
+    cameraPosition: GMSCameraPosition,
+) {
+    // Update rawPosition directly (no side effects, no feedback loop)
+    cameraPosition.target.useContents {
+        cameraPositionState.rawPosition = CameraPosition(
+            target = LatLng(latitude, longitude),
+            zoom = cameraPosition.zoom,
+            bearing = cameraPosition.bearing.toFloat(),
+            tilt = cameraPosition.viewingAngle.toFloat()
+        )
+    }
 }
 
 /**

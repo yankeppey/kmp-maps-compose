@@ -97,6 +97,13 @@ private class GMSMapViewDelegate(
         }
     }
 
+    @ObjCSignatureOverride
+    override fun mapView(mapView: GMSMapView, didChangeCameraPosition: GMSCameraPosition) {
+        // Realtime position updates during gestures/animations
+        updateCameraPositionStateOnMove(cameraPositionState, didChangeCameraPosition)
+    }
+
+    @ObjCSignatureOverride
     override fun mapView(mapView: GMSMapView, idleAtCameraPosition: GMSCameraPosition) {
         updateCameraPositionStateOnIdle(cameraPositionState, mapView, idleAtCameraPosition)
     }

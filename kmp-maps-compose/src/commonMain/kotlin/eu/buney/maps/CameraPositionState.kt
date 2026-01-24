@@ -83,9 +83,36 @@ class CameraPositionState(
         internal set
 
     /**
-     * The current camera position.
+     * Internal state - updated by platform callbacks (no side effects).
+     * This is the source of truth for the current camera position.
      */
-    var position: CameraPosition by mutableStateOf(position)
+    internal var rawPosition: CameraPosition by mutableStateOf(position)
+
+    /**
+     * Platform-specific callback to update the native map.
+     * Set by platform implementations when the map is attached.
+     */
+    internal var positionUpdater: ((CameraPosition) -> Unit)? = null
+
+    /**
+     * The current camera position.
+     *
+     * Reading this property returns the current position (from [rawPosition]).
+     * Setting this property will update the native map via [positionUpdater].
+     */
+    var position: CameraPosition
+        get() = rawPosition
+        set(value) {
+            val updater = positionUpdater
+            if (updater != null) {
+                // Map is attached - update via native API
+                // The native map will update rawPosition via callbacks
+                updater(value)
+            } else {
+                // No map attached yet - just store the value
+                rawPosition = value
+            }
+        }
 
     /**
      * The visible region bounds of the map as a bounding rectangle.

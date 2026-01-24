@@ -1,9 +1,7 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidApplication)
-    alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.composeCompiler)
 }
 
@@ -42,12 +40,6 @@ android {
 
     buildFeatures {
         compose = true
-    }
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 

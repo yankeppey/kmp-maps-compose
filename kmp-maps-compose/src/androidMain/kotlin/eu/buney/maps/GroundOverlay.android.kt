@@ -13,22 +13,18 @@ import com.google.maps.android.compose.GroundOverlayPosition as AndroidGroundOve
  * Wraps the Google Maps SDK GroundOverlay.
  */
 actual class GroundOverlay(
-    private val googleGroundOverlay: GoogleGroundOverlay
+    val googleGroundOverlay: GoogleGroundOverlay
 ) {
-    actual val bounds: LatLngBounds
-        get() {
-            val googleBounds = googleGroundOverlay.bounds
-            return LatLngBounds(
-                southwest = LatLng(googleBounds.southwest.latitude, googleBounds.southwest.longitude),
-                northeast = LatLng(googleBounds.northeast.latitude, googleBounds.northeast.longitude),
-            )
-        }
+    actual val bounds: LatLngBounds = googleGroundOverlay.bounds.let { googleBounds ->
+        LatLngBounds(
+            southwest = LatLng(googleBounds.southwest.latitude, googleBounds.southwest.longitude),
+            northeast = LatLng(googleBounds.northeast.latitude, googleBounds.northeast.longitude),
+        )
+    }
 
-    actual val bearing: Float
-        get() = googleGroundOverlay.bearing
+    actual val bearing: Float = googleGroundOverlay.bearing
 
-    actual val transparency: Float
-        get() = googleGroundOverlay.transparency
+    actual val transparency: Float = googleGroundOverlay.transparency
 }
 
 @Composable

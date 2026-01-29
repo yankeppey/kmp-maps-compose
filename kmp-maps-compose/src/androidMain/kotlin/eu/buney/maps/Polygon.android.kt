@@ -1,11 +1,11 @@
 package eu.buney.maps
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import com.google.android.gms.maps.model.Dash as GoogleDash
 import com.google.android.gms.maps.model.Dot as GoogleDot
 import com.google.android.gms.maps.model.Gap as GoogleGap
-import com.google.android.gms.maps.model.LatLng as GoogleLatLng
 import com.google.android.gms.maps.model.PatternItem as GooglePatternItem
 import com.google.android.gms.maps.model.Polygon as GooglePolygon
 import com.google.maps.android.compose.Polygon as AndroidPolygon
@@ -14,13 +14,13 @@ import com.google.maps.android.compose.Polygon as AndroidPolygon
  * Android implementation of [Polygon] that wraps the platform polygon.
  */
 actual class Polygon(
-    private val googlePolygon: GooglePolygon
+    val googlePolygon: GooglePolygon
 ) {
-    actual val points: List<LatLng>
-        get() = googlePolygon.points.map { LatLng(it.latitude, it.longitude) }
+    actual val points: List<LatLng> =
+        googlePolygon.points.map { LatLng(it.latitude, it.longitude) }
 
-    actual val holes: List<List<LatLng>>
-        get() = googlePolygon.holes.map { hole ->
+    actual val holes: List<List<LatLng>> =
+        googlePolygon.holes.map { hole ->
             hole.map { LatLng(it.latitude, it.longitude) }
         }
 }
@@ -42,17 +42,26 @@ actual fun Polygon(
     zIndex: Float,
     onClick: (Polygon) -> Unit,
 ) {
+    // Remember transformed lists to avoid recreating on every recomposition
+    val googlePoints = remember(points) {
+        points.map(LatLng::toGoogleLatLng)
+    }
+    val googleHoles = remember(holes) {
+        holes.map { hole -> hole.map(LatLng::toGoogleLatLng) }
+    }
+    val googleStrokePattern = remember(strokePattern) {
+        strokePattern?.toGooglePatternItems()
+    }
+
     AndroidPolygon(
-        points = points.map { GoogleLatLng(it.latitude, it.longitude) },
+        points = googlePoints,
         clickable = clickable,
         fillColor = fillColor,
         geodesic = geodesic,
-        holes = holes.map { hole ->
-            hole.map { GoogleLatLng(it.latitude, it.longitude) }
-        },
+        holes = googleHoles,
         strokeColor = strokeColor,
         strokeJointType = strokeJointType.toGoogleJointType(),
-        strokePattern = strokePattern?.toGooglePatternItems(),
+        strokePattern = googleStrokePattern,
         strokeWidth = strokeWidth,
         tag = tag,
         visible = visible,

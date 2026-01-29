@@ -15,18 +15,16 @@ import platform.UIKit.UIScreen
  */
 @OptIn(ExperimentalForeignApi::class)
 actual class Polyline(
-    private val gmsPolyline: GMSPolyline
+    val gmsPolyline: GMSPolyline
 ) {
-    actual val points: List<LatLng>
-        get() {
-            val path = gmsPolyline.path ?: return emptyList()
-            val count = path.count().toInt()
-            return (0 until count).map { index ->
-                path.coordinateAtIndex(index.toULong()).useContents {
-                    LatLng(latitude, longitude)
-                }
+    actual val points: List<LatLng> = gmsPolyline.path?.let { path ->
+        val count = path.count().toInt()
+        (0 until count).map { index ->
+            path.coordinateAtIndex(index.toULong()).useContents {
+                LatLng(latitude, longitude)
             }
         }
+    } ?: emptyList()
 }
 
 @OptIn(ExperimentalForeignApi::class)

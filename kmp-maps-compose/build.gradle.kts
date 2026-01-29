@@ -47,7 +47,7 @@ kotlin {
                     products = {
                         add("GoogleMaps", exportToKotlin = true)
                     },
-                    version = "10.6.0"
+                    version = libs.versions.google.maps.ios.get()
                 )
             }
             // Export GoogleMaps package so iOS app can use it directly

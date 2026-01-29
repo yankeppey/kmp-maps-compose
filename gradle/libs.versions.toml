@@ -3,10 +3,11 @@ kmp-maps-compose = "0.1.2-SNAPSHOT"
 kotlin = "2.3.0"
 compose = "1.10.0"
 agp = "9.0.0"
-maps-compose = "7.0.0"
+maps-compose = "8.0.0"
 # play-services-maps version should match maps-compose transitive dependency:
-# maps-compose 7.0.0 -> maps-ktx 5.2.1 -> play-services-maps 19.2.0
-play-services-maps = "19.2.0"
+# maps-compose 8.0.0 -> maps-ktx 6.0.0 -> play-services-maps 20.0.0
+play-services-maps = "20.0.0"
+google-maps-ios = "10.8.0"
 activity-compose = "1.12.2"
 androidx-core = "1.17.0"
 buildkonfig = "0.17.1"

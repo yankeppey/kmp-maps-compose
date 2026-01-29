@@ -18,33 +18,25 @@ import platform.CoreLocation.CLLocationCoordinate2DMake
  */
 @OptIn(ExperimentalForeignApi::class)
 actual class GroundOverlay(
-    private val gmsGroundOverlay: GMSGroundOverlay
+    val gmsGroundOverlay: GMSGroundOverlay
 ) {
-    actual val bounds: LatLngBounds
-        get() {
-            val gmsBounds = gmsGroundOverlay.bounds
-            return if (gmsBounds != null) {
-                gmsBounds.southWest.useContents {
-                    val sw = LatLng(latitude, longitude)
-                    gmsBounds.northEast.useContents {
-                        val ne = LatLng(latitude, longitude)
-                        LatLngBounds(southwest = sw, northeast = ne)
-                    }
-                }
-            } else {
-                // fallback if bounds is null - use position as center
-                gmsGroundOverlay.position.useContents {
-                    val center = LatLng(latitude, longitude)
-                    LatLngBounds(southwest = center, northeast = center)
-                }
+    actual val bounds: LatLngBounds = gmsGroundOverlay.bounds?.let { gmsBounds ->
+        gmsBounds.southWest.useContents {
+            val sw = LatLng(latitude, longitude)
+            gmsBounds.northEast.useContents {
+                val ne = LatLng(latitude, longitude)
+                LatLngBounds(southwest = sw, northeast = ne)
             }
         }
+    } ?: gmsGroundOverlay.position.useContents {
+        // fallback if bounds is null - use position as center
+        val center = LatLng(latitude, longitude)
+        LatLngBounds(southwest = center, northeast = center)
+    }
 
-    actual val bearing: Float
-        get() = gmsGroundOverlay.bearing.toFloat()
+    actual val bearing: Float = gmsGroundOverlay.bearing.toFloat()
 
-    actual val transparency: Float
-        get() = 1f - gmsGroundOverlay.opacity
+    actual val transparency: Float = (1.0 - gmsGroundOverlay.opacity).toFloat()
 }
 
 @OptIn(ExperimentalForeignApi::class)

@@ -1,9 +1,13 @@
 package eu.buney.maps
 
+import androidx.compose.runtime.ComposableTargetMarker
+
 /**
  * An annotation that can be used to mark a composable function as being expected to be used
  * inside of a [GoogleMap] content lambda.
  */
+@Retention(AnnotationRetention.BINARY)
+@ComposableTargetMarker(description = "Google Map Composable")
 @Target(
     AnnotationTarget.FILE,
     AnnotationTarget.FUNCTION,
@@ -11,4 +15,4 @@ package eu.buney.maps
     AnnotationTarget.TYPE,
     AnnotationTarget.TYPE_PARAMETER,
 )
-expect annotation class GoogleMapComposable()
+actual annotation class GoogleMapComposable

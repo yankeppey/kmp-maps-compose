@@ -15,6 +15,7 @@ import androidx.core.graphics.createBitmap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory as GoogleBitmapDescriptorFactory
 
 @Composable
+@GoogleMapComposable
 actual fun rememberComposeBitmapDescriptor(
     vararg keys: Any,
     content: @Composable () -> Unit,

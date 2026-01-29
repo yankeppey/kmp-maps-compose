@@ -83,9 +83,70 @@ class CameraPositionState(
         internal set
 
     /**
-     * The current camera position.
+     * Internal state - updated by platform callbacks (no side effects).
+     * This is the source of truth for the current camera position.
      */
-    var position: CameraPosition by mutableStateOf(position)
+    internal var rawPosition: CameraPosition by mutableStateOf(position)
+
+    /**
+     * Platform-specific callback to update the native map.
+     * Set by platform implementations when the map is attached.
+     */
+    internal var positionUpdater: ((CameraPosition) -> Unit)? = null
+
+    /**
+     * The current camera position.
+     *
+     * Reading this property returns the current position (from [rawPosition]).
+     * Setting this property will update the native map via [positionUpdater].
+     */
+    var position: CameraPosition
+        get() = rawPosition
+        set(value) {
+            val updater = positionUpdater
+            if (updater != null) {
+                // Map is attached - update via native API
+                // The native map will update rawPosition via callbacks
+                updater(value)
+            } else {
+                // No map attached yet - just store the value
+                rawPosition = value
+            }
+        }
+
+    /**
+     * The visible region bounds of the map as a bounding rectangle.
+     * Updated when the camera stops moving (idle state).
+     * May be null if the map hasn't been laid out yet.
+     *
+     * Note: For tilted maps, this is the bounding rectangle of the visible
+     * trapezoid, which may include areas outside the actual visible region.
+     */
+    var visibleBounds: LatLngBounds? by mutableStateOf(null)
+        internal set
+
+    /**
+     * Internal projection provider set by platform implementations.
+     * Returns a snapshot of the current projection, or null if the map
+     * hasn't been laid out yet.
+     */
+    internal var projectionProvider: (() -> Projection?)? = null
+
+    /**
+     * Returns a snapshot of the current map projection for converting between
+     * screen coordinates and geographic coordinates.
+     *
+     * May be null if the map hasn't been laid out yet or is not currently
+     * associated with a [GoogleMap] composable.
+     *
+     * Note: This is a snapshot that does not automatically update when the
+     * camera moves. Access this property again after camera movement to get
+     * an updated projection.
+     *
+     * @see Projection
+     */
+    val projection: Projection?
+        get() = projectionProvider?.invoke()
 
     /**
      * Internal flow for animation requests.

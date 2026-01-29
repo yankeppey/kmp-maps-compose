@@ -16,20 +16,16 @@ import platform.UIKit.UIScreen
  */
 @OptIn(ExperimentalForeignApi::class)
 actual class Polygon(
-    private val gmsPolygon: GMSPolygon
+    val gmsPolygon: GMSPolygon
 ) {
-    actual val points: List<LatLng>
-        get() {
-            val path = gmsPolygon.path ?: return emptyList()
-            return path.toLatLngList()
-        }
+    actual val points: List<LatLng> =
+        gmsPolygon.path?.toLatLngList() ?: emptyList()
 
-    actual val holes: List<List<LatLng>>
-        get() {
-            @Suppress("UNCHECKED_CAST")
-            val holesArray = gmsPolygon.holes as? List<GMSPath> ?: return emptyList()
-            return holesArray.map { it.toLatLngList() }
-        }
+    @Suppress("UNCHECKED_CAST")
+    actual val holes: List<List<LatLng>> =
+        (gmsPolygon.holes as? List<GMSPath>)
+            ?.map { it.toLatLngList() }
+            ?: emptyList()
 }
 
 @OptIn(ExperimentalForeignApi::class)

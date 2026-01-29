@@ -10,6 +10,12 @@ plugins {
     alias(libs.plugins.vanniktechMavenPublish)
 }
 
+composeCompiler {
+    reportsDestination = layout.buildDirectory.dir("compose_compiler")
+    metricsDestination = layout.buildDirectory.dir("compose_compiler")
+    stabilityConfigurationFiles.add(layout.projectDirectory.file("compose_compiler_stability_config.conf"))
+}
+
 group = "eu.buney.maps"
 version = libs.versions.kmp.maps.compose.get()
 
@@ -47,7 +53,7 @@ kotlin {
                     products = {
                         add("GoogleMaps", exportToKotlin = true)
                     },
-                    version = "10.6.0"
+                    version = libs.versions.google.maps.ios.get()
                 )
             }
             // Export GoogleMaps package so iOS app can use it directly
@@ -63,8 +69,8 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
+            implementation(libs.compose.components.resources)
         }
-
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
             implementation(libs.google.maps.compose)

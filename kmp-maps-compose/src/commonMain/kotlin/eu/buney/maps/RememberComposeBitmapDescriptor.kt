@@ -37,6 +37,7 @@ import androidx.compose.runtime.Composable
  *   [Marker]'s icon parameter.
  */
 @Composable
+@GoogleMapComposable
 expect fun rememberComposeBitmapDescriptor(
     vararg keys: Any,
     content: @Composable () -> Unit,

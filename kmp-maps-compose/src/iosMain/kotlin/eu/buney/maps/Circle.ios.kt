@@ -15,15 +15,12 @@ import platform.UIKit.UIScreen
  */
 @OptIn(ExperimentalForeignApi::class)
 actual class Circle(
-    private val gmsCircle: GMSCircle
+    val gmsCircle: GMSCircle
 ) {
-    actual val center: LatLng
-        get() = gmsCircle.position.useContents {
-            LatLng(latitude, longitude)
-        }
-
-    actual val radius: Double
-        get() = gmsCircle.radius
+    actual val center: LatLng = gmsCircle.position.useContents {
+        LatLng(latitude, longitude)
+    }
+    actual val radius: Double = gmsCircle.radius
 }
 
 @OptIn(ExperimentalForeignApi::class)

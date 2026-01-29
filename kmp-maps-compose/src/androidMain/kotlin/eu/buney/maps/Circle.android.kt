@@ -1,12 +1,12 @@
 package eu.buney.maps
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import com.google.android.gms.maps.model.Circle as GoogleCircle
 import com.google.android.gms.maps.model.Dash as GoogleDash
 import com.google.android.gms.maps.model.Dot as GoogleDot
 import com.google.android.gms.maps.model.Gap as GoogleGap
-import com.google.android.gms.maps.model.LatLng as GoogleLatLng
 import com.google.android.gms.maps.model.PatternItem as GooglePatternItem
 import com.google.maps.android.compose.Circle as AndroidCircle
 
@@ -14,13 +14,10 @@ import com.google.maps.android.compose.Circle as AndroidCircle
  * Android implementation of [Circle] that wraps the platform circle.
  */
 actual class Circle(
-    private val googleCircle: GoogleCircle
+    val googleCircle: GoogleCircle
 ) {
-    actual val center: LatLng
-        get() = LatLng(googleCircle.center.latitude, googleCircle.center.longitude)
-
-    actual val radius: Double
-        get() = googleCircle.radius
+    actual val center: LatLng = LatLng(googleCircle.center.latitude, googleCircle.center.longitude)
+    actual val radius: Double = googleCircle.radius
 }
 
 @Composable
@@ -38,13 +35,17 @@ actual fun Circle(
     zIndex: Float,
     onClick: (Circle) -> Unit,
 ) {
+    val googleStrokePattern = remember(strokePattern) {
+        strokePattern?.toGooglePatternItems()
+    }
+
     AndroidCircle(
-        center = GoogleLatLng(center.latitude, center.longitude),
+        center = center.toGoogleLatLng(),
         clickable = clickable,
         fillColor = fillColor,
         radius = radius,
         strokeColor = strokeColor,
-        strokePattern = strokePattern?.toGooglePatternItems(),
+        strokePattern = googleStrokePattern,
         strokeWidth = strokeWidth,
         tag = tag,
         visible = visible,

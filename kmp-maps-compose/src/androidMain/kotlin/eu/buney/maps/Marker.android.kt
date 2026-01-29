@@ -14,16 +14,13 @@ import com.google.maps.android.compose.rememberUpdatedMarkerState as androidReme
  * Android implementation of [Marker] that wraps the platform marker.
  */
 actual class Marker(
-    private val googleMarker: GoogleMarker
+    val googleMarker: GoogleMarker
 ) {
-    actual val position: LatLng
-        get() = LatLng(googleMarker.position.latitude, googleMarker.position.longitude)
+    actual val position: LatLng = LatLng(googleMarker.position.latitude, googleMarker.position.longitude)
 
-    actual val title: String?
-        get() = googleMarker.title
+    actual val title: String? = googleMarker.title
 
-    actual val snippet: String?
-        get() = googleMarker.snippet
+    actual val snippet: String? = googleMarker.snippet
 }
 
 @Composable

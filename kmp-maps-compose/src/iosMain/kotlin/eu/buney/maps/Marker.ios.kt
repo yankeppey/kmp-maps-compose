@@ -30,18 +30,15 @@ import platform.UIKit.accessibilityLabel
  */
 @OptIn(ExperimentalForeignApi::class)
 actual class Marker(
-    private val gmsMarker: GMSMarker
+    val gmsMarker: GMSMarker
 ) {
-    actual val position: LatLng
-        get() = gmsMarker.position.useContents {
-            LatLng(latitude, longitude)
-        }
+    actual val position: LatLng = gmsMarker.position.useContents {
+        LatLng(latitude, longitude)
+    }
 
-    actual val title: String?
-        get() = gmsMarker.title
+    actual val title: String? = gmsMarker.title
 
-    actual val snippet: String?
-        get() = gmsMarker.snippet
+    actual val snippet: String? = gmsMarker.snippet
 }
 
 @OptIn(ExperimentalForeignApi::class)

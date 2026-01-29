@@ -2,13 +2,38 @@ package eu.buney.sample
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsBus
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Polyline
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,9 +41,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import eu.buney.maps.*
+import eu.buney.maps.CameraPosition
+import eu.buney.maps.Circle
+import eu.buney.maps.GoogleMap
+import eu.buney.maps.GroundOverlay
+import eu.buney.maps.GroundOverlayPosition
+import eu.buney.maps.LatLng
+import eu.buney.maps.LatLngBounds
+import eu.buney.maps.MapProperties
+import eu.buney.maps.MapType
+import eu.buney.maps.MapUiSettings
+import eu.buney.maps.Marker
+import eu.buney.maps.MarkerComposable
+import eu.buney.maps.MarkerInfoWindow
+import eu.buney.maps.PointOfInterest
+import eu.buney.maps.Polygon
+import eu.buney.maps.Polyline
+import eu.buney.maps.StampStyle
+import eu.buney.maps.StrokeStyle
+import eu.buney.maps.StyleSpan
+import eu.buney.maps.rememberBitmapDescriptor
+import eu.buney.maps.rememberCameraPositionState
+import eu.buney.maps.rememberUpdatedMarkerState
 import kotlinx.coroutines.launch
-import mapscomposemultiplatform.sample.generated.resources.Res
+import mapscomposemultiplatform.sample.shared.generated.resources.Res
+import mapscomposemultiplatform.sample.shared.generated.resources.arrow_stamp
+import mapscomposemultiplatform.sample.shared.generated.resources.overlay_image
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 // sample locations
@@ -47,6 +95,11 @@ private val manhattanRoute = listOf(
     LatLng(40.7794, -73.9632), // Met Museum
     LatLng(40.7829, -73.9654), // Central Park North
 )
+
+// Polyline style options for the Manhattan route demo
+private enum class PolylineStyle {
+    SOLID, GRADIENT, STAMPED
+}
 
 // polygon around Westminster, London
 private val westminsterPolygon = listOf(
@@ -94,6 +147,9 @@ fun MapScreen(modifier: Modifier = Modifier) {
     val sfMarkerState = rememberUpdatedMarkerState(position = sanFrancisco)
     var showSfInfoWindow by remember { mutableStateOf(false) }
 
+    // state for polyline style (cycles through solid, gradient, stamped)
+    var polylineStyle by remember { mutableStateOf(PolylineStyle.SOLID) }
+
     // react to info window toggle
     LaunchedEffect(showSfInfoWindow) {
         if (showSfInfoWindow) {
@@ -113,12 +169,16 @@ fun MapScreen(modifier: Modifier = Modifier) {
     // coroutine scope for animated camera movements
     val coroutineScope = rememberCoroutineScope()
 
+
     Column(modifier = modifier) {
-        // map
-        GoogleMap(
+        // map with FAB overlay
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f),
+                .weight(1f)
+        ) {
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
             properties = MapProperties(
                 mapType = MapType.NORMAL
@@ -261,16 +321,55 @@ fun MapScreen(modifier: Modifier = Modifier) {
                 }
             )
 
-            // polyline showing Manhattan route
-            Polyline(
-                points = manhattanRoute,
-                color = Color.Red,
-                width = 5f,
-                clickable = true,
-                onClick = { polyline ->
-                    println("Polyline clicked! Points: ${polyline.points.size}")
+            // polyline showing Manhattan route - style changes based on polylineStyle state
+            val arrowStampImage = rememberBitmapDescriptor(Res.drawable.arrow_stamp)
+
+            when (polylineStyle) {
+                PolylineStyle.SOLID -> {
+                    Polyline(
+                        points = manhattanRoute,
+                        color = Color.Red,
+                        width = 8f,
+                        clickable = true,
+                        onClick = { polyline ->
+                            println("Solid polyline clicked! Points: ${polyline.points.size}")
+                        }
+                    )
                 }
-            )
+                PolylineStyle.GRADIENT -> {
+                    Polyline(
+                        points = manhattanRoute,
+                        spans = listOf(
+                            StyleSpan.solidColor(Color.Red, segments = 1.0),
+                            StyleSpan.gradient(Color.Red, Color.Yellow, segments = 1.0),
+                            StyleSpan.solidColor(Color.Yellow, segments = 1.0),
+                            StyleSpan.gradient(Color.Yellow, Color.Green, segments = 1.0),
+                        ),
+                        width = 8f,
+                        clickable = true,
+                        onClick = { polyline ->
+                            println("Gradient polyline clicked! Points: ${polyline.points.size}")
+                        }
+                    )
+                }
+                PolylineStyle.STAMPED -> {
+                    Polyline(
+                        points = manhattanRoute,
+                        spans = listOf(
+                            StyleSpan(
+                                style = StrokeStyle.SolidColor(Color.Blue),
+                                stampStyle = StampStyle(arrowStampImage),
+                                segments = manhattanRoute.size.toDouble()
+                            )
+                        ),
+                        width = 16f,
+                        clickable = true,
+                        onClick = { polyline ->
+                            println("Stamped polyline clicked! Points: ${polyline.points.size}")
+                        }
+                    )
+                }
+            }
 
             // polygon around Westminster, London (with a hole)
             Polygon(
@@ -286,22 +385,42 @@ fun MapScreen(modifier: Modifier = Modifier) {
             )
 
             // ground overlay near Central Park, NYC
-            // load image from resources
-            var groundOverlayImage by remember { mutableStateOf<BitmapDescriptor?>(null) }
-            LaunchedEffect(Unit) {
-                val imageBytes = Res.readBytes("drawable/overlay_image.jpg")
-                groundOverlayImage = BitmapDescriptorFactory.fromEncodedImage(imageBytes)
-            }
-            groundOverlayImage?.let { image ->
-                GroundOverlay(
-                    position = GroundOverlayPosition.create(groundOverlayBounds),
-                    image = image,
-                    transparency = 0.2f,
-                    clickable = true,
-                    onClick = { overlay ->
-                        println("GroundOverlay clicked! Bounds: ${overlay.bounds}")
+            val groundOverlayImage = rememberBitmapDescriptor(Res.drawable.overlay_image)
+            GroundOverlay(
+                position = GroundOverlayPosition.create(groundOverlayBounds),
+                image = groundOverlayImage,
+                transparency = 0.2f,
+                clickable = true,
+                onClick = { overlay ->
+                    println("GroundOverlay clicked! Bounds: ${overlay.bounds}")
+                }
+            )
+        }
+
+            // FAB to cycle polyline styles (only visible in New York)
+            if (selectedLocation == newYork) {
+                FloatingActionButton(
+                    onClick = {
+                        polylineStyle = when (polylineStyle) {
+                            PolylineStyle.SOLID -> PolylineStyle.GRADIENT
+                            PolylineStyle.GRADIENT -> PolylineStyle.STAMPED
+                            PolylineStyle.STAMPED -> PolylineStyle.SOLID
+                        }
+                    },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(16.dp),
+                    containerColor = when (polylineStyle) {
+                        PolylineStyle.SOLID -> Color(0xFFEF9A9A)      // Soft pastel red
+                        PolylineStyle.GRADIENT -> Color(0xFFFFCC80)   // Soft pastel orange
+                        PolylineStyle.STAMPED -> Color(0xFF90CAF9)    // Soft pastel blue
                     }
-                )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Polyline,
+                        contentDescription = "Change Polyline Style",
+                    )
+                }
             }
         }
 

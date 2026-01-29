@@ -28,9 +28,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5BA954915B435D62C2FE6C33 /* SampleApp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SampleApp.framework; path = "../sample/build/xcode-frameworks/$(CONFIGURATION)/$(PLATFORM_NAME)/SampleApp.framework"; sourceTree = "<group>"; };
+		5BA954915B435D62C2FE6C33 /* SampleApp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SampleApp.framework; path = "../shared/build/xcode-frameworks/$(CONFIGURATION)/$(PLATFORM_NAME)/SampleApp.framework"; sourceTree = "<group>"; };
 		668CECA83ACC03A83C85A623 /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
-		86038AE1032E284E79B32AD6 /* iosApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; name = iosApp.app; path = MapsDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		86038AE1032E284E79B32AD6 /* MapsDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapsDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C117AD187833E2513BD2F553 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -76,7 +76,7 @@
 		94C98B8B3A2BFC1966447269 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				86038AE1032E284E79B32AD6 /* iosApp.app */,
+				86038AE1032E284E79B32AD6 /* MapsDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,7 +102,7 @@
 				2722A17E2F0845010031DA00 /* exportedGoogleMapsBridge */,
 			);
 			productName = iosApp;
-			productReference = 86038AE1032E284E79B32AD6 /* iosApp.app */;
+			productReference = 86038AE1032E284E79B32AD6 /* MapsDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -113,11 +113,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
-				TargetAttributes = {
-					78B53CC79860CBFC2F5543C6 = {
-						DevelopmentTeam = "";
-					};
-				};
 			};
 			buildConfigurationList = FF7CA1CA754D017066F1822F /* Build configuration list for PBXProject "iosApp" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -130,7 +125,7 @@
 			mainGroup = 38B69C3F79CD97858CF7B609;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				2722A17D2F0845010031DA00 /* XCLocalSwiftPackageReference "../maps-compose-mp/exportedGoogleMapsBridge" */,
+				2722A17D2F0845010031DA00 /* XCLocalSwiftPackageReference "../../kmp-maps-compose/exportedGoogleMapsBridge" */,
 			);
 			projectDirPath = "";
 			projectRoot = "";
@@ -158,7 +153,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export JAVA_HOME=\"/Applications/Android Studio.app/Contents/jbr/Contents/Home\"\ncd \"$SRCROOT/..\"\n./gradlew :sample:embedAndSignAppleFrameworkForXcode\n\n# Create symlink to framework for easier linking\nFRAMEWORK_DIR=\"sample/build/xcode-frameworks/$CONFIGURATION\"\nif [ -d \"$FRAMEWORK_DIR\" ]; then\n  # Find the actual framework directory (with SDK version)\n  ACTUAL_DIR=$(find \"$FRAMEWORK_DIR\" -type d -name \"${PLATFORM_NAME}*\" -maxdepth 1 | head -n 1)\n  if [ -n \"$ACTUAL_DIR\" ]; then\n    # Create symlink without SDK version\n    ln -sfn \"$(basename \"$ACTUAL_DIR\")\" \"$FRAMEWORK_DIR/$PLATFORM_NAME\"\n  fi\nfi\n";
+			shellScript = "export JAVA_HOME=\"/Applications/Android Studio.app/Contents/jbr/Contents/Home\"\ncd \"$SRCROOT/../..\"\n./gradlew :sample:shared:embedAndSignAppleFrameworkForXcode\n\n# Create symlink to framework for easier linking\nFRAMEWORK_DIR=\"sample/shared/build/xcode-frameworks/$CONFIGURATION\"\nif [ -d \"$FRAMEWORK_DIR\" ]; then\n  # Find the actual framework directory (with SDK version)\n  ACTUAL_DIR=$(find \"$FRAMEWORK_DIR\" -type d -name \"${PLATFORM_NAME}*\" -maxdepth 1 | head -n 1)\n  if [ -n \"$ACTUAL_DIR\" ]; then\n    # Create symlink without SDK version\n    ln -sfn \"$(basename \"$ACTUAL_DIR\")\" \"$FRAMEWORK_DIR/$PLATFORM_NAME\"\n  fi\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -304,8 +299,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../sample/build/xcode-frameworks/$(CONFIGURATION)/$(PLATFORM_NAME)",
-					"\"../sample/build/xcode-frameworks/$(CONFIGURATION)/$(PLATFORM_NAME)\"",
+					"$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(PLATFORM_NAME)",
+					"\"../shared/build/xcode-frameworks/$(CONFIGURATION)/$(PLATFORM_NAME)\"",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -327,8 +322,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../sample/build/xcode-frameworks/$(CONFIGURATION)/$(PLATFORM_NAME)",
-					"\"../sample/build/xcode-frameworks/$(CONFIGURATION)/$(PLATFORM_NAME)\"",
+					"$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(PLATFORM_NAME)",
+					"\"../shared/build/xcode-frameworks/$(CONFIGURATION)/$(PLATFORM_NAME)\"",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -367,9 +362,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		2722A17D2F0845010031DA00 /* XCLocalSwiftPackageReference "../kmp-maps-compose/exportedGoogleMapsBridge" */ = {
+		2722A17D2F0845010031DA00 /* XCLocalSwiftPackageReference "../../kmp-maps-compose/exportedGoogleMapsBridge" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = "../kmp-maps-compose/exportedGoogleMapsBridge";
+			relativePath = "../../kmp-maps-compose/exportedGoogleMapsBridge";
 		};
 /* End XCLocalSwiftPackageReference section */
 

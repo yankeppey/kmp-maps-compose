@@ -1,21 +1,23 @@
 [versions]
-kmp-maps-compose = "0.1.1"
+kmp-maps-compose = "0.2.0"
 kotlin = "2.3.0"
-compose = "1.9.3"
-agp = "8.13.2"
-maps-compose = "7.0.0"
+compose = "1.10.0"
+agp = "9.0.0"
+maps-compose = "8.0.0"
 # play-services-maps version should match maps-compose transitive dependency:
-# maps-compose 7.0.0 -> maps-ktx 5.2.1 -> play-services-maps 19.2.0
-play-services-maps = "19.2.0"
+# maps-compose 8.0.0 -> maps-ktx 6.0.0 -> play-services-maps 20.0.0
+play-services-maps = "20.0.0"
+google-maps-ios = "10.8.0"
 activity-compose = "1.12.2"
 androidx-core = "1.17.0"
 buildkonfig = "0.17.1"
-spmForKmp = "1.4.2"
+spmForKmp = "1.4.7"
 vanniktechMavenPublish = "0.35.0"
 
 [libraries]
 kmp-maps-compose = { module = "eu.buney.maps:kmp-maps-compose", version.ref = "kmp-maps-compose" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+compose-components-resources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "compose" }
 google-maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "maps-compose" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -27,6 +29,7 @@ androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 androidKmpLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }

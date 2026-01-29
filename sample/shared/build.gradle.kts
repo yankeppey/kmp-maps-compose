@@ -1,11 +1,10 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.androidKmpLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.buildkonfig)
@@ -19,8 +18,14 @@ if (secretsPropertiesFile.exists()) {
 }
 
 kotlin {
-    androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    androidLibrary {
+        namespace = "eu.buney.sample.shared"
+        compileSdk = 36
+        minSdk = 24
+
+        // Enable Android resources for Compose resources support
+        androidResources.enable = true
+
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -39,8 +44,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            // implementation(projects.kmpMapsCompose)
-            implementation(libs.kmp.maps.compose)
+            // Use local project dependency for development
+            // implementation(libs.kmp.maps.compose)
+            implementation(project(":kmp-maps-compose"))
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -50,35 +56,8 @@ kotlin {
         }
 
         androidMain.dependencies {
-            implementation(libs.androidx.activity.compose)
+            // No Android-specific dependencies in shared module
         }
-    }
-}
-
-android {
-    namespace = "eu.buney.sample"
-    compileSdk = 36
-
-    defaultConfig {
-        applicationId = "eu.buney.maps.sample"
-        minSdk = 24
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
-
-        // Add Maps API key to AndroidManifest
-        manifestPlaceholders["MAPS_API_KEY"] = secretsProperties.getProperty("MAPS_API_KEY", "")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 

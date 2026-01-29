@@ -14,7 +14,7 @@ Add the dependency to your `build.gradle.kts`:
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("eu.buney.maps:kmp-maps-compose:0.1.0")
+            implementation("eu.buney.maps:kmp-maps-compose:0.2.0")
         }
     }
 }

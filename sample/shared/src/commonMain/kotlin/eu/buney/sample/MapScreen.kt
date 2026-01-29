@@ -41,8 +41,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import eu.buney.maps.BitmapDescriptor
-import eu.buney.maps.BitmapDescriptorFactory
 import eu.buney.maps.CameraPosition
 import eu.buney.maps.Circle
 import eu.buney.maps.GoogleMap
@@ -62,10 +60,13 @@ import eu.buney.maps.Polyline
 import eu.buney.maps.StampStyle
 import eu.buney.maps.StrokeStyle
 import eu.buney.maps.StyleSpan
+import eu.buney.maps.rememberBitmapDescriptor
 import eu.buney.maps.rememberCameraPositionState
 import eu.buney.maps.rememberUpdatedMarkerState
 import kotlinx.coroutines.launch
 import mapscomposemultiplatform.sample.shared.generated.resources.Res
+import mapscomposemultiplatform.sample.shared.generated.resources.arrow_stamp
+import mapscomposemultiplatform.sample.shared.generated.resources.overlay_image
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 // sample locations
@@ -321,11 +322,7 @@ fun MapScreen(modifier: Modifier = Modifier) {
             )
 
             // polyline showing Manhattan route - style changes based on polylineStyle state
-            var arrowStampImage by remember { mutableStateOf<BitmapDescriptor?>(null) }
-            LaunchedEffect(Unit) {
-                val imageBytes = Res.readBytes("drawable/arrow_stamp.png")
-                arrowStampImage = BitmapDescriptorFactory.fromEncodedImage(imageBytes)
-            }
+            val arrowStampImage = rememberBitmapDescriptor(Res.drawable.arrow_stamp)
 
             when (polylineStyle) {
                 PolylineStyle.SOLID -> {
@@ -356,23 +353,21 @@ fun MapScreen(modifier: Modifier = Modifier) {
                     )
                 }
                 PolylineStyle.STAMPED -> {
-                    arrowStampImage?.let { arrowImage ->
-                        Polyline(
-                            points = manhattanRoute,
-                            spans = listOf(
-                                StyleSpan(
-                                    style = StrokeStyle.SolidColor(Color.Blue),
-                                    stampStyle = StampStyle(arrowImage),
-                                    segments = manhattanRoute.size.toDouble()
-                                )
-                            ),
-                            width = 16f,
-                            clickable = true,
-                            onClick = { polyline ->
-                                println("Stamped polyline clicked! Points: ${polyline.points.size}")
-                            }
-                        )
-                    }
+                    Polyline(
+                        points = manhattanRoute,
+                        spans = listOf(
+                            StyleSpan(
+                                style = StrokeStyle.SolidColor(Color.Blue),
+                                stampStyle = StampStyle(arrowStampImage),
+                                segments = manhattanRoute.size.toDouble()
+                            )
+                        ),
+                        width = 16f,
+                        clickable = true,
+                        onClick = { polyline ->
+                            println("Stamped polyline clicked! Points: ${polyline.points.size}")
+                        }
+                    )
                 }
             }
 
@@ -390,24 +385,16 @@ fun MapScreen(modifier: Modifier = Modifier) {
             )
 
             // ground overlay near Central Park, NYC
-            // Note: BitmapDescriptorFactory must be called inside GoogleMap content
-            // because it requires the Maps SDK to be initialized
-            var groundOverlayImage by remember { mutableStateOf<BitmapDescriptor?>(null) }
-            LaunchedEffect(Unit) {
-                val imageBytes = Res.readBytes("drawable/overlay_image.jpg")
-                groundOverlayImage = BitmapDescriptorFactory.fromEncodedImage(imageBytes)
-            }
-            groundOverlayImage?.let { image ->
-                GroundOverlay(
-                    position = GroundOverlayPosition.create(groundOverlayBounds),
-                    image = image,
-                    transparency = 0.2f,
-                    clickable = true,
-                    onClick = { overlay ->
-                        println("GroundOverlay clicked! Bounds: ${overlay.bounds}")
-                    }
-                )
-            }
+            val groundOverlayImage = rememberBitmapDescriptor(Res.drawable.overlay_image)
+            GroundOverlay(
+                position = GroundOverlayPosition.create(groundOverlayBounds),
+                image = groundOverlayImage,
+                transparency = 0.2f,
+                clickable = true,
+                onClick = { overlay ->
+                    println("GroundOverlay clicked! Bounds: ${overlay.bounds}")
+                }
+            )
         }
 
             // FAB to cycle polyline styles (only visible in New York)

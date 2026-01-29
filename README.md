@@ -224,12 +224,36 @@ MarkerComposable(
 ### Shapes
 
 ```kotlin
-// polyline
+// simple polyline
 Polyline(
     points = listOf(LatLng(37.77, -122.42), LatLng(37.78, -122.41)),
     color = Color.Blue,
     width = 5f,
     geodesic = true
+)
+
+// gradient polyline
+Polyline(
+    points = routePoints,
+    spans = listOf(
+        StyleSpan.gradient(Color.Green, Color.Yellow, segments = 1.0),
+        StyleSpan.gradient(Color.Yellow, Color.Red, segments = 1.0),
+    ),
+    width = 8f
+)
+
+// stamped polyline (textured pattern)
+val stampImage = rememberBitmapDescriptor(Res.drawable.arrow_stamp)
+Polyline(
+    points = routePoints,
+    spans = listOf(
+        StyleSpan(
+            style = StrokeStyle.SolidColor(Color.Blue),
+            stampStyle = StampStyle(stampImage),
+            segments = routePoints.size.toDouble()
+        )
+    ),
+    width = 16f
 )
 
 // polygon with holes
@@ -290,10 +314,13 @@ if (cameraPositionState.isMoving) {
 ### Custom Marker Icons
 
 ```kotlin
+// from Compose Resources (recommended)
+val icon = rememberBitmapDescriptor(Res.drawable.my_marker)
+
 // from PNG/JPEG bytes
 val icon = BitmapDescriptorFactory.fromEncodedImage(imageBytes)
 
-// from Compose content
+// from Compose content (rendered to bitmap)
 val icon = rememberComposeBitmapDescriptor(key1, key2) {
     Icon(Icons.Default.Place, contentDescription = null, tint = Color.Red)
 }

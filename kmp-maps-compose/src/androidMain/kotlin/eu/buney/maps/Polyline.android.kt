@@ -57,6 +57,45 @@ actual fun Polyline(
 }
 
 /**
+ * Android implementation of styled [Polyline] with spans support.
+ */
+@Composable
+@GoogleMapComposable
+actual fun Polyline(
+    points: List<LatLng>,
+    spans: List<StyleSpan>,
+    clickable: Boolean,
+    endCap: Cap,
+    geodesic: Boolean,
+    jointType: JointType,
+    pattern: List<PatternItem>?,
+    startCap: Cap,
+    tag: Any?,
+    visible: Boolean,
+    width: Float,
+    zIndex: Float,
+    onClick: (Polyline) -> Unit,
+) {
+    AndroidPolyline(
+        points = points.map { GoogleLatLng(it.latitude, it.longitude) },
+        spans = spans.toGoogleStyleSpans(),
+        clickable = clickable,
+        endCap = endCap.toGoogleCap(),
+        geodesic = geodesic,
+        jointType = jointType.toGoogleJointType(),
+        pattern = pattern?.toGooglePatternItems(),
+        startCap = startCap.toGoogleCap(),
+        tag = tag,
+        visible = visible,
+        width = width,
+        zIndex = zIndex,
+        onClick = { googlePolyline ->
+            onClick(Polyline(googlePolyline))
+        },
+    )
+}
+
+/**
  * Converts a list of multiplatform [PatternItem]s to Google Maps Android SDK pattern items.
  */
 private fun List<PatternItem>.toGooglePatternItems(): List<GooglePatternItem> {

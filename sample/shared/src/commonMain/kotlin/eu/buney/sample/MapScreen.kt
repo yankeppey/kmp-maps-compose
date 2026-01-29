@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsBus
+import androidx.compose.material.icons.filled.Polyline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +21,7 @@ import eu.buney.maps.*
 import kotlinx.coroutines.launch
 import mapscomposemultiplatform.sample.shared.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 // sample locations
 private val sanFrancisco = LatLng(37.7749, -122.4194)
@@ -47,6 +49,11 @@ private val manhattanRoute = listOf(
     LatLng(40.7794, -73.9632), // Met Museum
     LatLng(40.7829, -73.9654), // Central Park North
 )
+
+// Polyline style options for the Manhattan route demo
+private enum class PolylineStyle {
+    SOLID, GRADIENT, STAMPED
+}
 
 // polygon around Westminster, London
 private val westminsterPolygon = listOf(
@@ -94,6 +101,9 @@ fun MapScreen(modifier: Modifier = Modifier) {
     val sfMarkerState = rememberUpdatedMarkerState(position = sanFrancisco)
     var showSfInfoWindow by remember { mutableStateOf(false) }
 
+    // state for polyline style (cycles through solid, gradient, stamped)
+    var polylineStyle by remember { mutableStateOf(PolylineStyle.SOLID) }
+
     // react to info window toggle
     LaunchedEffect(showSfInfoWindow) {
         if (showSfInfoWindow) {
@@ -115,11 +125,14 @@ fun MapScreen(modifier: Modifier = Modifier) {
 
 
     Column(modifier = modifier) {
-        // map
-        GoogleMap(
+        // map with FAB overlay
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f),
+                .weight(1f)
+        ) {
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
             properties = MapProperties(
                 mapType = MapType.NORMAL
@@ -262,16 +275,61 @@ fun MapScreen(modifier: Modifier = Modifier) {
                 }
             )
 
-            // polyline showing Manhattan route
-            Polyline(
-                points = manhattanRoute,
-                color = Color.Red,
-                width = 5f,
-                clickable = true,
-                onClick = { polyline ->
-                    println("Polyline clicked! Points: ${polyline.points.size}")
+            // polyline showing Manhattan route - style changes based on polylineStyle state
+            var arrowStampImage by remember { mutableStateOf<BitmapDescriptor?>(null) }
+            LaunchedEffect(Unit) {
+                val imageBytes = Res.readBytes("drawable/arrow_stamp.png")
+                arrowStampImage = BitmapDescriptorFactory.fromEncodedImage(imageBytes)
+            }
+
+            when (polylineStyle) {
+                PolylineStyle.SOLID -> {
+                    Polyline(
+                        points = manhattanRoute,
+                        color = Color.Red,
+                        width = 8f,
+                        clickable = true,
+                        onClick = { polyline ->
+                            println("Solid polyline clicked! Points: ${polyline.points.size}")
+                        }
+                    )
                 }
-            )
+                PolylineStyle.GRADIENT -> {
+                    Polyline(
+                        points = manhattanRoute,
+                        spans = listOf(
+                            StyleSpan.solidColor(Color.Red, segments = 1.0),
+                            StyleSpan.gradient(Color.Red, Color.Yellow, segments = 1.0),
+                            StyleSpan.solidColor(Color.Yellow, segments = 1.0),
+                            StyleSpan.gradient(Color.Yellow, Color.Green, segments = 1.0),
+                        ),
+                        width = 8f,
+                        clickable = true,
+                        onClick = { polyline ->
+                            println("Gradient polyline clicked! Points: ${polyline.points.size}")
+                        }
+                    )
+                }
+                PolylineStyle.STAMPED -> {
+                    arrowStampImage?.let { arrowImage ->
+                        Polyline(
+                            points = manhattanRoute,
+                            spans = listOf(
+                                StyleSpan(
+                                    style = StrokeStyle.SolidColor(Color.Blue),
+                                    stampStyle = StampStyle(arrowImage),
+                                    segments = manhattanRoute.size.toDouble()
+                                )
+                            ),
+                            width = 16f,
+                            clickable = true,
+                            onClick = { polyline ->
+                                println("Stamped polyline clicked! Points: ${polyline.points.size}")
+                            }
+                        )
+                    }
+                }
+            }
 
             // polygon around Westminster, London (with a hole)
             Polygon(
@@ -304,6 +362,34 @@ fun MapScreen(modifier: Modifier = Modifier) {
                         println("GroundOverlay clicked! Bounds: ${overlay.bounds}")
                     }
                 )
+            }
+        }
+
+            // FAB to cycle polyline styles (only visible in New York)
+            if (selectedLocation == newYork) {
+                FloatingActionButton(
+                    onClick = {
+                        polylineStyle = when (polylineStyle) {
+                            PolylineStyle.SOLID -> PolylineStyle.GRADIENT
+                            PolylineStyle.GRADIENT -> PolylineStyle.STAMPED
+                            PolylineStyle.STAMPED -> PolylineStyle.SOLID
+                        }
+                    },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(16.dp),
+                    containerColor = when (polylineStyle) {
+                        PolylineStyle.SOLID -> Color(0xFFEF9A9A)      // Soft pastel red
+                        PolylineStyle.GRADIENT -> Color(0xFFFFCC80)   // Soft pastel orange
+                        PolylineStyle.STAMPED -> Color(0xFF90CAF9)    // Soft pastel blue
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Polyline,
+                        contentDescription = "Change Polyline Style",
+                        tint = Color.White
+                    )
+                }
             }
         }
 

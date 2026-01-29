@@ -104,3 +104,82 @@ actual fun Polyline(
         }
     )
 }
+
+/**
+ * iOS implementation of styled [Polyline] with spans support.
+ */
+@OptIn(ExperimentalForeignApi::class)
+@Composable
+@GoogleMapComposable
+actual fun Polyline(
+    points: List<LatLng>,
+    spans: List<StyleSpan>,
+    clickable: Boolean,
+    endCap: Cap,
+    geodesic: Boolean,
+    jointType: JointType,
+    pattern: List<PatternItem>?,
+    startCap: Cap,
+    tag: Any?,
+    visible: Boolean,
+    width: Float,
+    zIndex: Float,
+    onClick: (Polyline) -> Unit,
+) {
+    val mapApplier = currentComposer.applier as? MapApplier
+        ?: error("Polyline must be used within a GoogleMap composable")
+
+    val gmsSpans = spans.toGMSStyleSpans()
+
+    ComposeNode<PolylineNode, MapApplier>(
+        factory = {
+            val path = GMSMutablePath().apply {
+                points.forEach { point ->
+                    addLatitude(point.latitude, longitude = point.longitude)
+                }
+            }
+
+            val gmsPolyline = GMSPolyline.polylineWithPath(path).apply {
+                this.strokeWidth = width.toDouble() / UIScreen.mainScreen.scale
+                // Note: When using spans, the individual span styles override strokeColor
+                this.geodesic = geodesic
+                this.tappable = clickable
+                this.zIndex = zIndex.toInt()
+                this.userData = tag
+                // Apply the style spans
+                this.spans = gmsSpans
+                this.map = if (visible) mapApplier.mapView else null
+            }
+
+            PolylineNode(
+                polyline = gmsPolyline,
+                onPolylineClick = onClick,
+            )
+        },
+        update = {
+            update(onClick) { this.onPolylineClick = it }
+
+            update(points) {
+                val path = GMSMutablePath().apply {
+                    it.forEach { point ->
+                        addLatitude(point.latitude, longitude = point.longitude)
+                    }
+                }
+                this.polyline.path = path
+            }
+            update(spans) {
+                this.polyline.spans = it.toGMSStyleSpans()
+            }
+            update(width) {
+                this.polyline.strokeWidth = it.toDouble() / UIScreen.mainScreen.scale
+            }
+            update(geodesic) { this.polyline.geodesic = it }
+            update(clickable) { this.polyline.tappable = it }
+            update(zIndex) { this.polyline.zIndex = it.toInt() }
+            update(tag) { this.polyline.userData = it }
+            update(visible) {
+                this.polyline.map = if (it) mapApplier.mapView else null
+            }
+        }
+    )
+}

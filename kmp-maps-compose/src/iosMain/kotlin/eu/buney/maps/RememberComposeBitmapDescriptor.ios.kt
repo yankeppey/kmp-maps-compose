@@ -212,7 +212,7 @@ internal suspend fun captureComposableToUIImage(
  * The resulting UIImage is scaled appropriately for the device's screen density.
  */
 @OptIn(ExperimentalForeignApi::class)
-private fun ImageBitmap.toUIImage(): UIImage {
+internal fun ImageBitmap.toUIImage(): UIImage {
     val width = this.width
     val height = this.height
     val scale = UIScreen.mainScreen.scale

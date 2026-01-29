@@ -13,7 +13,6 @@ import platform.CoreGraphics.kCGBitmapByteOrder32Big
 import platform.Foundation.NSData
 import platform.Foundation.create
 import platform.UIKit.UIImage
-import platform.posix.memcpy
 
 /**
  * iOS implementation of [BitmapDescriptor].

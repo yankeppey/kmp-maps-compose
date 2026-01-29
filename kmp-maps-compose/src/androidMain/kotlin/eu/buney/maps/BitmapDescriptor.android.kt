@@ -11,7 +11,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory as GoogleBitmap
  * Wraps the Google Maps SDK BitmapDescriptor.
  */
 actual class BitmapDescriptor(
-    internal val googleBitmapDescriptor: GoogleBitmapDescriptor
+    val googleBitmapDescriptor: GoogleBitmapDescriptor
 )
 
 /**

@@ -2,14 +2,38 @@ package eu.buney.sample
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsBus
 import androidx.compose.material.icons.filled.Polyline
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,11 +41,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import eu.buney.maps.*
+import eu.buney.maps.BitmapDescriptor
+import eu.buney.maps.BitmapDescriptorFactory
+import eu.buney.maps.CameraPosition
+import eu.buney.maps.Circle
+import eu.buney.maps.GoogleMap
+import eu.buney.maps.GroundOverlay
+import eu.buney.maps.GroundOverlayPosition
+import eu.buney.maps.LatLng
+import eu.buney.maps.LatLngBounds
+import eu.buney.maps.MapProperties
+import eu.buney.maps.MapType
+import eu.buney.maps.MapUiSettings
+import eu.buney.maps.Marker
+import eu.buney.maps.MarkerComposable
+import eu.buney.maps.MarkerInfoWindow
+import eu.buney.maps.PointOfInterest
+import eu.buney.maps.Polygon
+import eu.buney.maps.Polyline
+import eu.buney.maps.StampStyle
+import eu.buney.maps.StrokeStyle
+import eu.buney.maps.StyleSpan
+import eu.buney.maps.rememberCameraPositionState
+import eu.buney.maps.rememberUpdatedMarkerState
 import kotlinx.coroutines.launch
 import mapscomposemultiplatform.sample.shared.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 
 // sample locations
 private val sanFrancisco = LatLng(37.7749, -122.4194)
@@ -387,7 +432,6 @@ fun MapScreen(modifier: Modifier = Modifier) {
                     Icon(
                         imageVector = Icons.Default.Polyline,
                         contentDescription = "Change Polyline Style",
-                        tint = Color.White
                     )
                 }
             }

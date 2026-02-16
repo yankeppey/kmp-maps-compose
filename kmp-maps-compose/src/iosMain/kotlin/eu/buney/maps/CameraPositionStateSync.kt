@@ -45,28 +45,15 @@ internal fun SetupCameraPositionStateSync(
     // Handle animation requests
     LaunchedEffect(Unit) {
         cameraPositionState.animationRequests.collect { request ->
-            cameraPositionState.cameraMoveStartedReason = CameraMoveStartedReason.DEVELOPER_ANIMATION
-            when (request) {
-                is CameraAnimationRequest.ToPosition -> {
-                    mapView.animateToCameraPosition(request.position.toGMSCameraPosition())
-                }
-                is CameraAnimationRequest.ToBounds -> {
-                    val gmsBounds = request.bounds.toGMSCoordinateBounds()
-                    val padding = request.padding.toDouble()
-                    val insets = UIEdgeInsetsMake(padding, padding, padding, padding)
-                    val cameraPosition = mapView.cameraForBounds(gmsBounds, insets = insets)
-                    if (cameraPosition != null) {
-                        mapView.animateToCameraPosition(cameraPosition)
-                    }
-                }
-            }
+            cameraPositionState._cameraMoveStartedReason = CameraMoveStartedReason.DEVELOPER_ANIMATION
+            mapView.applyAnimatedCameraUpdate(request.update)
         }
     }
 
     // Handle move requests
     LaunchedEffect(Unit) {
-        cameraPositionState.moveRequests.collect { position ->
-            mapView.camera = position.toGMSCameraPosition()
+        cameraPositionState.moveRequests.collect { update ->
+            val position = mapView.applyInstantCameraUpdate(update)
             cameraPositionState.rawPosition = position
         }
     }
@@ -89,7 +76,7 @@ internal fun updateCameraPositionStateOnIdle(
     mapView: GMSMapView,
     idleAtCameraPosition: GMSCameraPosition,
 ) {
-    cameraPositionState.isMoving = false
+    cameraPositionState._isMoving = false
 
     // Update rawPosition directly (no side effects, no feedback loop)
     idleAtCameraPosition.target.useContents {
@@ -101,8 +88,6 @@ internal fun updateCameraPositionStateOnIdle(
         )
     }
 
-    // Update visible bounds from the map's projection
-    updateVisibleBounds(cameraPositionState, mapView)
 }
 
 /**
@@ -125,42 +110,73 @@ internal fun updateCameraPositionStateOnMove(
     }
 }
 
+// region CameraUpdate Helpers
+
 /**
- * Updates [CameraPositionState.visibleBounds] from the map's projection.
+ * Applies a [CameraUpdate] as an animation on the map view.
  */
 @OptIn(ExperimentalForeignApi::class)
-internal fun updateVisibleBounds(
-    cameraPositionState: CameraPositionState,
-    mapView: GMSMapView,
-) {
-    // GMSVisibleRegion has 4 corners - extract and compute bounding box
-    mapView.projection.visibleRegion().useContents {
-        // Collect all corner latitudes and longitudes
-        val lats = listOf(
-            nearLeft.latitude,
-            nearRight.latitude,
-            farLeft.latitude,
-            farRight.latitude
-        )
-        val lngs = listOf(
-            nearLeft.longitude,
-            nearRight.longitude,
-            farLeft.longitude,
-            farRight.longitude
-        )
-
-        // Compute bounding rectangle
-        val minLat = lats.min()
-        val maxLat = lats.max()
-        val minLng = lngs.min()
-        val maxLng = lngs.max()
-
-        cameraPositionState.visibleBounds = LatLngBounds(
-            southwest = LatLng(minLat, minLng),
-            northeast = LatLng(maxLat, maxLng)
-        )
+private fun GMSMapView.applyAnimatedCameraUpdate(update: CameraUpdate) {
+    when (update) {
+        is CameraUpdate.NewCameraPosition -> {
+            animateToCameraPosition(update.position.toGMSCameraPosition())
+        }
+        is CameraUpdate.NewLatLngZoom -> {
+            val position = CameraPosition(target = update.latLng, zoom = update.zoom)
+            animateToCameraPosition(position.toGMSCameraPosition())
+        }
+        is CameraUpdate.NewLatLngBounds -> {
+            val gmsBounds = update.bounds.toGMSCoordinateBounds()
+            val padding = update.padding.toDouble()
+            val insets = UIEdgeInsetsMake(padding, padding, padding, padding)
+            val cameraPosition = cameraForBounds(gmsBounds, insets = insets)
+            if (cameraPosition != null) {
+                animateToCameraPosition(cameraPosition)
+            }
+        }
     }
 }
+
+/**
+ * Applies a [CameraUpdate] instantly on the map view.
+ * Returns the resulting [CameraPosition].
+ */
+@OptIn(ExperimentalForeignApi::class)
+private fun GMSMapView.applyInstantCameraUpdate(update: CameraUpdate): CameraPosition {
+    when (update) {
+        is CameraUpdate.NewCameraPosition -> {
+            camera = update.position.toGMSCameraPosition()
+            return update.position
+        }
+        is CameraUpdate.NewLatLngZoom -> {
+            val position = CameraPosition(target = update.latLng, zoom = update.zoom)
+            camera = position.toGMSCameraPosition()
+            return position
+        }
+        is CameraUpdate.NewLatLngBounds -> {
+            val gmsBounds = update.bounds.toGMSCoordinateBounds()
+            val padding = update.padding.toDouble()
+            val insets = UIEdgeInsetsMake(padding, padding, padding, padding)
+            val gmsPosition = cameraForBounds(gmsBounds, insets = insets)
+            if (gmsPosition != null) {
+                camera = gmsPosition
+            }
+            // Read back the actual camera position
+            return camera.let { cam ->
+                cam.target.useContents {
+                    CameraPosition(
+                        target = LatLng(latitude, longitude),
+                        zoom = cam.zoom,
+                        bearing = cam.bearing.toFloat(),
+                        tilt = cam.viewingAngle.toFloat()
+                    )
+                }
+            }
+        }
+    }
+}
+
+// endregion
 
 // region Type Conversions
 

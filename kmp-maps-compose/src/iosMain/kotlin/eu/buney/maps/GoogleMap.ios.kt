@@ -18,6 +18,7 @@ import GoogleMaps.kGMSTypeTerrain
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -89,8 +90,8 @@ private class GMSMapViewDelegate(
     }
 
     override fun mapView(mapView: GMSMapView, willMove: Boolean) {
-        cameraPositionState.isMoving = true
-        cameraPositionState.cameraMoveStartedReason = if (willMove) {
+        cameraPositionState._isMoving = true
+        cameraPositionState._cameraMoveStartedReason = if (willMove) {
             CameraMoveStartedReason.GESTURE
         } else {
             CameraMoveStartedReason.DEVELOPER_ANIMATION
@@ -294,7 +295,11 @@ actual fun GoogleMap(
                 parent = parentComposition
             )
             composition.setContent {
-                currentContent?.invoke()
+                CompositionLocalProvider(
+                    LocalCameraPositionState provides cameraPositionState,
+                ) {
+                    currentContent?.invoke()
+                }
             }
         }
 

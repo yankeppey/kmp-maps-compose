@@ -1,9 +1,10 @@
 package eu.buney.maps
 
 import androidx.compose.runtime.*
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.mapSaver
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.staticCompositionLocalOf
 
 /**
  * Reason for camera movement start.
@@ -22,35 +23,6 @@ enum class CameraMoveStartedReason {
 }
 
 /**
- * Default animation duration in milliseconds.
- */
-const val DefaultAnimationDurationMs: Int = 300
-
-/**
- * Internal sealed class to represent camera animation requests.
- */
-internal sealed class CameraAnimationRequest {
-    abstract val durationMs: Int
-
-    /**
-     * Animate to a specific camera position.
-     */
-    data class ToPosition(
-        val position: CameraPosition,
-        override val durationMs: Int,
-    ) : CameraAnimationRequest()
-
-    /**
-     * Animate to fit bounds within the viewport.
-     */
-    data class ToBounds(
-        val bounds: LatLngBounds,
-        val padding: Int,
-        override val durationMs: Int,
-    ) : CameraAnimationRequest()
-}
-
-/**
  * A state holder for the camera position.
  *
  * This class holds the current camera position and allows it to be updated.
@@ -60,7 +32,7 @@ internal sealed class CameraAnimationRequest {
  * @param position the initial camera position
  */
 @Stable
-class CameraPositionState(
+expect class CameraPositionState(
     position: CameraPosition = CameraPosition(
         target = LatLng(0.0, 0.0),
         zoom = 10f
@@ -70,67 +42,21 @@ class CameraPositionState(
      * Whether the camera is currently moving or not. This includes any kind of movement:
      * panning, zooming, or rotation.
      */
-    var isMoving: Boolean by mutableStateOf(false)
-        internal set
+    val isMoving: Boolean
 
     /**
      * The reason for the start of the most recent camera moment, or
      * [CameraMoveStartedReason.NO_MOVEMENT_YET] if the camera hasn't moved yet.
      */
-    var cameraMoveStartedReason: CameraMoveStartedReason by mutableStateOf(
-        CameraMoveStartedReason.NO_MOVEMENT_YET
-    )
-        internal set
-
-    /**
-     * Internal state - updated by platform callbacks (no side effects).
-     * This is the source of truth for the current camera position.
-     */
-    internal var rawPosition: CameraPosition by mutableStateOf(position)
-
-    /**
-     * Platform-specific callback to update the native map.
-     * Set by platform implementations when the map is attached.
-     */
-    internal var positionUpdater: ((CameraPosition) -> Unit)? = null
+    val cameraMoveStartedReason: CameraMoveStartedReason
 
     /**
      * The current camera position.
      *
-     * Reading this property returns the current position (from [rawPosition]).
-     * Setting this property will update the native map via [positionUpdater].
+     * Reading this property returns the current position.
+     * Setting this property will update the native map.
      */
     var position: CameraPosition
-        get() = rawPosition
-        set(value) {
-            val updater = positionUpdater
-            if (updater != null) {
-                // Map is attached - update via native API
-                // The native map will update rawPosition via callbacks
-                updater(value)
-            } else {
-                // No map attached yet - just store the value
-                rawPosition = value
-            }
-        }
-
-    /**
-     * The visible region bounds of the map as a bounding rectangle.
-     * Updated when the camera stops moving (idle state).
-     * May be null if the map hasn't been laid out yet.
-     *
-     * Note: For tilted maps, this is the bounding rectangle of the visible
-     * trapezoid, which may include areas outside the actual visible region.
-     */
-    var visibleBounds: LatLngBounds? by mutableStateOf(null)
-        internal set
-
-    /**
-     * Internal projection provider set by platform implementations.
-     * Returns a snapshot of the current projection, or null if the map
-     * hasn't been laid out yet.
-     */
-    internal var projectionProvider: (() -> Projection?)? = null
 
     /**
      * Returns a snapshot of the current map projection for converting between
@@ -146,99 +72,80 @@ class CameraPositionState(
      * @see Projection
      */
     val projection: Projection?
-        get() = projectionProvider?.invoke()
 
     /**
-     * Internal flow for animation requests.
-     */
-    private val _animationRequests = MutableSharedFlow<CameraAnimationRequest>(extraBufferCapacity = 1)
-    internal val animationRequests: SharedFlow<CameraAnimationRequest> = _animationRequests.asSharedFlow()
-
-    /**
-     * Internal flow for immediate move requests.
-     */
-    private val _moveRequests = MutableSharedFlow<CameraPosition>(extraBufferCapacity = 1)
-    internal val moveRequests: SharedFlow<CameraPosition> = _moveRequests.asSharedFlow()
-
-    /**
-     * Animate the camera position to the specified [position].
-     *
-     * @param position The target camera position.
-     * @param durationMs The duration of the animation in milliseconds.
-     */
-    suspend fun animate(
-        position: CameraPosition,
-        durationMs: Int = DefaultAnimationDurationMs
-    ) {
-        _animationRequests.emit(CameraAnimationRequest.ToPosition(position, durationMs))
-    }
-
-    /**
-     * Animate the camera to fit the specified [bounds] within the viewport.
-     *
-     * @param bounds The bounds to fit within the viewport.
-     * @param padding Padding in pixels to apply around the bounds.
-     * @param durationMs The duration of the animation in milliseconds.
-     *   Note: On iOS, animation duration is fixed (~500ms) and this parameter is ignored.
-     */
-    suspend fun animateToBounds(
-        bounds: LatLngBounds,
-        padding: Int = 64,
-        durationMs: Int = DefaultAnimationDurationMs
-    ) {
-        _animationRequests.emit(CameraAnimationRequest.ToBounds(bounds, padding, durationMs))
-    }
-
-    /**
-     * Animate the camera as specified by [update].
-     *
-     * This method provides compatibility with android-maps-compose's CameraUpdate API.
+     * Animate the camera position as specified by [update], returning once the animation has
+     * completed. [position] will reflect the position of the camera as the animation proceeds.
      *
      * @param update The [CameraUpdate] describing the camera movement.
-     * @param durationMs The duration of the animation in milliseconds.
-     *   Note: On iOS, animation duration is fixed (~500ms) and this parameter may be ignored.
+     * @param durationMs The duration of the animation in milliseconds. If [Int.MAX_VALUE] is
+     *   provided, the default animation duration will be used. Otherwise, the value provided must be
+     *   strictly positive, otherwise an [IllegalArgumentException] will be thrown.
      */
     suspend fun animate(
         update: CameraUpdate,
-        durationMs: Int = DefaultAnimationDurationMs
-    ) {
-        when (update) {
-            is CameraUpdate.NewCameraPosition -> animate(update.position, durationMs)
-            is CameraUpdate.NewLatLngZoom -> animate(
-                CameraPosition(target = update.latLng, zoom = update.zoom),
-                durationMs
-            )
-            is CameraUpdate.NewLatLngBounds -> animateToBounds(
-                update.bounds,
-                update.padding,
-                durationMs
-            )
-        }
-    }
+        durationMs: Int = Int.MAX_VALUE
+    )
 
     /**
-     * Move the camera instantaneously to the specified [position].
+     * Move the camera instantaneously as specified by [update]. Any calls to [animate] in progress
+     * will be cancelled. [position] will be updated when the bound map's position has been updated.
      *
-     * @param position The target camera position.
+     * @param update The [CameraUpdate] describing the camera movement.
      */
-    fun move(position: CameraPosition) {
-        _moveRequests.tryEmit(position)
-    }
+    fun move(update: CameraUpdate)
 }
 
 /**
- * Creates and remembers a [CameraPositionState].
+ * The default saver implementation for [CameraPositionState].
  *
- * @param key An optional key to use for remembering the state. If the key changes,
- * a new state will be created.
+ * Our [CameraPosition] is a multiplatform class and can't implement [Parcelable],
+ * so we serialize to primitive Doubles which are [Bundle]-compatible.
+ */
+private val CameraPositionStateSaver: Saver<CameraPositionState, *> = mapSaver(
+    save = {
+        val pos = it.position
+        mapOf(
+            "latitude" to pos.target.latitude,
+            "longitude" to pos.target.longitude,
+            "zoom" to pos.zoom,
+            "bearing" to pos.bearing,
+            "tilt" to pos.tilt,
+        )
+    },
+    restore = {
+        CameraPositionState(
+            CameraPosition(
+                target = LatLng(it["latitude"] as Double, it["longitude"] as Double),
+                zoom = it["zoom"] as Float,
+                bearing = it["bearing"] as Float,
+                tilt = it["tilt"] as Float,
+            )
+        )
+    }
+)
+
+/**
+ * Creates and remembers a [CameraPositionState] using [rememberSaveable].
+ *
+ * The camera position state is saved across configuration changes and process death,
+ * ensuring the map retains its last position.
+ *
  * @param init An initialization block that will be called when the state is first created.
  */
 @Composable
 fun rememberCameraPositionState(
-    key: String? = null,
     init: CameraPositionState.() -> Unit = {}
 ): CameraPositionState {
-    return remember(key) {
+    return rememberSaveable(saver = CameraPositionStateSaver) {
         CameraPositionState().apply(init)
     }
 }
+
+/** Provides the [CameraPositionState] used by the map. */
+internal val LocalCameraPositionState = staticCompositionLocalOf { CameraPositionState() }
+
+/** The current [CameraPositionState] used by the map. */
+val currentCameraPositionState: CameraPositionState
+    @[GoogleMapComposable ReadOnlyComposable Composable]
+    get() = LocalCameraPositionState.current

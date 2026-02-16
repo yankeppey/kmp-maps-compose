@@ -1,18 +1,18 @@
 [versions]
 kmp-maps-compose = "0.2.1-SNAPSHOT"
-kotlin = "2.3.0"
-compose = "1.10.0"
-agp = "9.0.0"
-maps-compose = "8.0.0"
+kotlin = "2.3.10"
+compose = "1.10.1"
+agp = "9.0.1"
+maps-compose = "8.1.0"
 # play-services-maps version should match maps-compose transitive dependency:
 # maps-compose 8.0.0 -> maps-ktx 6.0.0 -> play-services-maps 20.0.0
 play-services-maps = "20.0.0"
 google-maps-ios = "10.8.0"
-activity-compose = "1.12.2"
+activity-compose = "1.12.4"
 androidx-core = "1.17.0"
 buildkonfig = "0.17.1"
-spmForKmp = "1.4.7"
-vanniktechMavenPublish = "0.35.0"
+spmForKmp = "1.4.8"
+vanniktechMavenPublish = "0.36.0"
 
 [libraries]
 kmp-maps-compose = { module = "eu.buney.maps:kmp-maps-compose", version.ref = "kmp-maps-compose" }

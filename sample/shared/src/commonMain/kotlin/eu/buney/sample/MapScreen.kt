@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.buney.maps.CameraPosition
+import eu.buney.maps.CameraUpdateFactory
 import eu.buney.maps.Circle
 import eu.buney.maps.GoogleMap
 import eu.buney.maps.GroundOverlay
@@ -488,7 +489,7 @@ fun MapScreen(modifier: Modifier = Modifier) {
                                     .include(statueOfLiberty)
                                     .include(brooklynBridge)
                                     .build()
-                                cameraPositionState.animateToBounds(bounds, padding = 0)
+                                cameraPositionState.animate(CameraUpdateFactory.newLatLngBounds(bounds, 0))
                             }
                         }
                     ) {

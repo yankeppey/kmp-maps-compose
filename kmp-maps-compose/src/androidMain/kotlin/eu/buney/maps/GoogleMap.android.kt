@@ -2,6 +2,12 @@ package eu.buney.maps
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.google.maps.android.compose.GoogleMap as AndroidGoogleMap
 import com.google.maps.android.compose.MapProperties as GoogleMapProperties
@@ -21,10 +27,16 @@ actual fun GoogleMap(
     onMapLoaded: (() -> Unit)?,
     content: (@Composable @GoogleMapComposable () -> Unit)?,
 ) {
-    val googleCameraPositionState = rememberSyncedGoogleCameraPositionState(
-        cameraPositionState = cameraPositionState,
-        contentPadding = contentPadding,
-    )
+    val google = cameraPositionState.google
+
+    // Re-apply camera position when contentPadding changes
+    var previousPadding by remember { mutableStateOf(contentPadding) }
+    LaunchedEffect(contentPadding) {
+        if (contentPadding != previousPadding) {
+            cameraPositionState.move(CameraUpdateFactory.newCameraPosition(cameraPositionState.position))
+            previousPadding = contentPadding
+        }
+    }
 
     val googleMapType = when (properties.mapType) {
         MapType.NONE -> GoogleMapType.NONE
@@ -36,7 +48,7 @@ actual fun GoogleMap(
 
     AndroidGoogleMap(
         modifier = modifier,
-        cameraPositionState = googleCameraPositionState,
+        cameraPositionState = google,
         contentPadding = contentPadding,
         properties = GoogleMapProperties(
             isBuildingEnabled = properties.isBuildingEnabled,
@@ -82,7 +94,11 @@ actual fun GoogleMap(
         },
         onMapLoaded = onMapLoaded,
         content = {
-            content?.invoke()
+            CompositionLocalProvider(
+                LocalCameraPositionState provides cameraPositionState,
+            ) {
+                content?.invoke()
+            }
         },
     )
 }

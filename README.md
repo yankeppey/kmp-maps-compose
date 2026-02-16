@@ -299,11 +299,11 @@ LaunchedEffect(markers) {
     val bounds = LatLngBounds.Builder().apply {
         markers.forEach { include(it.position) }
     }.build()
-    cameraPositionState.animateToBounds(bounds, padding = 100)
+    cameraPositionState.animate(CameraUpdateFactory.newLatLngBounds(bounds, 100))
 }
 
 // instant move
-cameraPositionState.move(CameraPosition(target = latLng, zoom = 10f))
+cameraPositionState.move(CameraUpdateFactory.newCameraPosition(CameraPosition(target = latLng, zoom = 10f)))
 
 // check camera state
 if (cameraPositionState.isMoving) {
@@ -358,13 +358,12 @@ This table shows feature compatibility between `android-maps-compose` and this l
 |---------|:--------------------:|:----------------:|-------|
 | CameraPositionState | Yes | Yes | |
 | CameraPosition (target, zoom, bearing, tilt) | Yes | Yes | |
-| animate() | Yes | Yes | |
-| animateToBounds() | Yes | Yes | |
-| move() | Yes | Yes | |
+| animate(CameraUpdate) | Yes | Yes | |
+| move(CameraUpdate) | Yes | Yes | |
+| CameraUpdateFactory | Yes | Yes | newCameraPosition, newLatLngZoom, newLatLngBounds |
 | isMoving | Yes | Yes | |
 | cameraMoveStartedReason | Yes | Yes | |
 | projection | Yes | Yes | |
-| visibleBounds | Yes | Yes | |
 
 ### Markers
 

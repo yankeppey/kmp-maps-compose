@@ -16,6 +16,7 @@ import GoogleMaps.kGMSTypeNormal
 import GoogleMaps.kGMSTypeSatellite
 import GoogleMaps.kGMSTypeTerrain
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
 import androidx.compose.runtime.CompositionLocalProvider
@@ -34,7 +35,6 @@ import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.ObjCSignatureOverride
 import kotlinx.cinterop.useContents
 import platform.CoreLocation.CLLocationCoordinate2D
-import platform.CoreLocation.CLLocationCoordinate2DMake
 import platform.UIKit.UIEdgeInsets
 import platform.UIKit.UIEdgeInsetsMake
 import platform.UIKit.UIImageView
@@ -268,12 +268,6 @@ actual fun GoogleMap(
     val parentComposition = rememberCompositionContext()
     val currentContent by rememberUpdatedState(content)
 
-    // Setup camera position state sync (animation, move, position)
-    SetupCameraPositionStateSync(
-        cameraPositionState = cameraPositionState,
-        mapView = mapView,
-    )
-
     // clean up delegate when composable is disposed
     DisposableEffect(delegate) {
         mapView.delegate = delegate
@@ -282,29 +276,34 @@ actual fun GoogleMap(
         }
     }
 
-    // launch subcomposition for map content
+    // launch subcomposition for map content (and MapUpdater node)
     DisposableEffect(mapView, parentComposition) {
-        var composition: Composition? = null
+        val applier = MapApplier(mapView)
+        mapApplier = applier
 
-        if (currentContent != null) {
-            val applier = MapApplier(mapView)
-            mapApplier = applier
-
-            composition = Composition(
-                applier = applier,
-                parent = parentComposition
+        val composition = Composition(
+            applier = applier,
+            parent = parentComposition
+        )
+        composition.setContent {
+            MapUpdater(
+                mapView = mapView,
+                cameraPositionState = cameraPositionState,
+                mapProperties = properties,
+                mapUiSettings = uiSettings,
+                contentPadding = uiEdgeInsets,
             )
-            composition.setContent {
+            currentContent?.let {
                 CompositionLocalProvider(
                     LocalCameraPositionState provides cameraPositionState,
                 ) {
-                    currentContent?.invoke()
+                    it()
                 }
             }
         }
 
         onDispose {
-            composition?.dispose()
+            composition.dispose()
             mapApplier = null
         }
     }
@@ -312,68 +311,11 @@ actual fun GoogleMap(
     UIKitView(
         factory = {
             mapView.apply {
-                // initial camera position
-                val coordinate = CLLocationCoordinate2DMake(
-                    latitude = cameraPositionState.position.target.latitude,
-                    longitude = cameraPositionState.position.target.longitude
-                )
-                val camera = GMSCameraPosition.cameraWithTarget(
-                    target = coordinate,
-                    zoom = cameraPositionState.position.zoom,
-                    bearing = cameraPositionState.position.bearing.toDouble(),
-                    viewingAngle = cameraPositionState.position.tilt.toDouble()
-                )
-                this.camera = camera
-
-                // apply map properties
-                this.mapType = properties.mapType.toGoogleMapType()
-                this.buildingsEnabled = properties.isBuildingEnabled
-                this.indoorEnabled = properties.isIndoorEnabled
-                this.trafficEnabled = properties.isTrafficEnabled
-                this.myLocationEnabled = properties.isMyLocationEnabled
-
-                // apply UI settings
-                this.settings.compassButton = uiSettings.compassEnabled
-                this.settings.indoorPicker = uiSettings.indoorLevelPickerEnabled
-                this.settings.myLocationButton = uiSettings.myLocationButtonEnabled
-                this.settings.rotateGestures = uiSettings.rotationGesturesEnabled
-                this.settings.scrollGestures = uiSettings.scrollGesturesEnabled
-                this.settings.tiltGestures = uiSettings.tiltGesturesEnabled
-                this.settings.zoomGestures = uiSettings.zoomGesturesEnabled
-
-                // apply content padding
-                this.padding = uiEdgeInsets
-
-                // set delegate
                 this.delegate = delegate
-
-                // notify that map is loaded
                 onMapLoaded?.invoke()
             }
         },
         modifier = modifier,
-        update = { view ->
-            // update map properties
-            view.mapType = properties.mapType.toGoogleMapType()
-            view.buildingsEnabled = properties.isBuildingEnabled
-            view.indoorEnabled = properties.isIndoorEnabled
-            view.trafficEnabled = properties.isTrafficEnabled
-            view.myLocationEnabled = properties.isMyLocationEnabled
-
-            // update UI settings
-            view.settings.compassButton = uiSettings.compassEnabled
-            view.settings.indoorPicker = uiSettings.indoorLevelPickerEnabled
-            view.settings.myLocationButton = uiSettings.myLocationButtonEnabled
-            view.settings.rotateGestures = uiSettings.rotationGesturesEnabled
-            view.settings.scrollGestures = uiSettings.scrollGesturesEnabled
-            view.settings.tiltGestures = uiSettings.tiltGesturesEnabled
-            view.settings.zoomGestures = uiSettings.zoomGesturesEnabled
-
-            // update content padding
-            // iOS GMSMapView automatically re-applies the camera position when
-            // padding changes, keeping the target at the logical center
-            view.padding = uiEdgeInsets
-        }
     )
 }
 
@@ -404,4 +346,82 @@ private fun PaddingValues.toUIEdgeInsets(): CValue<UIEdgeInsets> {
         bottom = calculateBottomPadding().value.toDouble(),
         right = calculateRightPadding(layoutDirection).value.toDouble()
     )
+}
+
+@OptIn(ExperimentalForeignApi::class)
+@Composable
+internal fun MapUpdater(
+    mapView: GMSMapView,
+    cameraPositionState: CameraPositionState,
+    mapProperties: MapProperties,
+    mapUiSettings: MapUiSettings,
+    contentPadding: CValue<UIEdgeInsets>,
+) {
+    ComposeNode<IOSMapPropertiesNode, MapApplier>(
+        factory = {
+            IOSMapPropertiesNode(
+                mapView = mapView,
+                cameraPositionState = cameraPositionState,
+                contentPadding = contentPadding,
+            )
+        }
+    ) {
+        set(mapProperties.mapType) { mapView.mapType = it.toGoogleMapType() }
+        set(mapProperties.isBuildingEnabled) { mapView.buildingsEnabled = it }
+        set(mapProperties.isIndoorEnabled) { mapView.indoorEnabled = it }
+        set(mapProperties.isTrafficEnabled) { mapView.trafficEnabled = it }
+        set(mapProperties.isMyLocationEnabled) { mapView.myLocationEnabled = it }
+
+        set(mapUiSettings.compassEnabled) { mapView.settings.compassButton = it }
+        set(mapUiSettings.indoorLevelPickerEnabled) { mapView.settings.indoorPicker = it }
+        set(mapUiSettings.myLocationButtonEnabled) { mapView.settings.myLocationButton = it }
+        set(mapUiSettings.rotationGesturesEnabled) { mapView.settings.rotateGestures = it }
+        set(mapUiSettings.scrollGesturesEnabled) { mapView.settings.scrollGestures = it }
+        set(mapUiSettings.tiltGesturesEnabled) { mapView.settings.tiltGestures = it }
+        set(mapUiSettings.zoomGesturesEnabled) { mapView.settings.zoomGestures = it }
+
+        update(contentPadding) { mapView.padding = it }
+        update(cameraPositionState) { this.cameraPositionState = it }
+    }
+}
+
+/**
+ * Updates [CameraPositionState] from the map when the camera becomes idle.
+ * Called from [GMSMapViewDelegate.mapView:idleAtCameraPosition:].
+ */
+@OptIn(ExperimentalForeignApi::class)
+internal fun updateCameraPositionStateOnIdle(
+    cameraPositionState: CameraPositionState,
+    mapView: GMSMapView,
+    idleAtCameraPosition: GMSCameraPosition,
+) {
+    cameraPositionState._isMoving = false
+
+    idleAtCameraPosition.target.useContents {
+        cameraPositionState.rawPosition = CameraPosition(
+            target = LatLng(latitude, longitude),
+            zoom = idleAtCameraPosition.zoom,
+            bearing = idleAtCameraPosition.bearing.toFloat(),
+            tilt = idleAtCameraPosition.viewingAngle.toFloat()
+        )
+    }
+}
+
+/**
+ * Updates [CameraPositionState] from the map during camera movement (realtime).
+ * Called from [GMSMapViewDelegate.mapView:didChangeCameraPosition:].
+ */
+@OptIn(ExperimentalForeignApi::class)
+internal fun updateCameraPositionStateOnMove(
+    cameraPositionState: CameraPositionState,
+    cameraPosition: GMSCameraPosition,
+) {
+    cameraPosition.target.useContents {
+        cameraPositionState.rawPosition = CameraPosition(
+            target = LatLng(latitude, longitude),
+            zoom = cameraPosition.zoom,
+            bearing = cameraPosition.bearing.toFloat(),
+            tilt = cameraPosition.viewingAngle.toFloat()
+        )
+    }
 }

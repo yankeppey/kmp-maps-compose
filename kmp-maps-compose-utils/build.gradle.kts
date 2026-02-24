@@ -1,4 +1,3 @@
-import io.github.frankois944.spmForKmp.swiftPackageConfig
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -6,27 +5,20 @@ plugins {
     alias(libs.plugins.androidKmpLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.spmForKmp)
     alias(libs.plugins.vanniktechMavenPublish)
 }
 
 composeCompiler {
     reportsDestination = layout.buildDirectory.dir("compose_compiler")
     metricsDestination = layout.buildDirectory.dir("compose_compiler")
-    stabilityConfigurationFiles.add(layout.projectDirectory.file("compose_compiler_stability_config.conf"))
 }
 
 group = "eu.buney.maps"
 version = libs.versions.kmp.maps.compose.get()
 
 kotlin {
-    // Suppress warnings about expect/actual classes being in Beta
-    compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
-
     androidLibrary {
-        namespace = "eu.buney.maps"
+        namespace = "eu.buney.maps.utils"
         compileSdk = 36
         minSdk = 24
 
@@ -41,44 +33,18 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "MapsComposeMp"
+            baseName = "MapsComposeUtilsMp"
             isStatic = true
-        }
-
-        iosTarget.swiftPackageConfig(cinteropName = "GoogleMapsBridge") {
-            minIos = "17.0"
-            dependency {
-                remotePackageVersion(
-                    url = uri("https://github.com/googlemaps/ios-maps-sdk"),
-                    products = {
-                        add("GoogleMaps", exportToKotlin = true)
-                    },
-                    version = libs.versions.google.maps.ios.get()
-                )
-            }
-            // Export GoogleMaps package so iOS app can use it directly
-            exportedPackageSettings {
-                includeProduct = listOf("GoogleMaps")
-            }
         }
     }
 
     sourceSets {
         commonMain.dependencies {
+            api(project(":kmp-maps-compose"))
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(libs.compose.components.resources)
-        }
-        androidMain.dependencies {
-            implementation(libs.androidx.core.ktx)
-            api(libs.google.maps.compose)
-            implementation(libs.play.services.maps)
-        }
-
-        iosMain.dependencies {
-            // Google Maps iOS SDK via SPM
+            implementation(compose.components.uiToolingPreview)
+            implementation(compose.preview)
         }
     }
 }
@@ -87,11 +53,11 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
 
-    coordinates(group.toString(), "kmp-maps-compose", version.toString())
+    coordinates(group.toString(), "kmp-maps-compose-utils", version.toString())
 
     pom {
-        name = "Maps Compose Multiplatform"
-        description = "Kotlin Compose Multiplatform library wrapping Google Maps for Android and iOS"
+        name = "Maps Compose Multiplatform - Utils"
+        description = "Utilities (clustering, animation) for kmp-maps-compose"
         inceptionYear = "2025"
         url = "https://github.com/yankeppey/kmp-maps-compose"
         licenses {

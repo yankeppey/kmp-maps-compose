@@ -56,6 +56,7 @@ actual fun GoogleMap(
             isMyLocationEnabled = properties.isMyLocationEnabled,
             isTrafficEnabled = properties.isTrafficEnabled,
             mapType = googleMapType,
+            mapStyleOptions = properties.mapStyleOptions?.android,
             minZoomPreference = properties.minZoomPreference,
             maxZoomPreference = properties.maxZoomPreference,
         ),

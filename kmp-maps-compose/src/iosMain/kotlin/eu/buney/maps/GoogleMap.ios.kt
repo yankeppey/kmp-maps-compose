@@ -371,6 +371,9 @@ internal fun MapUpdater(
         set(mapProperties.isIndoorEnabled) { mapView.indoorEnabled = it }
         set(mapProperties.isTrafficEnabled) { mapView.trafficEnabled = it }
         set(mapProperties.isMyLocationEnabled) { mapView.myLocationEnabled = it }
+        set(mapProperties.mapStyleOptions) {
+            mapView.mapStyle = it?.ios
+        }
 
         set(mapUiSettings.compassEnabled) { mapView.settings.compassButton = it }
         set(mapUiSettings.indoorLevelPickerEnabled) { mapView.settings.indoorPicker = it }

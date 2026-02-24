@@ -38,6 +38,10 @@ enum class DemoScreen(val title: String, val description: String) {
         title = "Marker Clustering",
         description = "Group nearby markers into clusters",
     ),
+    StyledMap(
+        title = "Styled Map",
+        description = "Custom map styling via JSON",
+    ),
 }
 
 /**
@@ -57,6 +61,7 @@ val allDemoGroups = listOf(
         demos = listOf(
             DemoScreen.BasicMap,
             DemoScreen.MarkerClustering,
+            DemoScreen.StyledMap,
         ),
     ),
 )

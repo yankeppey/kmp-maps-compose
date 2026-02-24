@@ -62,6 +62,7 @@ fun App() {
                 }
                 DemoScreen.BasicMap -> MapScreen(modifier = contentModifier)
                 DemoScreen.MarkerClustering -> ClusteringScreen(modifier = contentModifier)
+                DemoScreen.StyledMap -> StyledMapScreen(modifier = contentModifier)
             }
         }
     }

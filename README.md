@@ -15,6 +15,9 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation("eu.buney.maps:kmp-maps-compose:0.4.0")
+
+            // Optional: clustering utilities
+            implementation("eu.buney.maps:kmp-maps-compose-utils:0.4.0")
         }
     }
 }

@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.0
+
+Based on [android-maps-compose 8.1.0](https://github.com/googlemaps/android-maps-compose).
+
+**SDK Versions:**
+- Google Maps iOS SDK: 10.8.0
+- Google Play Services Maps: 20.0.0
+
+### Features
+
+- **Marker Clustering** - New `kmp-maps-compose-utils` module with Compose-first marker clustering. Includes `NonHierarchicalDistanceBasedAlgorithm` ported from android-maps-utils, animated split/merge transitions, and `DefaultClusterContent` matching android-maps-utils visual appearance. ([#6](https://github.com/yankeppey/kmp-maps-compose/issues/6))
+- **`MapStyleOptions`** - New expect/actual class for custom map styling via JSON from the [Google Maps Styling Wizard](https://mapstyle.withgoogle.com/). Use `MapStyleOptions.fromJson()` with `MapProperties`. ([#5](https://github.com/yankeppey/kmp-maps-compose/issues/5))
+- **`MapEffect` composable** - Cross-platform access to the underlying native map object (`GoogleMap` on Android, `GMSMapView` on iOS) via `NativeMap` type alias
+
+### Improvements
+
+- **iOS: Improved composable-to-UIImage rendering** - Rewritten rendering pipeline for marker and info window image capture
+
 ## 0.3.0
 
 Based on [android-maps-compose 8.1.0](https://github.com/googlemaps/android-maps-compose).

@@ -14,7 +14,7 @@ Add the dependency to your `build.gradle.kts`:
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("eu.buney.maps:kmp-maps-compose:0.2.0")
+            implementation("eu.buney.maps:kmp-maps-compose:0.4.0")
         }
     }
 }
@@ -347,7 +347,7 @@ This table shows feature compatibility between `android-maps-compose` and this l
 | onMapClick / onMapLongClick | Yes | Yes | |
 | onPOIClick | Yes | Yes | |
 | onMapLoaded | Yes | Yes | |
-| mapStyleOptions (custom JSON styling) | Yes | No | |
+| mapStyleOptions (custom JSON styling) | Yes | Yes | |
 | latLngBoundsForCameraTarget | Yes | No | |
 | MapColorScheme | Yes | No | |
 | LocationSource | Yes | No | |
@@ -399,9 +399,9 @@ This table shows feature compatibility between `android-maps-compose` and this l
 | Feature | android-maps-compose | kmp-maps-compose | Notes |
 |---------|:--------------------:|:----------------:|-------|
 | StreetView | Yes | No | |
-| Clustering | Yes | No | |
+| Clustering | Yes | Yes | Via `kmp-maps-compose-utils` module |
 | ScaleBar widget | Yes | No | |
-| MapEffect | Yes | No | |
+| MapEffect | Yes | Yes | Block receives platform `NativeMap` |
 | IndoorStateChangeListener | Yes | No | |
 
 **Legend:** Yes = Supported | Partial = See notes | No = Not supported

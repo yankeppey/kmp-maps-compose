@@ -3,25 +3,15 @@ package eu.buney.maps
 import GoogleMaps.GMSMarker
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.currentComposer
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlin.coroutines.coroutineContext
 import platform.CoreGraphics.CGPointMake
 import platform.CoreLocation.CLLocationCoordinate2DMake
+import platform.QuartzCore.CATransaction
 import platform.UIKit.UIImage
 import platform.UIKit.accessibilityLabel
 
@@ -130,7 +120,12 @@ actual fun Marker(
                 this.marker.infoWindowAnchor = CGPointMake(it.x.toDouble(), it.y.toDouble())
             }
             update(state.position) {
-                this.marker.position = CLLocationCoordinate2DMake(it.latitude, it.longitude)
+                // Disable GMSMarker's implicit Core Animation so that position
+                // changes are instant and Compose drives the animation instead.
+                CATransaction.withTransaction {
+                    setAnimationDuration(0.0)
+                    this@update.marker.position = CLLocationCoordinate2DMake(it.latitude, it.longitude)
+                }
             }
             update(rotation) { this.marker.rotation = it.toDouble() }
             update(snippet) { this.marker.snippet = it }
@@ -149,7 +144,8 @@ actual fun Marker(
  * iOS implementation of [MarkerInfoWindow].
  *
  * Renders the [content] composable to a bitmap which is displayed as a custom info window.
- * The bitmap is pre-rendered asynchronously when the marker is created and cached for display.
+ * The bitmap is rendered synchronously and cached; it recomputes when [content] or
+ * [state] position changes.
  */
 @OptIn(ExperimentalForeignApi::class)
 @Composable
@@ -178,29 +174,12 @@ actual fun MarkerInfoWindow(
     val mapApplier = currentComposer.applier as? MapApplier
         ?: error("MarkerInfoWindow must be used within a GoogleMap composable")
 
-    var cachedImage by remember { mutableStateOf<UIImage?>(null) }
-    val coroutineScope = rememberCoroutineScope()
-
     val gmsMarkerRef = remember { mutableStateOf<GMSMarker?>(null) }
 
-    LaunchedEffect(content, state.position) {
-        if (content != null && gmsMarkerRef.value != null) {
-            try {
-                val image = withContext(Dispatchers.Main) {
-                    captureComposableToUIImage {
-                        content(Marker(gmsMarkerRef.value!!))
-                    }
-                }
-                coroutineContext.ensureActive()
-                cachedImage = image
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                if (coroutineContext.isActive) {
-                    println("MarkerInfoWindow: Failed to capture info window: ${e.message}")
-                }
-            }
-        }
+    val cachedImage: UIImage? = remember(content, state.position, gmsMarkerRef.value) {
+        val gmsMarker = gmsMarkerRef.value ?: return@remember null
+        if (content == null) return@remember null
+        captureComposableToUIImage { content(Marker(gmsMarker)) }
     }
 
     ComposeNode<MarkerNode, MapApplier>(
@@ -229,26 +208,6 @@ actual fun MarkerInfoWindow(
             }
 
             gmsMarkerRef.value = gmsMarker
-
-            if (content != null) {
-                coroutineScope.launch {
-                    try {
-                        val image = withContext(Dispatchers.Main) {
-                            captureComposableToUIImage {
-                                content(Marker(gmsMarker))
-                            }
-                        }
-                        ensureActive()
-                        cachedImage = image
-                    } catch (e: CancellationException) {
-                        // Expected during rapid updates, don't log
-                    } catch (e: Exception) {
-                        if (isActive) {
-                            println("MarkerInfoWindow: Failed to capture info window: ${e.message}")
-                        }
-                    }
-                }
-            }
 
             state.showInfoWindowCallback = {
                 gmsMarker.map?.selectedMarker = gmsMarker
@@ -290,7 +249,12 @@ actual fun MarkerInfoWindow(
                 this.marker.infoWindowAnchor = CGPointMake(it.x.toDouble(), it.y.toDouble())
             }
             update(state.position) {
-                this.marker.position = CLLocationCoordinate2DMake(it.latitude, it.longitude)
+                // Disable GMSMarker's implicit Core Animation so that position
+                // changes are instant and Compose drives the animation instead.
+                CATransaction.withTransaction {
+                    setAnimationDuration(0.0)
+                    this@update.marker.position = CLLocationCoordinate2DMake(it.latitude, it.longitude)
+                }
             }
             update(rotation) { this.marker.rotation = it.toDouble() }
             update(snippet) { this.marker.snippet = it }
@@ -309,7 +273,7 @@ actual fun MarkerInfoWindow(
  * iOS implementation of [MarkerInfoWindowContent].
  *
  * Renders the [content] composable to a bitmap which is displayed inside the default
- * info window frame. The bitmap is pre-rendered asynchronously when the marker is created.
+ * info window frame. The bitmap is rendered synchronously and cached.
  *
  * Note: On iOS, the "default info window frame" is not available in the same way as Android.
  * This implementation renders the content as a fully custom info window (same as [MarkerInfoWindow]).
@@ -341,29 +305,12 @@ actual fun MarkerInfoWindowContent(
     val mapApplier = currentComposer.applier as? MapApplier
         ?: error("MarkerInfoWindowContent must be used within a GoogleMap composable")
 
-    var cachedImage by remember { mutableStateOf<UIImage?>(null) }
-    val coroutineScope = rememberCoroutineScope()
-
     val gmsMarkerRef = remember { mutableStateOf<GMSMarker?>(null) }
 
-    LaunchedEffect(content, state.position) {
-        if (content != null && gmsMarkerRef.value != null) {
-            try {
-                val image = withContext(Dispatchers.Main) {
-                    captureComposableToUIImage {
-                        content(Marker(gmsMarkerRef.value!!))
-                    }
-                }
-                coroutineContext.ensureActive()
-                cachedImage = image
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                if (coroutineContext.isActive) {
-                    println("MarkerInfoWindowContent: Failed to capture info window: ${e.message}")
-                }
-            }
-        }
+    val cachedImage: UIImage? = remember(content, state.position, gmsMarkerRef.value) {
+        val gmsMarker = gmsMarkerRef.value ?: return@remember null
+        if (content == null) return@remember null
+        captureComposableToUIImage { content(Marker(gmsMarker)) }
     }
 
     ComposeNode<MarkerNode, MapApplier>(
@@ -392,26 +339,6 @@ actual fun MarkerInfoWindowContent(
             }
 
             gmsMarkerRef.value = gmsMarker
-
-            if (content != null) {
-                coroutineScope.launch {
-                    try {
-                        val image = withContext(Dispatchers.Main) {
-                            captureComposableToUIImage {
-                                content(Marker(gmsMarker))
-                            }
-                        }
-                        ensureActive()
-                        cachedImage = image
-                    } catch (e: CancellationException) {
-                        // Expected during rapid updates, don't log
-                    } catch (e: Exception) {
-                        if (isActive) {
-                            println("MarkerInfoWindowContent: Failed to capture info window: ${e.message}")
-                        }
-                    }
-                }
-            }
 
             state.showInfoWindowCallback = {
                 gmsMarker.map?.selectedMarker = gmsMarker
@@ -453,7 +380,12 @@ actual fun MarkerInfoWindowContent(
                 this.marker.infoWindowAnchor = CGPointMake(it.x.toDouble(), it.y.toDouble())
             }
             update(state.position) {
-                this.marker.position = CLLocationCoordinate2DMake(it.latitude, it.longitude)
+                // Disable GMSMarker's implicit Core Animation so that position
+                // changes are instant and Compose drives the animation instead.
+                CATransaction.withTransaction {
+                    setAnimationDuration(0.0)
+                    this@update.marker.position = CLLocationCoordinate2DMake(it.latitude, it.longitude)
+                }
             }
             update(rotation) { this.marker.rotation = it.toDouble() }
             update(snippet) { this.marker.snippet = it }

@@ -64,11 +64,14 @@ import eu.buney.maps.StyleSpan
 import eu.buney.maps.rememberBitmapDescriptor
 import eu.buney.maps.rememberCameraPositionState
 import eu.buney.maps.rememberUpdatedMarkerState
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.launch
 import mapscomposemultiplatform.sample.shared.generated.resources.Res
 import mapscomposemultiplatform.sample.shared.generated.resources.arrow_stamp
 import mapscomposemultiplatform.sample.shared.generated.resources.overlay_image
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+
+private val logger = Logger.withTag("MapScreen")
 
 // sample locations
 private val sanFrancisco = LatLng(37.7749, -122.4194)
@@ -194,10 +197,10 @@ fun MapScreen(modifier: Modifier = Modifier) {
                 PaddingValues(0.dp)
             },
             onMapLoaded = {
-                println("Map loaded successfully!")
+                logger.i("Map loaded successfully!")
             },
             onPOIClick = { poi ->
-                println("POI clicked: ${poi.name} (${poi.placeId}) at ${poi.latLng}")
+                logger.i("POI clicked: ${poi.name} (${poi.placeId}) at ${poi.latLng}")
                 lastClickedPOI = poi
             }
         ) {
@@ -208,19 +211,19 @@ fun MapScreen(modifier: Modifier = Modifier) {
                 title = "San Francisco",
                 snippet = "Use button below to toggle!",
                 onClick = { marker ->
-                    println("Marker clicked: ${marker.title}")
+                    logger.i("Marker clicked: ${marker.title}")
                     showSfInfoWindow = true // Sync state when user clicks marker
                     false // Return false to show info window
                 },
                 onInfoWindowClick = { marker ->
-                    println("Info window clicked: ${marker.title}")
+                    logger.i("Info window clicked: ${marker.title}")
                 },
                 onInfoWindowClose = { marker ->
-                    println("Info window closed: ${marker.title}")
+                    logger.i("Info window closed: ${marker.title}")
                     showSfInfoWindow = false // Sync state when user closes info window
                 },
                 onInfoWindowLongClick = { marker ->
-                    println("Info window long-clicked: ${marker.title}")
+                    logger.i("Info window long-clicked: ${marker.title}")
                 },
             )
             // MarkerInfoWindow example - custom composable info window
@@ -230,7 +233,7 @@ fun MapScreen(modifier: Modifier = Modifier) {
                 title = "New York", // Fallback for iOS
                 snippet = "The Big Apple", // Fallback for iOS
                 onInfoWindowClick = { marker ->
-                    println("Custom info window clicked: ${marker.title}")
+                    logger.i("Custom info window clicked: ${marker.title}")
                 },
             ) { marker ->
                 // custom info window content (Android only)
@@ -256,7 +259,7 @@ fun MapScreen(modifier: Modifier = Modifier) {
                     snippet = if (isSelected) "Selected!" else "Tap to select",
                     onClick = {
                         selectedCustomMarkerIndex = if (isSelected) null else index
-                        println("Custom marker ${index + 1} clicked, selected: ${!isSelected}")
+                        logger.i("Custom marker ${index + 1} clicked, selected: ${!isSelected}")
                         false // Show info window
                     }
                 ) {
@@ -274,7 +277,7 @@ fun MapScreen(modifier: Modifier = Modifier) {
                     snippet = "Tap for details",
                     anchor = androidx.compose.ui.geometry.Offset(0.5f, 0.5f), // Center anchor for bus icon
                     onClick = {
-                        println("Bus $routeLabel clicked")
+                        logger.i("Bus $routeLabel clicked")
                         false // Show info window
                     }
                 ) {
@@ -318,7 +321,7 @@ fun MapScreen(modifier: Modifier = Modifier) {
                 strokeWidth = 3f,
                 clickable = true,
                 onClick = { circle ->
-                    println("Circle clicked! Center: ${circle.center}, Radius: ${circle.radius}m")
+                    logger.i("Circle clicked! Center: ${circle.center}, Radius: ${circle.radius}m")
                 }
             )
 
@@ -333,7 +336,7 @@ fun MapScreen(modifier: Modifier = Modifier) {
                         width = 8f,
                         clickable = true,
                         onClick = { polyline ->
-                            println("Solid polyline clicked! Points: ${polyline.points.size}")
+                            logger.i("Solid polyline clicked! Points: ${polyline.points.size}")
                         }
                     )
                 }
@@ -349,7 +352,7 @@ fun MapScreen(modifier: Modifier = Modifier) {
                         width = 8f,
                         clickable = true,
                         onClick = { polyline ->
-                            println("Gradient polyline clicked! Points: ${polyline.points.size}")
+                            logger.i("Gradient polyline clicked! Points: ${polyline.points.size}")
                         }
                     )
                 }
@@ -366,7 +369,7 @@ fun MapScreen(modifier: Modifier = Modifier) {
                         width = 16f,
                         clickable = true,
                         onClick = { polyline ->
-                            println("Stamped polyline clicked! Points: ${polyline.points.size}")
+                            logger.i("Stamped polyline clicked! Points: ${polyline.points.size}")
                         }
                     )
                 }
@@ -381,7 +384,7 @@ fun MapScreen(modifier: Modifier = Modifier) {
                 strokeWidth = 3f,
                 clickable = true,
                 onClick = { polygon ->
-                    println("Polygon clicked! Points: ${polygon.points.size}, Holes: ${polygon.holes.size}")
+                    logger.i("Polygon clicked! Points: ${polygon.points.size}, Holes: ${polygon.holes.size}")
                 }
             )
 
@@ -393,7 +396,7 @@ fun MapScreen(modifier: Modifier = Modifier) {
                 transparency = 0.2f,
                 clickable = true,
                 onClick = { overlay ->
-                    println("GroundOverlay clicked! Bounds: ${overlay.bounds}")
+                    logger.i("GroundOverlay clicked! Bounds: ${overlay.bounds}")
                 }
             )
         }

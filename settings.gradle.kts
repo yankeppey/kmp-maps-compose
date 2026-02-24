@@ -30,5 +30,6 @@ dependencyResolutionManagement {
 }
 
 include(":kmp-maps-compose")
+include(":kmp-maps-compose-utils")
 include(":sample:shared")
 include(":sample:androidApp")

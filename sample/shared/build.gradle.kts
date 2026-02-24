@@ -47,6 +47,7 @@ kotlin {
             // Use local project dependency for development
             // implementation(libs.kmp.maps.compose)
             implementation(project(":kmp-maps-compose"))
+            implementation(project(":kmp-maps-compose-utils"))
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)

@@ -34,6 +34,10 @@ enum class DemoScreen(val title: String, val description: String) {
         title = "Basic Map",
         description = "Map with markers, overlays, and camera controls",
     ),
+    MarkerClustering(
+        title = "Marker Clustering",
+        description = "Group nearby markers into clusters",
+    ),
 }
 
 /**
@@ -52,6 +56,7 @@ val allDemoGroups = listOf(
         title = "Maps",
         demos = listOf(
             DemoScreen.BasicMap,
+            DemoScreen.MarkerClustering,
         ),
     ),
 )

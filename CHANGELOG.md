@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.5.0
+
+Based on [android-maps-compose 8.2.0](https://github.com/googlemaps/android-maps-compose).
+
+**SDK Versions:**
+- Google Maps iOS SDK: 10.8.0
+- Google Play Services Maps: 20.0.0
+
+### Features
+
+- **`TileOverlay` composable** - Cross-platform tile overlay support wrapping `TileProvider`/`TileOverlay` on Android and `GMSSyncTileLayer` on iOS. Includes `TileOverlayState` for cache management, with fadeIn, transparency, visibility, and zIndex properties.
+- **`clusterItemDecoration`** - New parameter on all `Clustering` overloads for rendering additional map content (circles, polylines, etc.) alongside each unclustered item, matching android-maps-compose 8.2.0
+
+### Breaking Changes
+
+- **`clusterItemDecoration` signature** - Changed from `(T) -> Unit` to `(T, LatLng) -> Unit` so decorations receive the animated position during cluster transitions
+
+### Other Changes
+
+- Updated maps-compose to 8.2.0, Compose Multiplatform to 1.10.2, AGP to 9.1.0
+
 ## 0.4.0
 
 Based on [android-maps-compose 8.1.0](https://github.com/googlemaps/android-maps-compose).

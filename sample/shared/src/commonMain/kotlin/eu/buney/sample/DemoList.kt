@@ -60,8 +60,13 @@ val allDemoGroups = listOf(
         title = "Maps",
         demos = listOf(
             DemoScreen.BasicMap,
-            DemoScreen.MarkerClustering,
             DemoScreen.StyledMap,
+        ),
+    ),
+    DemoGroup(
+        title = "Markers",
+        demos = listOf(
+            DemoScreen.MarkerClustering,
         ),
     ),
 )

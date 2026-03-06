@@ -395,7 +395,7 @@ This table shows feature compatibility between `android-maps-compose` and this l
 | Circle | Yes | Yes | |
 | Circle pattern | Yes | Partial | Android only |
 | GroundOverlay | Yes | Yes | |
-| TileOverlay | Yes | No | |
+| TileOverlay | Yes | Yes | |
 
 ### Advanced Features
 

@@ -37,6 +37,7 @@ import eu.buney.maps.LatLng
 import eu.buney.maps.utils.clustering.Cluster
 import eu.buney.maps.utils.clustering.ClusterItem
 import eu.buney.maps.utils.clustering.Clustering
+import eu.buney.maps.Circle
 import eu.buney.maps.rememberCameraPositionState
 import eu.buney.maps.MarkerInfoWindow
 import eu.buney.maps.rememberUpdatedMarkerState
@@ -52,6 +53,7 @@ private val singapore = LatLng(1.35, 103.87)
 private enum class ClusteringType {
     Default,
     CustomUi,
+    Decorations,
 }
 
 data class MyItem(
@@ -91,6 +93,7 @@ fun ClusteringScreen(modifier: Modifier = Modifier) {
                 when (clusteringType) {
                     ClusteringType.Default -> DefaultClustering(items)
                     ClusteringType.CustomUi -> CustomUiClustering(items)
+                    ClusteringType.Decorations -> DecorationsClustering(items)
                 }
 
                 // Standalone marker outside the clustering system
@@ -165,6 +168,22 @@ private fun CustomUiClustering(items: List<MyItem>) {
 }
 
 @Composable
+private fun DecorationsClustering(items: List<MyItem>) {
+    Clustering(
+        items = items,
+        clusterItemDecoration = { _, position ->
+            Circle(
+                center = position,
+                radius = 10000.0,
+                fillColor = Color.Blue.copy(alpha = 0.2f),
+                strokeColor = Color.Blue,
+                strokeWidth = 2f,
+            )
+        },
+    )
+}
+
+@Composable
 private fun CircleContent(
     color: Color,
     text: String,
@@ -221,6 +240,7 @@ private fun ClusteringTypeControls(
                     text = when (type) {
                         ClusteringType.Default -> "Default"
                         ClusteringType.CustomUi -> "Custom UI"
+                        ClusteringType.Decorations -> "Decorations"
                     },
                 )
             }

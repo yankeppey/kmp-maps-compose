@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import eu.buney.maps.GoogleMapComposable
 import eu.buney.maps.LatLng
 import eu.buney.maps.Marker
 import eu.buney.maps.MarkerComposable
@@ -39,6 +40,7 @@ fun <T : ClusterItem> Clustering(
     exitAnimationSpec: FiniteAnimationSpec<Float> = DefaultAnimationSpec,
     clusterContent: (@Composable (Cluster<T>) -> Unit)? = null,
     clusterItemContent: (@Composable (T) -> Unit)? = null,
+    clusterItemDecoration: @Composable @GoogleMapComposable (T, LatLng) -> Unit = { _, _ -> },
 ) {
     val cameraPositionState = currentCameraPositionState
     var clusters by remember { mutableStateOf<Set<Cluster<T>>>(emptySet()) }
@@ -137,6 +139,7 @@ fun <T : ClusterItem> Clustering(
                     },
                 )
             }
+            clusterItemDecoration(item, position)
         },
     )
 }
@@ -172,6 +175,7 @@ fun <T : ClusterItem> Clustering(
     exitAnimationSpec: FiniteAnimationSpec<Float> = DefaultAnimationSpec,
     clusterContent: (@Composable (Cluster<T>) -> Unit)? = null,
     clusterItemContent: (@Composable (T) -> Unit)? = null,
+    clusterItemDecoration: @Composable @GoogleMapComposable (T, LatLng) -> Unit = { _, _ -> },
 ) {
     Clustering(
         items = items,
@@ -183,6 +187,7 @@ fun <T : ClusterItem> Clustering(
         exitAnimationSpec = exitAnimationSpec,
         clusterContent = clusterContent,
         clusterItemContent = clusterItemContent,
+        clusterItemDecoration = clusterItemDecoration,
         onClusterManager = null,
     )
 }
@@ -202,6 +207,7 @@ fun <T : ClusterItem> Clustering(
     exitAnimationSpec: FiniteAnimationSpec<Float> = DefaultAnimationSpec,
     clusterContent: (@Composable (Cluster<T>) -> Unit)? = null,
     clusterItemContent: (@Composable (T) -> Unit)? = null,
+    clusterItemDecoration: @Composable @GoogleMapComposable (T, LatLng) -> Unit = { _, _ -> },
     onClusterManager: ((ClusterManager<T>) -> Unit)?,
 ) {
     val clusterManager = rememberClusterManager<T>()
@@ -221,5 +227,6 @@ fun <T : ClusterItem> Clustering(
         exitAnimationSpec = exitAnimationSpec,
         clusterContent = clusterContent,
         clusterItemContent = clusterItemContent,
+        clusterItemDecoration = clusterItemDecoration,
     )
 }

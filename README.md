@@ -14,10 +14,10 @@ Add the dependency to your `build.gradle.kts`:
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("eu.buney.maps:kmp-maps-compose:0.4.0")
+            implementation("eu.buney.maps:kmp-maps-compose:0.5.0")
 
             // Optional: clustering utilities
-            implementation("eu.buney.maps:kmp-maps-compose-utils:0.4.0")
+            implementation("eu.buney.maps:kmp-maps-compose-utils:0.5.0")
         }
     }
 }
@@ -395,7 +395,7 @@ This table shows feature compatibility between `android-maps-compose` and this l
 | Circle | Yes | Yes | |
 | Circle pattern | Yes | Partial | Android only |
 | GroundOverlay | Yes | Yes | |
-| TileOverlay | Yes | No | |
+| TileOverlay | Yes | Yes | |
 
 ### Advanced Features
 

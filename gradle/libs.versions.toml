@@ -1,5 +1,5 @@
 [versions]
-kmp-maps-compose = "0.5.0"
+kmp-maps-compose = "0.5.1-SNAPSHOT"
 kotlin = "2.3.10"
 compose = "1.10.2"
 agp = "9.1.0"

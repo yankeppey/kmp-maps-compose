@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.6.0
+
+Based on [android-maps-compose 8.3.0](https://github.com/googlemaps/android-maps-compose).
+
+**SDK Versions:**
+- Google Maps iOS SDK: 10.8.0
+- Google Play Services Maps: 20.0.0
+
+### Features
+
+- **`WmsTileOverlay` composable** - Cross-platform Web Map Service (WMS) tile overlay support in `kmp-maps-compose-utils`. Converts tile coordinates to EPSG:3857 bounding boxes and fetches WMS tiles via platform-specific HTTP (ports googlemaps/android-maps-compose#884)
+
+### Bug Fixes
+
+- **iOS: Fix dynamic MapProperties and MapUiSettings not updating** - Properties like `mapType`, `isTrafficEnabled`, and UI settings were captured once during subcomposition setup and never updated on iOS. Introduced `MapUpdaterState` following the android-maps-compose pattern to ensure dynamic changes are reflected (regression since 0.3.0)
+
+### Other Changes
+
+- Applied Compose stability configuration to `kmp-maps-compose-utils` module, matching upstream (ports googlemaps/android-maps-compose#874)
+- Updated maps-compose to 8.3.0, Kotlin to 2.3.20, Compose Multiplatform to 1.10.3, Gradle to 9.4.1, BuildKonfig to 0.18.0, spmForKmp to 1.7.0
+
 ## 0.5.0
 
 Based on [android-maps-compose 8.2.0](https://github.com/googlemaps/android-maps-compose).

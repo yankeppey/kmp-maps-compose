@@ -64,6 +64,7 @@ fun App() {
                 DemoScreen.MarkerClustering -> ClusteringScreen(modifier = contentModifier)
                 DemoScreen.StyledMap -> StyledMapScreen(modifier = contentModifier)
                 DemoScreen.TileOverlay -> TileOverlayScreen(modifier = contentModifier)
+                DemoScreen.WmsTileOverlay -> WmsTileOverlayScreen(modifier = contentModifier)
             }
         }
     }

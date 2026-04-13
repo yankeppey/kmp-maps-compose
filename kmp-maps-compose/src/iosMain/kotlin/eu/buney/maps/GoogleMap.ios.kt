@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -264,7 +265,23 @@ actual fun GoogleMap(
         )
     }
 
-    // subcomposition setup
+    // rememberUpdatedState and friends are used here to make these values observable to
+    // the subcomposition without providing a new content function each recomposition.
+    // Pattern follows android-maps-compose's MapUpdaterState approach.
+    val mapUpdaterState = remember {
+        MapUpdaterState(
+            cameraPositionState = cameraPositionState,
+            mapProperties = properties,
+            mapUiSettings = uiSettings,
+            contentPadding = uiEdgeInsets,
+        )
+    }.also {
+        it.cameraPositionState = cameraPositionState
+        it.mapProperties = properties
+        it.mapUiSettings = uiSettings
+        it.contentPadding = uiEdgeInsets
+    }
+
     val parentComposition = rememberCompositionContext()
     val currentContent by rememberUpdatedState(content)
 
@@ -288,10 +305,7 @@ actual fun GoogleMap(
         composition.setContent {
             MapUpdater(
                 mapView = mapView,
-                cameraPositionState = cameraPositionState,
-                mapProperties = properties,
-                mapUiSettings = uiSettings,
-                contentPadding = uiEdgeInsets,
+                mapUpdaterState = mapUpdaterState,
             )
             currentContent?.let {
                 CompositionLocalProvider(
@@ -348,15 +362,35 @@ private fun PaddingValues.toUIEdgeInsets(): CValue<UIEdgeInsets> {
     )
 }
 
+/**
+ * Mutable state holder for map properties, UI settings, and camera state.
+ *
+ * Remembered once in [GoogleMap] and updated on every recomposition via `.also {}`.
+ * The subcomposition reads these [mutableStateOf] fields, so it recomposes when
+ * any value changes — avoiding the stale closure problem.
+ *
+ * Follows the same pattern as android-maps-compose's MapUpdaterState.
+ */
 @OptIn(ExperimentalForeignApi::class)
-@Composable
-internal fun MapUpdater(
-    mapView: GMSMapView,
+@Stable
+internal class MapUpdaterState(
     cameraPositionState: CameraPositionState,
     mapProperties: MapProperties,
     mapUiSettings: MapUiSettings,
     contentPadding: CValue<UIEdgeInsets>,
 ) {
+    var cameraPositionState by mutableStateOf(cameraPositionState)
+    var mapProperties by mutableStateOf(mapProperties)
+    var mapUiSettings by mutableStateOf(mapUiSettings)
+    var contentPadding by mutableStateOf(contentPadding)
+}
+
+@OptIn(ExperimentalForeignApi::class)
+@Composable
+internal fun MapUpdater(
+    mapView: GMSMapView,
+    mapUpdaterState: MapUpdaterState,
+) = with(mapUpdaterState) {
     ComposeNode<IOSMapPropertiesNode, MapApplier>(
         factory = {
             IOSMapPropertiesNode(

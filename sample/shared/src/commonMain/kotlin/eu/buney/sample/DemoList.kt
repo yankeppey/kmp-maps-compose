@@ -46,6 +46,10 @@ enum class DemoScreen(val title: String, val description: String) {
         title = "Tile Overlay",
         description = "Custom tile overlay with cache management",
     ),
+    WmsTileOverlay(
+        title = "WMS Tile Overlay",
+        description = "Web Map Service layer with USGS shaded relief",
+    ),
 }
 
 /**
@@ -71,6 +75,7 @@ val allDemoGroups = listOf(
         title = "Map Features",
         demos = listOf(
             DemoScreen.TileOverlay,
+            DemoScreen.WmsTileOverlay,
         ),
     ),
     DemoGroup(

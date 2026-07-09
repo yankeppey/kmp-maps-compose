@@ -8,6 +8,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import kotlinx.cinterop.CValue
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import kotlinx.coroutines.CancellationException
@@ -16,7 +17,9 @@ import platform.CoreLocation.CLLocationCoordinate2DMake
 import platform.QuartzCore.CATransaction
 import platform.QuartzCore.CATransaction.Companion.setAnimationDuration
 import platform.QuartzCore.CATransaction.Companion.setCompletionBlock
+import platform.UIKit.UIEdgeInsets
 import platform.UIKit.UIEdgeInsetsMake
+import platform.UIKit.UIScreen
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -211,8 +214,7 @@ private suspend fun GMSMapView.applyAnimatedCameraUpdate(
                 }
                 is CameraUpdate.NewLatLngBounds -> {
                     val gmsBounds = update.bounds.toGMSCoordinateBounds()
-                    val padding = update.padding.toDouble()
-                    val insets = UIEdgeInsetsMake(padding, padding, padding, padding)
+                    val insets = boundsPaddingInsets(update.padding)
                     val cameraPosition = cameraForBounds(gmsBounds, insets = insets)
                     if (cameraPosition != null) {
                         animateToCameraPosition(cameraPosition)
@@ -247,8 +249,7 @@ private fun GMSMapView.applyInstantCameraUpdate(update: CameraUpdate): CameraPos
         }
         is CameraUpdate.NewLatLngBounds -> {
             val gmsBounds = update.bounds.toGMSCoordinateBounds()
-            val padding = update.padding.toDouble()
-            val insets = UIEdgeInsetsMake(padding, padding, padding, padding)
+            val insets = boundsPaddingInsets(update.padding)
             val gmsPosition = cameraForBounds(gmsBounds, insets = insets)
             if (gmsPosition != null) {
                 camera = gmsPosition
@@ -266,6 +267,18 @@ private fun GMSMapView.applyInstantCameraUpdate(update: CameraUpdate): CameraPos
             }
         }
     }
+}
+
+/**
+ * Converts [CameraUpdate.NewLatLngBounds.padding] (physical pixels, per the Android SDK
+ * convention) to per-edge insets in points, as expected by `cameraForBounds:insets:`.
+ */
+@OptIn(ExperimentalForeignApi::class)
+private fun GMSMapView.boundsPaddingInsets(paddingPx: Int): CValue<UIEdgeInsets> {
+    val scale = traitCollection.displayScale.takeIf { it > 0.0 }
+        ?: UIScreen.mainScreen.scale
+    val padding = paddingPx / scale
+    return UIEdgeInsetsMake(padding, padding, padding, padding)
 }
 
 // endregion

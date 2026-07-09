@@ -52,7 +52,8 @@ object CameraUpdateFactory {
      * Creates a [CameraUpdate] that moves the camera to fit the specified bounds.
      *
      * @param bounds The bounds to fit within the viewport.
-     * @param padding Padding in pixels to apply around the bounds.
+     * @param padding Padding in physical pixels to apply around the bounds
+     * (converted to points on iOS).
      * @return A [CameraUpdate] representing the camera movement.
      */
     fun newLatLngBounds(bounds: LatLngBounds, padding: Int): CameraUpdate =

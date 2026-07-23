@@ -29,6 +29,7 @@ import androidx.compose.runtime.rememberCompositionContext
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.UiComposable
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.viewinterop.UIKitView
 import kotlinx.cinterop.CValue
@@ -234,6 +235,7 @@ private class GMSMapViewDelegate(
 
 @OptIn(ExperimentalForeignApi::class)
 @Composable
+@UiComposable
 actual fun GoogleMap(
     modifier: Modifier,
     cameraPositionState: CameraPositionState,

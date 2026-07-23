@@ -7,7 +7,7 @@ maps-compose = "8.3.0"
 # play-services-maps version should match maps-compose transitive dependency:
 # maps-compose 8.3.0 -> maps-ktx 6.0.1 -> play-services-maps 20.0.0
 play-services-maps = "20.0.0"
-google-maps-ios = "10.8.0"
+google-maps-ios = "10.15.0"
 activity-compose = "1.13.0"
 androidx-core = "1.19.0"
 kermit = "2.1.0"

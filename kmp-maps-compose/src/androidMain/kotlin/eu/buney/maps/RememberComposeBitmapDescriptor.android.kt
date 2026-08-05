@@ -4,10 +4,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionContext
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCompositionContext
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalView
 import androidx.core.graphics.applyCanvas
@@ -22,10 +20,12 @@ actual fun rememberComposeBitmapDescriptor(
 ): BitmapDescriptor {
     val parent = LocalView.current as ViewGroup
     val compositionContext = rememberCompositionContext()
-    val currentContent by rememberUpdatedState(content)
 
-    return remember(parent, compositionContext, currentContent, *keys) {
-        renderComposableToBitmapDescriptor(parent, compositionContext, currentContent)
+    // Callers must explicitly include content changes in keys. Using the lambda reference itself
+    // as a key would recreate the ComposeView and bitmap on every recomposition, defeating
+    // the Marker descriptor cache.
+    return remember(parent, compositionContext, *keys) {
+        renderComposableToBitmapDescriptor(parent, compositionContext, content)
     }
 }
 

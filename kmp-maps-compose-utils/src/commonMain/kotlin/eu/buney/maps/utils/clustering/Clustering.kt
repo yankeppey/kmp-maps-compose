@@ -12,6 +12,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.geometry.Offset
+import eu.buney.maps.BitmapDescriptor
 import eu.buney.maps.GoogleMapComposable
 import eu.buney.maps.LatLng
 import eu.buney.maps.Marker
@@ -31,6 +33,14 @@ import eu.buney.maps.rememberUpdatedMarkerState
  *
  * Clusters animate when splitting (zoom in: one cluster marker explodes into individual
  * markers) and merging (zoom out: individual markers collapse into a cluster marker).
+ *
+ * When [clusterItemIcon] is supplied, unclustered items are rendered with a regular [Marker]
+ * using that descriptor and [clusterItemAnchor]. This takes precedence over [clusterItemContent]
+ * and avoids creating a Compose bitmap for every item. The callback should return a cached
+ * descriptor rather than creating one during rendering.
+ *
+ * [markerVisibility] only controls marker output. All [items] still participate in cluster
+ * calculation and transitions, so hiding offscreen markers does not change cluster membership.
  */
 @Composable
 fun <T : ClusterItem> Clustering(
@@ -40,6 +50,10 @@ fun <T : ClusterItem> Clustering(
     exitAnimationSpec: FiniteAnimationSpec<Float> = DefaultAnimationSpec,
     clusterContent: (@Composable (Cluster<T>) -> Unit)? = null,
     clusterItemContent: (@Composable (T) -> Unit)? = null,
+    clusterItemContentKey: ((T) -> Any)? = null,
+    clusterItemIcon: ((T) -> BitmapDescriptor?)? = null,
+    clusterItemAnchor: Offset = Offset(0.5f, 1.0f),
+    markerVisibility: ((LatLng) -> Boolean)? = null,
     clusterItemDecoration: @Composable @GoogleMapComposable (T, LatLng) -> Unit = { _, _ -> },
 ) {
     val cameraPositionState = currentCameraPositionState
@@ -89,57 +103,83 @@ fun <T : ClusterItem> Clustering(
         enterAnimationSpec = enterAnimationSpec,
         exitAnimationSpec = exitAnimationSpec,
         clusterContent = { cluster, _, _, position ->
-            val content: @Composable (Cluster<T>) -> Unit =
-                clusterContent ?: { DefaultClusterContent(it) }
-            MarkerComposable(
-                cluster.size,
-                state = rememberUpdatedMarkerState(position),
-                zIndex = cluster.items.firstOrNull()?.zIndex ?: 0f,
-                onClick = {
-                    clusterManager.onClusterClick?.invoke(cluster) ?: false
-                },
-            ) {
-                content(cluster)
+            if (markerVisibility?.invoke(position) != false) {
+                val content: @Composable (Cluster<T>) -> Unit =
+                    clusterContent ?: { DefaultClusterContent(it) }
+                MarkerComposable(
+                    cluster.size,
+                    state = rememberUpdatedMarkerState(position),
+                    zIndex = cluster.items.firstOrNull()?.zIndex ?: 0f,
+                    onClick = {
+                        clusterManager.onClusterClick?.invoke(cluster) ?: false
+                    },
+                ) {
+                    content(cluster)
+                }
             }
         },
         itemContent = { item, position ->
-            if (clusterItemContent != null) {
-                MarkerComposable(
-                    item,
-                    state = rememberUpdatedMarkerState(position),
-                    title = item.title,
-                    snippet = item.snippet,
-                    zIndex = item.zIndex ?: 0f,
-                    onClick = {
-                        clusterManager.onClusterItemClick?.invoke(item) ?: false
-                    },
-                    onInfoWindowClick = {
-                        clusterManager.onClusterItemInfoWindowClick?.invoke(item)
-                    },
-                    onInfoWindowLongClick = {
-                        clusterManager.onClusterItemInfoWindowLongClick?.invoke(item)
-                    },
-                ) {
-                    clusterItemContent(item)
+            if (markerVisibility?.invoke(position) != false) {
+                if (clusterItemIcon != null) {
+                    Marker(
+                        state = rememberUpdatedMarkerState(position),
+                        anchor = clusterItemAnchor,
+                        icon = clusterItemIcon(item),
+                        title = item.title,
+                        snippet = item.snippet,
+                        zIndex = item.zIndex ?: 0f,
+                        onClick = {
+                            clusterManager.onClusterItemClick?.invoke(item) ?: false
+                        },
+                        onInfoWindowClick = {
+                            clusterManager.onClusterItemInfoWindowClick?.invoke(item)
+                        },
+                        onInfoWindowLongClick = {
+                            clusterManager.onClusterItemInfoWindowLongClick?.invoke(item)
+                        },
+                    )
+                } else if (clusterItemContent != null) {
+                    // `MarkerComposable` 仅在 key 变化时重建位图；没有额外 key 时
+                    // 复用 item，避免传入 nullable key。
+                    val contentKey = clusterItemContentKey?.invoke(item) ?: item
+                    MarkerComposable(
+                        item,
+                        contentKey,
+                        state = rememberUpdatedMarkerState(position),
+                        title = item.title,
+                        snippet = item.snippet,
+                        zIndex = item.zIndex ?: 0f,
+                        onClick = {
+                            clusterManager.onClusterItemClick?.invoke(item) ?: false
+                        },
+                        onInfoWindowClick = {
+                            clusterManager.onClusterItemInfoWindowClick?.invoke(item)
+                        },
+                        onInfoWindowLongClick = {
+                            clusterManager.onClusterItemInfoWindowLongClick?.invoke(item)
+                        },
+                    ) {
+                        clusterItemContent(item)
+                    }
+                } else {
+                    Marker(
+                        state = rememberUpdatedMarkerState(position),
+                        title = item.title,
+                        snippet = item.snippet,
+                        zIndex = item.zIndex ?: 0f,
+                        onClick = {
+                            clusterManager.onClusterItemClick?.invoke(item) ?: false
+                        },
+                        onInfoWindowClick = {
+                            clusterManager.onClusterItemInfoWindowClick?.invoke(item)
+                        },
+                        onInfoWindowLongClick = {
+                            clusterManager.onClusterItemInfoWindowLongClick?.invoke(item)
+                        },
+                    )
                 }
-            } else {
-                Marker(
-                    state = rememberUpdatedMarkerState(position),
-                    title = item.title,
-                    snippet = item.snippet,
-                    zIndex = item.zIndex ?: 0f,
-                    onClick = {
-                        clusterManager.onClusterItemClick?.invoke(item) ?: false
-                    },
-                    onInfoWindowClick = {
-                        clusterManager.onClusterItemInfoWindowClick?.invoke(item)
-                    },
-                    onInfoWindowLongClick = {
-                        clusterManager.onClusterItemInfoWindowLongClick?.invoke(item)
-                    },
-                )
+                clusterItemDecoration(item, position)
             }
-            clusterItemDecoration(item, position)
         },
     )
 }
@@ -175,6 +215,10 @@ fun <T : ClusterItem> Clustering(
     exitAnimationSpec: FiniteAnimationSpec<Float> = DefaultAnimationSpec,
     clusterContent: (@Composable (Cluster<T>) -> Unit)? = null,
     clusterItemContent: (@Composable (T) -> Unit)? = null,
+    clusterItemContentKey: ((T) -> Any)? = null,
+    clusterItemIcon: ((T) -> BitmapDescriptor?)? = null,
+    clusterItemAnchor: Offset = Offset(0.5f, 1.0f),
+    markerVisibility: ((LatLng) -> Boolean)? = null,
     clusterItemDecoration: @Composable @GoogleMapComposable (T, LatLng) -> Unit = { _, _ -> },
 ) {
     Clustering(
@@ -187,6 +231,10 @@ fun <T : ClusterItem> Clustering(
         exitAnimationSpec = exitAnimationSpec,
         clusterContent = clusterContent,
         clusterItemContent = clusterItemContent,
+        clusterItemContentKey = clusterItemContentKey,
+        clusterItemIcon = clusterItemIcon,
+        clusterItemAnchor = clusterItemAnchor,
+        markerVisibility = markerVisibility,
         clusterItemDecoration = clusterItemDecoration,
         onClusterManager = null,
     )
@@ -207,6 +255,10 @@ fun <T : ClusterItem> Clustering(
     exitAnimationSpec: FiniteAnimationSpec<Float> = DefaultAnimationSpec,
     clusterContent: (@Composable (Cluster<T>) -> Unit)? = null,
     clusterItemContent: (@Composable (T) -> Unit)? = null,
+    clusterItemContentKey: ((T) -> Any)? = null,
+    clusterItemIcon: ((T) -> BitmapDescriptor?)? = null,
+    clusterItemAnchor: Offset = Offset(0.5f, 1.0f),
+    markerVisibility: ((LatLng) -> Boolean)? = null,
     clusterItemDecoration: @Composable @GoogleMapComposable (T, LatLng) -> Unit = { _, _ -> },
     onClusterManager: ((ClusterManager<T>) -> Unit)?,
 ) {
@@ -227,6 +279,10 @@ fun <T : ClusterItem> Clustering(
         exitAnimationSpec = exitAnimationSpec,
         clusterContent = clusterContent,
         clusterItemContent = clusterItemContent,
+        clusterItemContentKey = clusterItemContentKey,
+        clusterItemIcon = clusterItemIcon,
+        clusterItemAnchor = clusterItemAnchor,
+        markerVisibility = markerVisibility,
         clusterItemDecoration = clusterItemDecoration,
     )
 }

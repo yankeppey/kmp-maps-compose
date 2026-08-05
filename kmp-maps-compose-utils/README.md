@@ -9,6 +9,55 @@ Clustering support is provided as its own Compose-first common Kotlin port, not 
 - there are a number of small API and behavioral differences between the two that might make it confusing if the Kotlin code is the same
 - wrapping and unwrapping the common types into native types has a comparable cost
 
+For unclustered items backed by cached `BitmapDescriptor`s, use `clusterItemIcon` instead of
+`clusterItemContent`. The item markers remain part of the same clustering and split/merge
+transition pipeline, but do not create Compose-rendered marker bitmaps:
+
+```kotlin
+Clustering(
+    items = vehicles,
+    clusterItemIcon = { vehicle -> vehicleMarkerIcons.iconFor(vehicle) },
+    clusterItemAnchor = Offset(0.5f, 0.5f),
+)
+```
+
+`clusterItemIcon` takes precedence over `clusterItemContent` when both are provided.
+
+`clusterItemAnchor` controls which point of the icon is placed at the item's coordinate. The
+default is `Offset(0.5f, 1f)`, which suits pin-shaped markers. Use `Offset(0.5f, 0.5f)` for
+vehicle or other centre-aligned icons.
+
+### Compose item content keys
+
+When using `clusterItemContent`, use `clusterItemContentKey` to specify when the generated marker
+bitmap should be rebuilt. Return only values that affect the marker's appearance:
+
+```kotlin
+Clustering(
+    items = vehicles,
+    clusterItemContentKey = { vehicle -> vehicle.status },
+    clusterItemContent = { vehicle ->
+        VehicleMarkerContent(status = vehicle.status)
+    },
+)
+```
+
+When `clusterItemContentKey` is omitted, the item itself is used as the key.
+
+### Marker visibility
+
+Use `markerVisibility` to suppress marker output outside a visible area. This affects rendering
+only: all items still participate in cluster calculation and split/merge transitions.
+
+```kotlin
+Clustering(
+    items = vehicles,
+    markerVisibility = { position ->
+        cameraPositionState.projection?.contains(position) ?: true
+    },
+)
+```
+
 ### Known limitations
 
 Caching and performance have not really been battle-tested and there is definitely room for improvement in the future:

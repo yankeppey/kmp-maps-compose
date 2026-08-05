@@ -1,5 +1,6 @@
 package eu.buney.sample
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.horizontalScroll
@@ -26,23 +27,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import co.touchlab.kermit.Logger
 import eu.buney.maps.CameraPosition
+import eu.buney.maps.Circle
 import eu.buney.maps.GoogleMap
 import eu.buney.maps.LatLng
-import eu.buney.maps.utils.clustering.Cluster
+import eu.buney.maps.MarkerInfoWindow
+import eu.buney.maps.rememberBitmapDescriptor
+import eu.buney.maps.rememberCameraPositionState
+import eu.buney.maps.rememberUpdatedMarkerState
 import eu.buney.maps.utils.clustering.ClusterItem
 import eu.buney.maps.utils.clustering.Clustering
-import eu.buney.maps.Circle
-import eu.buney.maps.rememberCameraPositionState
-import eu.buney.maps.MarkerInfoWindow
-import eu.buney.maps.rememberUpdatedMarkerState
-import androidx.compose.animation.core.tween
-import co.touchlab.kermit.Logger
+import mapscomposemultiplatform.sample.shared.generated.resources.Res
+import mapscomposemultiplatform.sample.shared.generated.resources.overlay_image
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.random.Random
 
 private val logger = Logger.withTag("ClusteringScreen")
@@ -53,6 +57,7 @@ private val singapore = LatLng(1.35, 103.87)
 private enum class ClusteringType {
     Default,
     CustomUi,
+    CachedIcon,
     Decorations,
 }
 
@@ -93,6 +98,7 @@ fun ClusteringScreen(modifier: Modifier = Modifier) {
                 when (clusteringType) {
                     ClusteringType.Default -> DefaultClustering(items)
                     ClusteringType.CustomUi -> CustomUiClustering(items)
+                    ClusteringType.CachedIcon -> CachedIconClustering(items)
                     ClusteringType.Decorations -> DecorationsClustering(items)
                 }
 
@@ -163,6 +169,24 @@ private fun CustomUiClustering(items: List<MyItem>) {
                 text = "",
                 color = Color.Red,
             )
+        },
+    )
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+private fun CachedIconClustering(items: List<MyItem>) {
+    // Loaded once and reused by every unclustered item. Unlike clusterItemContent,
+    // this does not render a Compose bitmap for each marker during transitions.
+    val vehicleIcon = rememberBitmapDescriptor(Res.drawable.overlay_image)
+
+    Clustering(
+        items = items,
+        clusterItemIcon = { vehicleIcon },
+        clusterItemAnchor = Offset(0.5f, 0.5f),
+        onClusterItemClick = {
+            logger.i { "Cached-icon cluster item clicked! ${it.title}" }
+            false
         },
     )
 }
@@ -240,6 +264,7 @@ private fun ClusteringTypeControls(
                     text = when (type) {
                         ClusteringType.Default -> "Default"
                         ClusteringType.CustomUi -> "Custom UI"
+                        ClusteringType.CachedIcon -> "Cached Icon"
                         ClusteringType.Decorations -> "Decorations"
                     },
                 )

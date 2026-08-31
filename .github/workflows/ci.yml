@@ -37,6 +37,23 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
+      # The cinterop klibs are generated from spm4Kmp def files that reference this runner's build
+      # directory. kmp-maps-compose/build.gradle.kts strips those paths back out; fail loudly if a
+      # change ever lets them through again. See issue #10.
+      - name: Check klibs carry no build-machine paths
+        run: |
+          set -euo pipefail
+          leaked=0
+          while IFS= read -r klib; do
+            manifest=$(unzip -p "$klib" default/manifest)
+            if grep -qE '(/Users/runner|/Applications/Xcode|^libraryPaths=)' <<<"$manifest"; then
+              echo "::error file=$klib::klib manifest contains build-machine paths"
+              grep -nE '(/Users/runner|/Applications/Xcode|^libraryPaths=)' <<<"$manifest"
+              leaked=1
+            fi
+          done < <(find ~/.m2/repository/eu/buney/maps -iname '*cinterop*.klib')
+          exit $leaked
+
       - name: Publish to Maven Central
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true'
         run: ./gradlew publishToMavenCentral --no-configuration-cache

@@ -1,5 +1,11 @@
 import io.github.frankois944.spmForKmp.swiftPackageConfig
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.CInteropProcess
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+import java.util.zip.ZipOutputStream
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -83,6 +89,24 @@ kotlin {
     }
 }
 
+// spm4Kmp writes the absolute Swift package build directory of the machine running cinterop straight
+// into the generated .def file, and cinterop copies those options verbatim into the klib manifest. On
+// a consumer's machine the paths do not exist, so every release so far shipped manifests carrying
+// `-I/-L/-F "/Users/runner/work/..."` and `"/Applications/Xcode_<version>.app/..."`, which surface as
+// confusing `ld: warning: search path ... not found` lines. Strip them so the published klibs are
+// relocatable: the Swift bridge archive is embedded inside the klib itself (default/targets/<target>/
+// included/libGoogleMapsBridge.a), and none of the removed options contribute an actual link input.
+// See https://github.com/yankeppey/kmp-maps-compose/issues/10
+val sanitizeKlibManifests =
+    providers.gradleProperty("kmpMaps.sanitizeKlibManifests").map(String::toBoolean).getOrElse(true)
+
+tasks.withType<CInteropProcess>().configureEach {
+    val klib = klibOutput
+    doLast {
+        if (sanitizeKlibManifests) stripBuildMachinePaths(klib.get())
+    }
+}
+
 mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
@@ -115,3 +139,47 @@ mavenPublishing {
         }
     }
 }
+
+val klibManifestEntry = "default/manifest"
+
+/** Matches a `-I`, `-L` or `-F` option pointing at an absolute path, quoted or bare. */
+val absolutePathOption = Regex("""\s*-[ILF]\s*(?:"/[^"]*"|/\S+)""")
+
+/** Rewrites the manifest of [klib] in place, dropping every build-machine-specific path. */
+fun stripBuildMachinePaths(klib: File) {
+    if (klib.isDirectory) {
+        val manifest = klib.resolve(klibManifestEntry)
+        manifest.writeText(sanitizeKlibManifest(manifest.readText()))
+        return
+    }
+
+    val rewritten = File.createTempFile(klib.nameWithoutExtension, ".klib", klib.parentFile)
+    ZipFile(klib).use { zip ->
+        ZipOutputStream(rewritten.outputStream().buffered()).use { out ->
+            for (entry in zip.entries()) {
+                out.putNextEntry(ZipEntry(entry.name))
+                if (entry.name == klibManifestEntry) {
+                    val manifest = zip.getInputStream(entry).use { it.readBytes() }.decodeToString()
+                    out.write(sanitizeKlibManifest(manifest).toByteArray())
+                } else {
+                    zip.getInputStream(entry).use { it.copyTo(out) }
+                }
+                out.closeEntry()
+            }
+        }
+    }
+    Files.move(rewritten.toPath(), klib.toPath(), StandardCopyOption.REPLACE_EXISTING)
+}
+
+fun sanitizeKlibManifest(manifest: String): String =
+    manifest
+        .lineSequence()
+        .filterNot { it.startsWith("libraryPaths=") }
+        .map { line ->
+            if (line.startsWith("compilerOpts=") || line.startsWith("linkerOpts=")) {
+                line.replace(absolutePathOption, "").trimEnd()
+            } else {
+                line
+            }
+        }
+        .joinToString("\n")

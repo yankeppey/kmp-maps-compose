@@ -15,7 +15,9 @@ composeCompiler {
 }
 
 group = "eu.buney.maps"
-version = libs.versions.kmp.maps.compose.get()
+// Shares the version key with :kmp-maps-compose; -PmapsComposeVersion overrides both.
+version = providers.gradleProperty("mapsComposeVersion")
+    .getOrElse(libs.versions.kmp.maps.compose.get())
 
 kotlin {
     androidLibrary {

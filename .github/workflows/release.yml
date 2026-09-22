@@ -1,0 +1,105 @@
+name: Release
+
+# A pushed tag vx.y.z publishes signed artifacts to Maven Central, where they land VALIDATED
+# and wait for a manual Publish at https://central.sonatype.com/publishing/deployments.
+# There is no pre-release channel: testers consume the snapshots ci.yml publishes from dev
+# and release/*, so a vx.y.z-rc.N tag is rejected below rather than published.
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Publish to Maven Central
+    runs-on: macos-latest
+    timeout-minutes: 60
+
+    env:
+      ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+      ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+      # vanniktech requires a signature for any non-SNAPSHOT version, which is every tag.
+      ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
+      ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
+      ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # A tag may only publish the version its commit already claims, so a tag cut on the
+      # wrong branch fails here instead of shipping the wrong coordinate.
+      - name: Verify tag against the catalog version
+        id: tag
+        run: |
+          set -euo pipefail
+          TAG="${{ github.ref_name }}"
+          TAG_VERSION="${TAG#v}"
+          FILE_VERSION=$(awk -F'"' '/^kmp-maps-compose[[:space:]]*=[[:space:]]*"/{print $2; exit}' gradle/libs.versions.toml)
+          case "$TAG_VERSION" in
+            *-*)
+              echo "::error::tag $TAG is a pre-release. There is no rc channel — testers use the snapshot ci.yml publishes from dev/release branches."
+              exit 1 ;;
+          esac
+          [ "$TAG_VERSION" = "$FILE_VERSION" ] || {
+            echo "::error::tag $TAG (parsed $TAG_VERSION) does not match kmp-maps-compose=$FILE_VERSION. Bump the catalog to $TAG_VERSION and merge to main before tagging."
+            exit 1
+          }
+          echo "version=$TAG_VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag $TAG -> version=$TAG_VERSION"
+
+      # Publishing compiles what it publishes but never builds the sample, so a tag cut at a
+      # commit CI never saw would ship unverified. Same tasks as ci.yml.
+      - name: Assemble library
+        run: >
+          ./gradlew
+          :kmp-maps-compose:assemble
+          :kmp-maps-compose-utils:assemble
+          -PmapsComposeVersion=${{ steps.tag.outputs.version }}
+          --stacktrace
+
+      - name: Build sample apps
+        run: >
+          ./gradlew
+          :sample:androidApp:assembleDebug
+          :sample:shared:linkDebugFrameworkIosSimulatorArm64
+          -PmapsComposeVersion=${{ steps.tag.outputs.version }}
+          --stacktrace
+
+      # Both modules in one invocation so Central receives them as a single deployment.
+      - name: Publish to Maven Central
+        run: >
+          ./gradlew
+          :kmp-maps-compose:publishToMavenCentral
+          :kmp-maps-compose-utils:publishToMavenCentral
+          -PmapsComposeVersion=${{ steps.tag.outputs.version }}
+          --no-configuration-cache --stacktrace
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+
+      - name: Summary
+        if: success()
+        run: |
+          echo "### Released \`${{ steps.tag.outputs.version }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Uploaded to Maven Central in **VALIDATED** state — promote to PUBLISHED at https://central.sonatype.com/publishing/deployments" >> "$GITHUB_STEP_SUMMARY"

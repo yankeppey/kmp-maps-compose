@@ -18,6 +18,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
 
+        <!-- The Maps SDK dynamite module references legacy Apache HTTP classes that are no
+             longer on the boot classpath (API 28+); without this the app crashes with
+             NoClassDefFoundError: org.apache.http.ProtocolVersion on some GMS versions -->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

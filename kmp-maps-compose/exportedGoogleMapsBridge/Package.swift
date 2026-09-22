@@ -12,7 +12,7 @@ let package = Package(
             targets: ["exportedGoogleMapsBridge"])
     ],
     dependencies: [
-        .package(url: "https://github.com/googlemaps/ios-maps-sdk", exact: "10.8.0")
+        .package(url: "https://github.com/googlemaps/ios-maps-sdk", exact: "10.15.0")
     ],
     targets: [
         .target(
@@ -21,6 +21,7 @@ let package = Package(
                 .product(name: "GoogleMaps", package: "ios-maps-sdk")
             ],
             path: "Sources"
+            
             
         )
         

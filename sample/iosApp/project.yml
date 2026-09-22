@@ -10,6 +10,8 @@ settings:
   base:
     ENABLE_USER_SCRIPT_SANDBOXING: NO
     DEVELOPMENT_TEAM: ""
+    # The Kotlin frameworks are built for arm64 only; Intel simulators are not supported
+    EXCLUDED_ARCHS[sdk=iphonesimulator*]: x86_64
 
 targets:
   iosApp:

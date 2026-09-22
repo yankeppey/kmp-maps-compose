@@ -46,6 +46,7 @@ kotlin {
         }
 
         iosTarget.swiftPackageConfig(cinteropName = "GoogleMapsBridge") {
+            publishSafe = true
             minIos = "17.0"
             dependency {
                 remotePackageVersion(

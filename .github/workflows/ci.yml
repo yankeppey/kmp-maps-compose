@@ -37,6 +37,23 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
+      # publishSafe keeps the build machine out of `linkerOpts`, the only manifest options a
+      # consumer's linker reads. `libraryPaths` and the `compilerOpts` headers stay absolute by
+      # design, so only linkerOpts is checked. See issue #10.
+      - name: Check klibs carry no build-machine paths
+        run: |
+          set -euo pipefail
+          leaked=0
+          while IFS= read -r klib; do
+            linkerOpts=$(unzip -p "$klib" default/manifest | grep '^linkerOpts=' || true)
+            if grep -qE '(/Users/runner|/Applications/Xcode)' <<<"$linkerOpts"; then
+              echo "::error file=$klib::klib linkerOpts contains build-machine paths"
+              grep -nE '(/Users/runner|/Applications/Xcode)' <<<"$linkerOpts"
+              leaked=1
+            fi
+          done < <(find ~/.m2/repository/eu/buney/maps -iname '*cinterop*.klib')
+          exit $leaked
+
       - name: Publish to Maven Central
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true'
         run: ./gradlew publishToMavenCentral --no-configuration-cache

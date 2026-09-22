@@ -62,13 +62,18 @@ jobs:
           --parallel --build-cache --configuration-cache --stacktrace
 
       # The sample is the only consumer in the repo, so it is what catches an API change that
-      # compiles in isolation but breaks callers.
+      # compiles in isolation but breaks callers. Linking its framework costs ~12 min and only
+      # adds whole-graph symbol checking, so pull requests compile and pushes link.
       - name: Build sample apps
-        run: >
-          ./gradlew
-          :sample:androidApp:assembleDebug
-          :sample:shared:linkDebugFrameworkIosSimulatorArm64
-          --parallel --build-cache --configuration-cache --stacktrace
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            ios=:sample:shared:compileKotlinIosSimulatorArm64
+          else
+            ios=:sample:shared:linkDebugFrameworkIosSimulatorArm64
+          fi
+          ./gradlew :sample:androidApp:assembleDebug "$ios" \
+            --parallel --build-cache --configuration-cache --stacktrace
 
       # publishSafe keeps the build machine out of `linkerOpts`, the only manifest options a
       # consumer's linker reads. `libraryPaths` and the `compilerOpts` headers stay absolute by

@@ -52,6 +52,15 @@ jobs:
           :kmp-maps-compose-utils:publishToMavenLocal
           --parallel --build-cache --no-configuration-cache --stacktrace
 
+      # Fails when the public ABI of either module drifts from the dumps in api/. Regenerate
+      # with `./gradlew updateKotlinAbi` and review the diff as part of the change.
+      - name: Binary compatibility (ABI)
+        run: >
+          ./gradlew
+          :kmp-maps-compose:checkKotlinAbi
+          :kmp-maps-compose-utils:checkKotlinAbi
+          --parallel --build-cache --configuration-cache --stacktrace
+
       # The sample is the only consumer in the repo, so it is what catches an API change that
       # compiles in isolation but breaks callers.
       - name: Build sample apps

@@ -22,7 +22,7 @@ version = providers.gradleProperty("mapsComposeVersion")
 kotlin {
     androidLibrary {
         namespace = "eu.buney.maps.utils"
-        compileSdk = 36
+        compileSdk = 37
         minSdk = 24
 
         compilerOptions {

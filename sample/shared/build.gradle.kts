@@ -20,7 +20,7 @@ if (secretsPropertiesFile.exists()) {
 kotlin {
     androidLibrary {
         namespace = "eu.buney.sample.shared"
-        compileSdk = 36
+        compileSdk = 37
         minSdk = 24
 
         // Enable Android resources for Compose resources support

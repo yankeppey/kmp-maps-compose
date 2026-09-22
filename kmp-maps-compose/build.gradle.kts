@@ -30,7 +30,7 @@ kotlin {
 
     androidLibrary {
         namespace = "eu.buney.maps"
-        compileSdk = 36
+        compileSdk = 37
         minSdk = 24
 
         compilerOptions {

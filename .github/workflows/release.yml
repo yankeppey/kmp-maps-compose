@@ -64,23 +64,15 @@ jobs:
           echo "version=$TAG_VERSION" >> "$GITHUB_OUTPUT"
           echo "tag $TAG -> version=$TAG_VERSION"
 
-      # Publishing compiles what it publishes but never builds the sample, so a tag cut at a
-      # commit CI never saw would ship unverified. Same tasks as ci.yml.
-      - name: Assemble library
-        run: >
-          ./gradlew
-          :kmp-maps-compose:assemble
-          :kmp-maps-compose-utils:assemble
-          -PmapsComposeVersion=${{ steps.tag.outputs.version }}
-          --stacktrace
-
+      # Publishing compiles what it publishes, so nothing is assembled up front. The sample is
+      # not on that path, and a tag cut at a commit CI never saw would ship it unverified.
       - name: Build sample apps
         run: >
           ./gradlew
           :sample:androidApp:assembleDebug
           :sample:shared:linkDebugFrameworkIosSimulatorArm64
           -PmapsComposeVersion=${{ steps.tag.outputs.version }}
-          --stacktrace
+          --parallel --build-cache --configuration-cache --stacktrace
 
       # Both modules in one invocation so Central receives them as a single deployment.
       - name: Publish to Maven Central
@@ -89,7 +81,7 @@ jobs:
           :kmp-maps-compose:publishToMavenCentral
           :kmp-maps-compose-utils:publishToMavenCentral
           -PmapsComposeVersion=${{ steps.tag.outputs.version }}
-          --no-configuration-cache --stacktrace
+          --parallel --build-cache --no-configuration-cache --stacktrace
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3

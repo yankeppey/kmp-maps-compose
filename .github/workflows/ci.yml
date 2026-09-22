@@ -42,14 +42,15 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      # Android AAR + iOS klibs and frameworks for both published modules. `assemble` on a
-      # macOS host covers every target the library ships.
-      - name: Assemble library
+      # Builds exactly what a release publishes — AAR, klibs, metadata, POMs — and nothing else.
+      # `assemble` would additionally link a debug and a release framework per Apple target, which
+      # no consumer receives and which dominated the job (36 of 46 min on the first run).
+      - name: Build publishable artifacts
         run: >
           ./gradlew
-          :kmp-maps-compose:assemble
-          :kmp-maps-compose-utils:assemble
-          --stacktrace
+          :kmp-maps-compose:publishToMavenLocal
+          :kmp-maps-compose-utils:publishToMavenLocal
+          --parallel --build-cache --no-configuration-cache --stacktrace
 
       # The sample is the only consumer in the repo, so it is what catches an API change that
       # compiles in isolation but breaks callers.
@@ -58,7 +59,7 @@ jobs:
           ./gradlew
           :sample:androidApp:assembleDebug
           :sample:shared:linkDebugFrameworkIosSimulatorArm64
-          --stacktrace
+          --parallel --build-cache --configuration-cache --stacktrace
 
       # publishSafe keeps the build machine out of `linkerOpts`, the only manifest options a
       # consumer's linker reads. `libraryPaths` and the `compilerOpts` headers stay absolute by
@@ -103,7 +104,7 @@ jobs:
           ./gradlew
           :kmp-maps-compose:publishToMavenCentral
           :kmp-maps-compose-utils:publishToMavenCentral
-          --no-configuration-cache --stacktrace
+          --parallel --build-cache --no-configuration-cache --stacktrace
 
       - name: Summary
         if: steps.gate.outputs.publish == 'true'

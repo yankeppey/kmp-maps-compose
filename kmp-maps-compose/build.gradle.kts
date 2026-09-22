@@ -17,9 +17,16 @@ composeCompiler {
 }
 
 group = "eu.buney.maps"
-version = libs.versions.kmp.maps.compose.get()
+// The tag build passes -PmapsComposeVersion=<tag>, so a release version lives in the tag while
+// the branch keeps its -SNAPSHOT. Every other build takes the catalog value.
+version = providers.gradleProperty("mapsComposeVersion")
+    .getOrElse(libs.versions.kmp.maps.compose.get())
 
 kotlin {
+    // Golden ABI dumps under api/ gate unintended public API changes; updateKotlinAbi refreshes them.
+    @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
+    abiValidation()
+
     // Suppress warnings about expect/actual classes being in Beta
     compilerOptions {
         freeCompilerArgs.add("-Xexpect-actual-classes")
@@ -27,7 +34,7 @@ kotlin {
 
     androidLibrary {
         namespace = "eu.buney.maps"
-        compileSdk = 36
+        compileSdk = 37
         minSdk = 24
 
         compilerOptions {
@@ -36,7 +43,6 @@ kotlin {
     }
 
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
@@ -46,6 +52,7 @@ kotlin {
         }
 
         iosTarget.swiftPackageConfig(cinteropName = "GoogleMapsBridge") {
+            publishSafe = true
             minIos = "17.0"
             dependency {
                 remotePackageVersion(

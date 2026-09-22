@@ -1,0 +1,193 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <eu.buney.maps:kmp-maps-compose-utils>
+abstract fun interface <#A: kotlin/Any, #B: kotlin/Any, #C: kotlin/Any?> eu.buney.maps.utils.clustering.transition/TransitionResolver { // eu.buney.maps.utils.clustering.transition/TransitionResolver|null[0]
+    abstract fun resolve(eu.buney.maps.utils.clustering.transition/GroupedSnapshot<#A, #B>, eu.buney.maps.utils.clustering.transition/GroupedSnapshot<#A, #B>): eu.buney.maps.utils.clustering.transition/TransitionPlan<#A, #B, #C> // eu.buney.maps.utils.clustering.transition/TransitionResolver.resolve|resolve(eu.buney.maps.utils.clustering.transition.GroupedSnapshot<1:0,1:1>;eu.buney.maps.utils.clustering.transition.GroupedSnapshot<1:0,1:1>){}[0]
+}
+
+abstract interface <#A: eu.buney.maps.utils.clustering/ClusterItem> eu.buney.maps.utils.clustering/Cluster { // eu.buney.maps.utils.clustering/Cluster|null[0]
+    abstract val items // eu.buney.maps.utils.clustering/Cluster.items|{}items[0]
+        abstract fun <get-items>(): kotlin.collections/Collection<#A> // eu.buney.maps.utils.clustering/Cluster.items.<get-items>|<get-items>(){}[0]
+    abstract val position // eu.buney.maps.utils.clustering/Cluster.position|{}position[0]
+        abstract fun <get-position>(): eu.buney.maps/LatLng // eu.buney.maps.utils.clustering/Cluster.position.<get-position>|<get-position>(){}[0]
+    abstract val size // eu.buney.maps.utils.clustering/Cluster.size|{}size[0]
+        abstract fun <get-size>(): kotlin/Int // eu.buney.maps.utils.clustering/Cluster.size.<get-size>|<get-size>(){}[0]
+}
+
+abstract interface <#A: eu.buney.maps.utils.clustering/ClusterItem> eu.buney.maps.utils.clustering/ClusterAlgorithm { // eu.buney.maps.utils.clustering/ClusterAlgorithm|null[0]
+    abstract fun addItems(kotlin.collections/Collection<#A>) // eu.buney.maps.utils.clustering/ClusterAlgorithm.addItems|addItems(kotlin.collections.Collection<1:0>){}[0]
+    abstract fun clearItems() // eu.buney.maps.utils.clustering/ClusterAlgorithm.clearItems|clearItems(){}[0]
+    abstract fun getClusters(kotlin/Float): kotlin.collections/Set<eu.buney.maps.utils.clustering/Cluster<#A>> // eu.buney.maps.utils.clustering/ClusterAlgorithm.getClusters|getClusters(kotlin.Float){}[0]
+}
+
+abstract interface eu.buney.maps.utils.clustering/ClusterItem { // eu.buney.maps.utils.clustering/ClusterItem|null[0]
+    abstract val position // eu.buney.maps.utils.clustering/ClusterItem.position|{}position[0]
+        abstract fun <get-position>(): eu.buney.maps/LatLng // eu.buney.maps.utils.clustering/ClusterItem.position.<get-position>|<get-position>(){}[0]
+    abstract val snippet // eu.buney.maps.utils.clustering/ClusterItem.snippet|{}snippet[0]
+        abstract fun <get-snippet>(): kotlin/String? // eu.buney.maps.utils.clustering/ClusterItem.snippet.<get-snippet>|<get-snippet>(){}[0]
+    abstract val title // eu.buney.maps.utils.clustering/ClusterItem.title|{}title[0]
+        abstract fun <get-title>(): kotlin/String? // eu.buney.maps.utils.clustering/ClusterItem.title.<get-title>|<get-title>(){}[0]
+    abstract val zIndex // eu.buney.maps.utils.clustering/ClusterItem.zIndex|{}zIndex[0]
+        abstract fun <get-zIndex>(): kotlin/Float? // eu.buney.maps.utils.clustering/ClusterItem.zIndex.<get-zIndex>|<get-zIndex>(){}[0]
+}
+
+sealed interface <#A: out kotlin/Any, #B: out kotlin/Any> eu.buney.maps.utils.clustering.transition/VisualElement { // eu.buney.maps.utils.clustering.transition/VisualElement|null[0]
+    final class <#A1: kotlin/Any, #B1: kotlin/Any> ClusterElement : eu.buney.maps.utils.clustering.transition/VisualElement<#A1, #B1> { // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement|null[0]
+        constructor <init>(#A1, kotlin.collections/Set<#B1>, kotlin/Int = ...) // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.<init>|<init>(1:0;kotlin.collections.Set<1:1>;kotlin.Int){}[0]
+
+        final val items // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.items|{}items[0]
+            final fun <get-items>(): kotlin.collections/Set<#B1> // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.items.<get-items>|<get-items>(){}[0]
+        final val key // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.key|{}key[0]
+            final fun <get-key>(): #A1 // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.key.<get-key>|<get-key>(){}[0]
+        final val size // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.size|{}size[0]
+            final fun <get-size>(): kotlin/Int // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.size.<get-size>|<get-size>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.toString|toString(){}[0]
+    }
+
+    final class <#A1: kotlin/Any, #B1: kotlin/Any> ItemElement : eu.buney.maps.utils.clustering.transition/VisualElement<#A1, #B1> { // eu.buney.maps.utils.clustering.transition/VisualElement.ItemElement|null[0]
+        constructor <init>(#B1) // eu.buney.maps.utils.clustering.transition/VisualElement.ItemElement.<init>|<init>(1:1){}[0]
+
+        final val item // eu.buney.maps.utils.clustering.transition/VisualElement.ItemElement.item|{}item[0]
+            final fun <get-item>(): #B1 // eu.buney.maps.utils.clustering.transition/VisualElement.ItemElement.item.<get-item>|<get-item>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps.utils.clustering.transition/VisualElement.ItemElement.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // eu.buney.maps.utils.clustering.transition/VisualElement.ItemElement.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // eu.buney.maps.utils.clustering.transition/VisualElement.ItemElement.toString|toString(){}[0]
+    }
+}
+
+final class <#A: eu.buney.maps.utils.clustering/ClusterItem> eu.buney.maps.utils.clustering.algo/NonHierarchicalDistanceBasedAlgorithm : eu.buney.maps.utils.clustering/ClusterAlgorithm<#A> { // eu.buney.maps.utils.clustering.algo/NonHierarchicalDistanceBasedAlgorithm|null[0]
+    constructor <init>() // eu.buney.maps.utils.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.<init>|<init>(){}[0]
+
+    final fun addItems(kotlin.collections/Collection<#A>) // eu.buney.maps.utils.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.addItems|addItems(kotlin.collections.Collection<1:0>){}[0]
+    final fun clearItems() // eu.buney.maps.utils.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.clearItems|clearItems(){}[0]
+    final fun getClusters(kotlin/Float): kotlin.collections/Set<eu.buney.maps.utils.clustering/Cluster<#A>> // eu.buney.maps.utils.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.getClusters|getClusters(kotlin.Float){}[0]
+
+    final object Companion // eu.buney.maps.utils.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.Companion|null[0]
+}
+
+final class <#A: eu.buney.maps.utils.clustering/ClusterItem> eu.buney.maps.utils.clustering/ClusterManager { // eu.buney.maps.utils.clustering/ClusterManager|null[0]
+    constructor <init>(eu.buney.maps.utils.clustering/ClusterAlgorithm<#A> = ..., kotlin.coroutines/CoroutineContext = ...) // eu.buney.maps.utils.clustering/ClusterManager.<init>|<init>(eu.buney.maps.utils.clustering.ClusterAlgorithm<1:0>;kotlin.coroutines.CoroutineContext){}[0]
+
+    final val algorithm // eu.buney.maps.utils.clustering/ClusterManager.algorithm|{}algorithm[0]
+        final fun <get-algorithm>(): eu.buney.maps.utils.clustering/ClusterAlgorithm<#A> // eu.buney.maps.utils.clustering/ClusterManager.algorithm.<get-algorithm>|<get-algorithm>(){}[0]
+
+    final var minClusterSize // eu.buney.maps.utils.clustering/ClusterManager.minClusterSize|{}minClusterSize[0]
+        final fun <get-minClusterSize>(): kotlin/Int // eu.buney.maps.utils.clustering/ClusterManager.minClusterSize.<get-minClusterSize>|<get-minClusterSize>(){}[0]
+        final fun <set-minClusterSize>(kotlin/Int) // eu.buney.maps.utils.clustering/ClusterManager.minClusterSize.<set-minClusterSize>|<set-minClusterSize>(kotlin.Int){}[0]
+
+    final fun setItems(kotlin.collections/Collection<#A>) // eu.buney.maps.utils.clustering/ClusterManager.setItems|setItems(kotlin.collections.Collection<1:0>){}[0]
+    final fun setOnClusterClickListener(kotlin/Function1<eu.buney.maps.utils.clustering/Cluster<#A>, kotlin/Boolean>?) // eu.buney.maps.utils.clustering/ClusterManager.setOnClusterClickListener|setOnClusterClickListener(kotlin.Function1<eu.buney.maps.utils.clustering.Cluster<1:0>,kotlin.Boolean>?){}[0]
+    final fun setOnClusterItemClickListener(kotlin/Function1<#A, kotlin/Boolean>?) // eu.buney.maps.utils.clustering/ClusterManager.setOnClusterItemClickListener|setOnClusterItemClickListener(kotlin.Function1<1:0,kotlin.Boolean>?){}[0]
+    final fun setOnClusterItemInfoWindowClickListener(kotlin/Function1<#A, kotlin/Unit>?) // eu.buney.maps.utils.clustering/ClusterManager.setOnClusterItemInfoWindowClickListener|setOnClusterItemInfoWindowClickListener(kotlin.Function1<1:0,kotlin.Unit>?){}[0]
+    final fun setOnClusterItemInfoWindowLongClickListener(kotlin/Function1<#A, kotlin/Unit>?) // eu.buney.maps.utils.clustering/ClusterManager.setOnClusterItemInfoWindowLongClickListener|setOnClusterItemInfoWindowLongClickListener(kotlin.Function1<1:0,kotlin.Unit>?){}[0]
+    final suspend fun getClusters(kotlin/Float): kotlin.collections/Set<eu.buney.maps.utils.clustering/Cluster<#A>> // eu.buney.maps.utils.clustering/ClusterManager.getClusters|getClusters(kotlin.Float){}[0]
+}
+
+final class <#A: kotlin/Any, #B: kotlin/Any, #C: kotlin/Any?> eu.buney.maps.utils.clustering.transition/ElementTransition { // eu.buney.maps.utils.clustering.transition/ElementTransition|null[0]
+    constructor <init>(eu.buney.maps.utils.clustering.transition/VisualElement<#A, #B>, #C, #C) // eu.buney.maps.utils.clustering.transition/ElementTransition.<init>|<init>(eu.buney.maps.utils.clustering.transition.VisualElement<1:0,1:1>;1:2;1:2){}[0]
+
+    final val element // eu.buney.maps.utils.clustering.transition/ElementTransition.element|{}element[0]
+        final fun <get-element>(): eu.buney.maps.utils.clustering.transition/VisualElement<#A, #B> // eu.buney.maps.utils.clustering.transition/ElementTransition.element.<get-element>|<get-element>(){}[0]
+    final val from // eu.buney.maps.utils.clustering.transition/ElementTransition.from|{}from[0]
+        final fun <get-from>(): #C // eu.buney.maps.utils.clustering.transition/ElementTransition.from.<get-from>|<get-from>(){}[0]
+    final val to // eu.buney.maps.utils.clustering.transition/ElementTransition.to|{}to[0]
+        final fun <get-to>(): #C // eu.buney.maps.utils.clustering.transition/ElementTransition.to.<get-to>|<get-to>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps.utils.clustering.transition/ElementTransition.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // eu.buney.maps.utils.clustering.transition/ElementTransition.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // eu.buney.maps.utils.clustering.transition/ElementTransition.toString|toString(){}[0]
+}
+
+final class <#A: kotlin/Any, #B: kotlin/Any, #C: kotlin/Any?> eu.buney.maps.utils.clustering.transition/MembershipResolver : eu.buney.maps.utils.clustering.transition/TransitionResolver<#A, #B, #C> { // eu.buney.maps.utils.clustering.transition/MembershipResolver|null[0]
+    constructor <init>(kotlin/Function1<#B, #C>, kotlin/Function1<eu.buney.maps.utils.clustering.transition/Group<#A, #B>, #C>, kotlin/Function1<eu.buney.maps.utils.clustering.transition/Group<#A, #B>, kotlin/Boolean>) // eu.buney.maps.utils.clustering.transition/MembershipResolver.<init>|<init>(kotlin.Function1<1:1,1:2>;kotlin.Function1<eu.buney.maps.utils.clustering.transition.Group<1:0,1:1>,1:2>;kotlin.Function1<eu.buney.maps.utils.clustering.transition.Group<1:0,1:1>,kotlin.Boolean>){}[0]
+
+    final fun resolve(eu.buney.maps.utils.clustering.transition/GroupedSnapshot<#A, #B>, eu.buney.maps.utils.clustering.transition/GroupedSnapshot<#A, #B>): eu.buney.maps.utils.clustering.transition/TransitionPlan<#A, #B, #C> // eu.buney.maps.utils.clustering.transition/MembershipResolver.resolve|resolve(eu.buney.maps.utils.clustering.transition.GroupedSnapshot<1:0,1:1>;eu.buney.maps.utils.clustering.transition.GroupedSnapshot<1:0,1:1>){}[0]
+}
+
+final class <#A: kotlin/Any, #B: kotlin/Any, #C: kotlin/Any?> eu.buney.maps.utils.clustering.transition/TransitionPlan { // eu.buney.maps.utils.clustering.transition/TransitionPlan|null[0]
+    constructor <init>(kotlin.collections/List<eu.buney.maps.utils.clustering.transition/ElementTransition<#A, #B, #C>>, kotlin.collections/List<eu.buney.maps.utils.clustering.transition/ElementTransition<#A, #B, #C>>, kotlin.collections/List<eu.buney.maps.utils.clustering.transition/ElementTransition<#A, #B, #C>>) // eu.buney.maps.utils.clustering.transition/TransitionPlan.<init>|<init>(kotlin.collections.List<eu.buney.maps.utils.clustering.transition.ElementTransition<1:0,1:1,1:2>>;kotlin.collections.List<eu.buney.maps.utils.clustering.transition.ElementTransition<1:0,1:1,1:2>>;kotlin.collections.List<eu.buney.maps.utils.clustering.transition.ElementTransition<1:0,1:1,1:2>>){}[0]
+
+    final val entering // eu.buney.maps.utils.clustering.transition/TransitionPlan.entering|{}entering[0]
+        final fun <get-entering>(): kotlin.collections/List<eu.buney.maps.utils.clustering.transition/ElementTransition<#A, #B, #C>> // eu.buney.maps.utils.clustering.transition/TransitionPlan.entering.<get-entering>|<get-entering>(){}[0]
+    final val exiting // eu.buney.maps.utils.clustering.transition/TransitionPlan.exiting|{}exiting[0]
+        final fun <get-exiting>(): kotlin.collections/List<eu.buney.maps.utils.clustering.transition/ElementTransition<#A, #B, #C>> // eu.buney.maps.utils.clustering.transition/TransitionPlan.exiting.<get-exiting>|<get-exiting>(){}[0]
+    final val stable // eu.buney.maps.utils.clustering.transition/TransitionPlan.stable|{}stable[0]
+        final fun <get-stable>(): kotlin.collections/List<eu.buney.maps.utils.clustering.transition/ElementTransition<#A, #B, #C>> // eu.buney.maps.utils.clustering.transition/TransitionPlan.stable.<get-stable>|<get-stable>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps.utils.clustering.transition/TransitionPlan.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // eu.buney.maps.utils.clustering.transition/TransitionPlan.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // eu.buney.maps.utils.clustering.transition/TransitionPlan.toString|toString(){}[0]
+}
+
+final class <#A: kotlin/Any, #B: kotlin/Any> eu.buney.maps.utils.clustering.transition/Group { // eu.buney.maps.utils.clustering.transition/Group|null[0]
+    constructor <init>(#A, kotlin.collections/Set<#B>) // eu.buney.maps.utils.clustering.transition/Group.<init>|<init>(1:0;kotlin.collections.Set<1:1>){}[0]
+
+    final val items // eu.buney.maps.utils.clustering.transition/Group.items|{}items[0]
+        final fun <get-items>(): kotlin.collections/Set<#B> // eu.buney.maps.utils.clustering.transition/Group.items.<get-items>|<get-items>(){}[0]
+    final val key // eu.buney.maps.utils.clustering.transition/Group.key|{}key[0]
+        final fun <get-key>(): #A // eu.buney.maps.utils.clustering.transition/Group.key.<get-key>|<get-key>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps.utils.clustering.transition/Group.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // eu.buney.maps.utils.clustering.transition/Group.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // eu.buney.maps.utils.clustering.transition/Group.toString|toString(){}[0]
+}
+
+final class <#A: kotlin/Any, #B: kotlin/Any> eu.buney.maps.utils.clustering.transition/GroupedSnapshot { // eu.buney.maps.utils.clustering.transition/GroupedSnapshot|null[0]
+    constructor <init>(kotlin.collections/List<eu.buney.maps.utils.clustering.transition/Group<#A, #B>>) // eu.buney.maps.utils.clustering.transition/GroupedSnapshot.<init>|<init>(kotlin.collections.List<eu.buney.maps.utils.clustering.transition.Group<1:0,1:1>>){}[0]
+
+    final val allItems // eu.buney.maps.utils.clustering.transition/GroupedSnapshot.allItems|{}allItems[0]
+        final fun <get-allItems>(): kotlin.collections/Set<#B> // eu.buney.maps.utils.clustering.transition/GroupedSnapshot.allItems.<get-allItems>|<get-allItems>(){}[0]
+    final val groups // eu.buney.maps.utils.clustering.transition/GroupedSnapshot.groups|{}groups[0]
+        final fun <get-groups>(): kotlin.collections/List<eu.buney.maps.utils.clustering.transition/Group<#A, #B>> // eu.buney.maps.utils.clustering.transition/GroupedSnapshot.groups.<get-groups>|<get-groups>(){}[0]
+
+    final fun groupOf(#B): eu.buney.maps.utils.clustering.transition/Group<#A, #B>? // eu.buney.maps.utils.clustering.transition/GroupedSnapshot.groupOf|groupOf(1:1){}[0]
+
+    final object Companion { // eu.buney.maps.utils.clustering.transition/GroupedSnapshot.Companion|null[0]
+        final fun <#A2: kotlin/Any, #B2: kotlin/Any> empty(): eu.buney.maps.utils.clustering.transition/GroupedSnapshot<#A2, #B2> // eu.buney.maps.utils.clustering.transition/GroupedSnapshot.Companion.empty|empty(){0§<kotlin.Any>;1§<kotlin.Any>}[0]
+    }
+}
+
+final class eu.buney.maps.utils.wms/WmsTileProvider : eu.buney.maps/TileProvider { // eu.buney.maps.utils.wms/WmsTileProvider|null[0]
+    constructor <init>(kotlin/Function5<kotlin/Double, kotlin/Double, kotlin/Double, kotlin/Double, kotlin/Int, kotlin/String>, kotlin/Int = ..., kotlin/Int = ...) // eu.buney.maps.utils.wms/WmsTileProvider.<init>|<init>(kotlin.Function5<kotlin.Double,kotlin.Double,kotlin.Double,kotlin.Double,kotlin.Int,kotlin.String>;kotlin.Int;kotlin.Int){}[0]
+
+    final fun getTile(kotlin/Int, kotlin/Int, kotlin/Int): eu.buney.maps/Tile? // eu.buney.maps.utils.wms/WmsTileProvider.getTile|getTile(kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+}
+
+final val eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_NonHierarchicalDistanceBasedAlgorithm$stableprop // eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_NonHierarchicalDistanceBasedAlgorithm$stableprop|#static{}eu_buney_maps_utils_clustering_algo_NonHierarchicalDistanceBasedAlgorithm$stableprop[0]
+final val eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_ElementTransition$stableprop // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_ElementTransition$stableprop|#static{}eu_buney_maps_utils_clustering_transition_ElementTransition$stableprop[0]
+final val eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_Group$stableprop // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_Group$stableprop|#static{}eu_buney_maps_utils_clustering_transition_Group$stableprop[0]
+final val eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_GroupedSnapshot$stableprop // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_GroupedSnapshot$stableprop|#static{}eu_buney_maps_utils_clustering_transition_GroupedSnapshot$stableprop[0]
+final val eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_MembershipResolver$stableprop // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_MembershipResolver$stableprop|#static{}eu_buney_maps_utils_clustering_transition_MembershipResolver$stableprop[0]
+final val eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_TransitionPlan$stableprop // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_TransitionPlan$stableprop|#static{}eu_buney_maps_utils_clustering_transition_TransitionPlan$stableprop[0]
+final val eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_VisualElement_ClusterElement$stableprop // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_VisualElement_ClusterElement$stableprop|#static{}eu_buney_maps_utils_clustering_transition_VisualElement_ClusterElement$stableprop[0]
+final val eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_VisualElement_ItemElement$stableprop // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_VisualElement_ItemElement$stableprop|#static{}eu_buney_maps_utils_clustering_transition_VisualElement_ItemElement$stableprop[0]
+final val eu.buney.maps.utils.clustering/eu_buney_maps_utils_clustering_ClusterManager$stableprop // eu.buney.maps.utils.clustering/eu_buney_maps_utils_clustering_ClusterManager$stableprop|#static{}eu_buney_maps_utils_clustering_ClusterManager$stableprop[0]
+final val eu.buney.maps.utils.wms/eu_buney_maps_utils_wms_WmsTileProvider$stableprop // eu.buney.maps.utils.wms/eu_buney_maps_utils_wms_WmsTileProvider$stableprop|#static{}eu_buney_maps_utils_wms_WmsTileProvider$stableprop[0]
+
+final fun <#A: eu.buney.maps.utils.clustering/ClusterItem> eu.buney.maps.utils.clustering/Clustering(kotlin.collections/Collection<#A>, eu.buney.maps.utils.clustering/ClusterManager<#A>, androidx.compose.animation.core/FiniteAnimationSpec<kotlin/Float>?, androidx.compose.animation.core/FiniteAnimationSpec<kotlin/Float>?, kotlin/Function3<eu.buney.maps.utils.clustering/Cluster<#A>, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<#A, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function4<#A, eu.buney.maps/LatLng, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // eu.buney.maps.utils.clustering/Clustering|Clustering(kotlin.collections.Collection<0:0>;eu.buney.maps.utils.clustering.ClusterManager<0:0>;androidx.compose.animation.core.FiniteAnimationSpec<kotlin.Float>?;androidx.compose.animation.core.FiniteAnimationSpec<kotlin.Float>?;kotlin.Function3<eu.buney.maps.utils.clustering.Cluster<0:0>,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<0:0,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function4<0:0,eu.buney.maps.LatLng,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<eu.buney.maps.utils.clustering.ClusterItem>}[0]
+final fun <#A: eu.buney.maps.utils.clustering/ClusterItem> eu.buney.maps.utils.clustering/Clustering(kotlin.collections/Collection<#A>, kotlin/Function1<eu.buney.maps.utils.clustering/Cluster<#A>, kotlin/Boolean>?, kotlin/Function1<#A, kotlin/Boolean>?, kotlin/Function1<#A, kotlin/Unit>?, kotlin/Function1<#A, kotlin/Unit>?, androidx.compose.animation.core/FiniteAnimationSpec<kotlin/Float>?, androidx.compose.animation.core/FiniteAnimationSpec<kotlin/Float>?, kotlin/Function3<eu.buney.maps.utils.clustering/Cluster<#A>, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<#A, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function4<#A, eu.buney.maps/LatLng, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // eu.buney.maps.utils.clustering/Clustering|Clustering(kotlin.collections.Collection<0:0>;kotlin.Function1<eu.buney.maps.utils.clustering.Cluster<0:0>,kotlin.Boolean>?;kotlin.Function1<0:0,kotlin.Boolean>?;kotlin.Function1<0:0,kotlin.Unit>?;kotlin.Function1<0:0,kotlin.Unit>?;androidx.compose.animation.core.FiniteAnimationSpec<kotlin.Float>?;androidx.compose.animation.core.FiniteAnimationSpec<kotlin.Float>?;kotlin.Function3<eu.buney.maps.utils.clustering.Cluster<0:0>,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<0:0,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function4<0:0,eu.buney.maps.LatLng,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<eu.buney.maps.utils.clustering.ClusterItem>}[0]
+final fun <#A: eu.buney.maps.utils.clustering/ClusterItem> eu.buney.maps.utils.clustering/Clustering(kotlin.collections/Collection<#A>, kotlin/Function1<eu.buney.maps.utils.clustering/Cluster<#A>, kotlin/Boolean>?, kotlin/Function1<#A, kotlin/Boolean>?, kotlin/Function1<#A, kotlin/Unit>?, kotlin/Function1<#A, kotlin/Unit>?, androidx.compose.animation.core/FiniteAnimationSpec<kotlin/Float>?, androidx.compose.animation.core/FiniteAnimationSpec<kotlin/Float>?, kotlin/Function3<eu.buney.maps.utils.clustering/Cluster<#A>, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<#A, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function4<#A, eu.buney.maps/LatLng, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function1<eu.buney.maps.utils.clustering/ClusterManager<#A>, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // eu.buney.maps.utils.clustering/Clustering|Clustering(kotlin.collections.Collection<0:0>;kotlin.Function1<eu.buney.maps.utils.clustering.Cluster<0:0>,kotlin.Boolean>?;kotlin.Function1<0:0,kotlin.Boolean>?;kotlin.Function1<0:0,kotlin.Unit>?;kotlin.Function1<0:0,kotlin.Unit>?;androidx.compose.animation.core.FiniteAnimationSpec<kotlin.Float>?;androidx.compose.animation.core.FiniteAnimationSpec<kotlin.Float>?;kotlin.Function3<eu.buney.maps.utils.clustering.Cluster<0:0>,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<0:0,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function4<0:0,eu.buney.maps.LatLng,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function1<eu.buney.maps.utils.clustering.ClusterManager<0:0>,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){0§<eu.buney.maps.utils.clustering.ClusterItem>}[0]
+final fun <#A: eu.buney.maps.utils.clustering/ClusterItem> eu.buney.maps.utils.clustering/defaultClusterAlgorithm(): eu.buney.maps.utils.clustering/ClusterAlgorithm<#A> // eu.buney.maps.utils.clustering/defaultClusterAlgorithm|defaultClusterAlgorithm(){0§<eu.buney.maps.utils.clustering.ClusterItem>}[0]
+final fun <#A: eu.buney.maps.utils.clustering/ClusterItem> eu.buney.maps.utils.clustering/rememberClusterManager(eu.buney.maps.utils.clustering/ClusterAlgorithm<#A>?, kotlin.coroutines/CoroutineContext?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): eu.buney.maps.utils.clustering/ClusterManager<#A> // eu.buney.maps.utils.clustering/rememberClusterManager|rememberClusterManager(eu.buney.maps.utils.clustering.ClusterAlgorithm<0:0>?;kotlin.coroutines.CoroutineContext?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<eu.buney.maps.utils.clustering.ClusterItem>}[0]
+final fun <#A: kotlin/Any, #B: kotlin/Any, #C: kotlin/Any?> eu.buney.maps.utils.clustering.transition/rememberTransitionPlan(eu.buney.maps.utils.clustering.transition/GroupedSnapshot<#A, #B>, eu.buney.maps.utils.clustering.transition/TransitionResolver<#A, #B, #C>, androidx.compose.runtime/Composer?, kotlin/Int): eu.buney.maps.utils.clustering.transition/TransitionPlan<#A, #B, #C> // eu.buney.maps.utils.clustering.transition/rememberTransitionPlan|rememberTransitionPlan(eu.buney.maps.utils.clustering.transition.GroupedSnapshot<0:0,0:1>;eu.buney.maps.utils.clustering.transition.TransitionResolver<0:0,0:1,0:2>;androidx.compose.runtime.Composer?;kotlin.Int){0§<kotlin.Any>;1§<kotlin.Any>;2§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any, #B: kotlin/Any> eu.buney.maps.utils.clustering.transition/AnimatedGroupedMarkers(eu.buney.maps.utils.clustering.transition/TransitionPlan<#A, #B, eu.buney.maps/LatLng>, androidx.compose.animation.core/FiniteAnimationSpec<kotlin/Float>?, androidx.compose.animation.core/FiniteAnimationSpec<kotlin/Float>?, kotlin/Function6<#A, kotlin.collections/Set<#B>, kotlin/Int, eu.buney.maps/LatLng, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, kotlin/Function4<#B, eu.buney.maps/LatLng, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // eu.buney.maps.utils.clustering.transition/AnimatedGroupedMarkers|AnimatedGroupedMarkers(eu.buney.maps.utils.clustering.transition.TransitionPlan<0:0,0:1,eu.buney.maps.LatLng>;androidx.compose.animation.core.FiniteAnimationSpec<kotlin.Float>?;androidx.compose.animation.core.FiniteAnimationSpec<kotlin.Float>?;kotlin.Function6<0:0,kotlin.collections.Set<0:1>,kotlin.Int,eu.buney.maps.LatLng,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;kotlin.Function4<0:1,eu.buney.maps.LatLng,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<kotlin.Any>;1§<kotlin.Any>}[0]
+final fun eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_NonHierarchicalDistanceBasedAlgorithm$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_NonHierarchicalDistanceBasedAlgorithm$stableprop_getter|eu_buney_maps_utils_clustering_algo_NonHierarchicalDistanceBasedAlgorithm$stableprop_getter(){}[0]
+final fun eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_ElementTransition$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_ElementTransition$stableprop_getter|eu_buney_maps_utils_clustering_transition_ElementTransition$stableprop_getter(){}[0]
+final fun eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_Group$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_Group$stableprop_getter|eu_buney_maps_utils_clustering_transition_Group$stableprop_getter(){}[0]
+final fun eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_GroupedSnapshot$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_GroupedSnapshot$stableprop_getter|eu_buney_maps_utils_clustering_transition_GroupedSnapshot$stableprop_getter(){}[0]
+final fun eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_MembershipResolver$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_MembershipResolver$stableprop_getter|eu_buney_maps_utils_clustering_transition_MembershipResolver$stableprop_getter(){}[0]
+final fun eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_TransitionPlan$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_TransitionPlan$stableprop_getter|eu_buney_maps_utils_clustering_transition_TransitionPlan$stableprop_getter(){}[0]
+final fun eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_VisualElement_ClusterElement$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_VisualElement_ClusterElement$stableprop_getter|eu_buney_maps_utils_clustering_transition_VisualElement_ClusterElement$stableprop_getter(){}[0]
+final fun eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_VisualElement_ItemElement$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_VisualElement_ItemElement$stableprop_getter|eu_buney_maps_utils_clustering_transition_VisualElement_ItemElement$stableprop_getter(){}[0]
+final fun eu.buney.maps.utils.clustering/eu_buney_maps_utils_clustering_ClusterManager$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.clustering/eu_buney_maps_utils_clustering_ClusterManager$stableprop_getter|eu_buney_maps_utils_clustering_ClusterManager$stableprop_getter(){}[0]
+final fun eu.buney.maps.utils.wms/WmsTileOverlay(kotlin/Function5<kotlin/Double, kotlin/Double, kotlin/Double, kotlin/Double, kotlin/Int, kotlin/String>, eu.buney.maps/TileOverlayState?, kotlin/Boolean, kotlin/Float, kotlin/Boolean, kotlin/Float, kotlin/Function1<eu.buney.maps/NativeTileOverlay, kotlin/Unit>?, kotlin/Int, kotlin/Int, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // eu.buney.maps.utils.wms/WmsTileOverlay|WmsTileOverlay(kotlin.Function5<kotlin.Double,kotlin.Double,kotlin.Double,kotlin.Double,kotlin.Int,kotlin.String>;eu.buney.maps.TileOverlayState?;kotlin.Boolean;kotlin.Float;kotlin.Boolean;kotlin.Float;kotlin.Function1<eu.buney.maps.NativeTileOverlay,kotlin.Unit>?;kotlin.Int;kotlin.Int;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun eu.buney.maps.utils.wms/eu_buney_maps_utils_wms_WmsTileProvider$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.wms/eu_buney_maps_utils_wms_WmsTileProvider$stableprop_getter|eu_buney_maps_utils_wms_WmsTileProvider$stableprop_getter(){}[0]

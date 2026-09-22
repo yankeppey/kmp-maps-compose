@@ -3,6 +3,7 @@ package eu.buney.maps
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.UiComposable
 import androidx.compose.ui.unit.dp
 
 /**
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
  * @param content A lambda for placing map content such as markers.
  */
 @Composable
+@UiComposable
 expect fun GoogleMap(
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),

@@ -1,0 +1,655 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <eu.buney.maps:kmp-maps-compose>
+open annotation class eu.buney.maps/GoogleMapComposable : kotlin/Annotation { // eu.buney.maps/GoogleMapComposable|null[0]
+    constructor <init>() // eu.buney.maps/GoogleMapComposable.<init>|<init>(){}[0]
+}
+
+final enum class eu.buney.maps/CameraMoveStartedReason : kotlin/Enum<eu.buney.maps/CameraMoveStartedReason> { // eu.buney.maps/CameraMoveStartedReason|null[0]
+    enum entry API_ANIMATION // eu.buney.maps/CameraMoveStartedReason.API_ANIMATION|null[0]
+    enum entry DEVELOPER_ANIMATION // eu.buney.maps/CameraMoveStartedReason.DEVELOPER_ANIMATION|null[0]
+    enum entry GESTURE // eu.buney.maps/CameraMoveStartedReason.GESTURE|null[0]
+    enum entry NO_MOVEMENT_YET // eu.buney.maps/CameraMoveStartedReason.NO_MOVEMENT_YET|null[0]
+    enum entry UNKNOWN // eu.buney.maps/CameraMoveStartedReason.UNKNOWN|null[0]
+
+    final val entries // eu.buney.maps/CameraMoveStartedReason.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<eu.buney.maps/CameraMoveStartedReason> // eu.buney.maps/CameraMoveStartedReason.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): eu.buney.maps/CameraMoveStartedReason // eu.buney.maps/CameraMoveStartedReason.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<eu.buney.maps/CameraMoveStartedReason> // eu.buney.maps/CameraMoveStartedReason.values|values#static(){}[0]
+}
+
+final enum class eu.buney.maps/JointType : kotlin/Enum<eu.buney.maps/JointType> { // eu.buney.maps/JointType|null[0]
+    enum entry Bevel // eu.buney.maps/JointType.Bevel|null[0]
+    enum entry Default // eu.buney.maps/JointType.Default|null[0]
+    enum entry Round // eu.buney.maps/JointType.Round|null[0]
+
+    final val entries // eu.buney.maps/JointType.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<eu.buney.maps/JointType> // eu.buney.maps/JointType.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): eu.buney.maps/JointType // eu.buney.maps/JointType.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<eu.buney.maps/JointType> // eu.buney.maps/JointType.values|values#static(){}[0]
+}
+
+final enum class eu.buney.maps/MapType : kotlin/Enum<eu.buney.maps/MapType> { // eu.buney.maps/MapType|null[0]
+    enum entry HYBRID // eu.buney.maps/MapType.HYBRID|null[0]
+    enum entry NONE // eu.buney.maps/MapType.NONE|null[0]
+    enum entry NORMAL // eu.buney.maps/MapType.NORMAL|null[0]
+    enum entry SATELLITE // eu.buney.maps/MapType.SATELLITE|null[0]
+    enum entry TERRAIN // eu.buney.maps/MapType.TERRAIN|null[0]
+
+    final val entries // eu.buney.maps/MapType.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<eu.buney.maps/MapType> // eu.buney.maps/MapType.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): eu.buney.maps/MapType // eu.buney.maps/MapType.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<eu.buney.maps/MapType> // eu.buney.maps/MapType.values|values#static(){}[0]
+}
+
+abstract interface eu.buney.maps/Projection { // eu.buney.maps/Projection|null[0]
+    abstract val visibleBounds // eu.buney.maps/Projection.visibleBounds|{}visibleBounds[0]
+        abstract fun <get-visibleBounds>(): eu.buney.maps/LatLngBounds // eu.buney.maps/Projection.visibleBounds.<get-visibleBounds>|<get-visibleBounds>(){}[0]
+
+    abstract fun contains(eu.buney.maps/LatLng): kotlin/Boolean // eu.buney.maps/Projection.contains|contains(eu.buney.maps.LatLng){}[0]
+    abstract fun fromScreenLocation(eu.buney.maps/ScreenPoint): eu.buney.maps/LatLng // eu.buney.maps/Projection.fromScreenLocation|fromScreenLocation(eu.buney.maps.ScreenPoint){}[0]
+    abstract fun toScreenLocation(eu.buney.maps/LatLng): eu.buney.maps/ScreenPoint // eu.buney.maps/Projection.toScreenLocation|toScreenLocation(eu.buney.maps.LatLng){}[0]
+}
+
+abstract interface eu.buney.maps/TileProvider { // eu.buney.maps/TileProvider|null[0]
+    abstract fun getTile(kotlin/Int, kotlin/Int, kotlin/Int): eu.buney.maps/Tile? // eu.buney.maps/TileProvider.getTile|getTile(kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+}
+
+final class eu.buney.maps/BitmapDescriptor { // eu.buney.maps/BitmapDescriptor|null[0]
+    constructor <init>(platform.UIKit/UIImage) // eu.buney.maps/BitmapDescriptor.<init>|<init>(platform.UIKit.UIImage){}[0]
+
+    final val uiImage // eu.buney.maps/BitmapDescriptor.uiImage|{}uiImage[0]
+        final fun <get-uiImage>(): platform.UIKit/UIImage // eu.buney.maps/BitmapDescriptor.uiImage.<get-uiImage>|<get-uiImage>(){}[0]
+}
+
+final class eu.buney.maps/CameraPosition { // eu.buney.maps/CameraPosition|null[0]
+    constructor <init>(eu.buney.maps/LatLng, kotlin/Float = ..., kotlin/Float = ..., kotlin/Float = ...) // eu.buney.maps/CameraPosition.<init>|<init>(eu.buney.maps.LatLng;kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+
+    final val bearing // eu.buney.maps/CameraPosition.bearing|{}bearing[0]
+        final fun <get-bearing>(): kotlin/Float // eu.buney.maps/CameraPosition.bearing.<get-bearing>|<get-bearing>(){}[0]
+    final val target // eu.buney.maps/CameraPosition.target|{}target[0]
+        final fun <get-target>(): eu.buney.maps/LatLng // eu.buney.maps/CameraPosition.target.<get-target>|<get-target>(){}[0]
+    final val tilt // eu.buney.maps/CameraPosition.tilt|{}tilt[0]
+        final fun <get-tilt>(): kotlin/Float // eu.buney.maps/CameraPosition.tilt.<get-tilt>|<get-tilt>(){}[0]
+    final val zoom // eu.buney.maps/CameraPosition.zoom|{}zoom[0]
+        final fun <get-zoom>(): kotlin/Float // eu.buney.maps/CameraPosition.zoom.<get-zoom>|<get-zoom>(){}[0]
+
+    final fun component1(): eu.buney.maps/LatLng // eu.buney.maps/CameraPosition.component1|component1(){}[0]
+    final fun component2(): kotlin/Float // eu.buney.maps/CameraPosition.component2|component2(){}[0]
+    final fun component3(): kotlin/Float // eu.buney.maps/CameraPosition.component3|component3(){}[0]
+    final fun component4(): kotlin/Float // eu.buney.maps/CameraPosition.component4|component4(){}[0]
+    final fun copy(eu.buney.maps/LatLng = ..., kotlin/Float = ..., kotlin/Float = ..., kotlin/Float = ...): eu.buney.maps/CameraPosition // eu.buney.maps/CameraPosition.copy|copy(eu.buney.maps.LatLng;kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/CameraPosition.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // eu.buney.maps/CameraPosition.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // eu.buney.maps/CameraPosition.toString|toString(){}[0]
+
+    final object Companion { // eu.buney.maps/CameraPosition.Companion|null[0]
+        final fun fromLatLngZoom(eu.buney.maps/LatLng, kotlin/Float): eu.buney.maps/CameraPosition // eu.buney.maps/CameraPosition.Companion.fromLatLngZoom|fromLatLngZoom(eu.buney.maps.LatLng;kotlin.Float){}[0]
+    }
+}
+
+final class eu.buney.maps/CameraPositionState { // eu.buney.maps/CameraPositionState|null[0]
+    constructor <init>(eu.buney.maps/CameraPosition = ...) // eu.buney.maps/CameraPositionState.<init>|<init>(eu.buney.maps.CameraPosition){}[0]
+
+    final val cameraMoveStartedReason // eu.buney.maps/CameraPositionState.cameraMoveStartedReason|{}cameraMoveStartedReason[0]
+        final fun <get-cameraMoveStartedReason>(): eu.buney.maps/CameraMoveStartedReason // eu.buney.maps/CameraPositionState.cameraMoveStartedReason.<get-cameraMoveStartedReason>|<get-cameraMoveStartedReason>(){}[0]
+    final val isMoving // eu.buney.maps/CameraPositionState.isMoving|{}isMoving[0]
+        final fun <get-isMoving>(): kotlin/Boolean // eu.buney.maps/CameraPositionState.isMoving.<get-isMoving>|<get-isMoving>(){}[0]
+    final val projection // eu.buney.maps/CameraPositionState.projection|{}projection[0]
+        final fun <get-projection>(): eu.buney.maps/Projection? // eu.buney.maps/CameraPositionState.projection.<get-projection>|<get-projection>(){}[0]
+
+    final var position // eu.buney.maps/CameraPositionState.position|{}position[0]
+        final fun <get-position>(): eu.buney.maps/CameraPosition // eu.buney.maps/CameraPositionState.position.<get-position>|<get-position>(){}[0]
+        final fun <set-position>(eu.buney.maps/CameraPosition) // eu.buney.maps/CameraPositionState.position.<set-position>|<set-position>(eu.buney.maps.CameraPosition){}[0]
+
+    final fun move(eu.buney.maps/CameraUpdate) // eu.buney.maps/CameraPositionState.move|move(eu.buney.maps.CameraUpdate){}[0]
+    final suspend fun animate(eu.buney.maps/CameraUpdate, kotlin/Int = ...) // eu.buney.maps/CameraPositionState.animate|animate(eu.buney.maps.CameraUpdate;kotlin.Int){}[0]
+}
+
+final class eu.buney.maps/Circle { // eu.buney.maps/Circle|null[0]
+    constructor <init>(GoogleMaps/GMSCircle) // eu.buney.maps/Circle.<init>|<init>(GoogleMaps.GMSCircle){}[0]
+
+    final val center // eu.buney.maps/Circle.center|{}center[0]
+        final fun <get-center>(): eu.buney.maps/LatLng // eu.buney.maps/Circle.center.<get-center>|<get-center>(){}[0]
+    final val gmsCircle // eu.buney.maps/Circle.gmsCircle|{}gmsCircle[0]
+        final fun <get-gmsCircle>(): GoogleMaps/GMSCircle // eu.buney.maps/Circle.gmsCircle.<get-gmsCircle>|<get-gmsCircle>(){}[0]
+    final val radius // eu.buney.maps/Circle.radius|{}radius[0]
+        final fun <get-radius>(): kotlin/Double // eu.buney.maps/Circle.radius.<get-radius>|<get-radius>(){}[0]
+}
+
+final class eu.buney.maps/GroundOverlay { // eu.buney.maps/GroundOverlay|null[0]
+    constructor <init>(GoogleMaps/GMSGroundOverlay) // eu.buney.maps/GroundOverlay.<init>|<init>(GoogleMaps.GMSGroundOverlay){}[0]
+
+    final val bearing // eu.buney.maps/GroundOverlay.bearing|{}bearing[0]
+        final fun <get-bearing>(): kotlin/Float // eu.buney.maps/GroundOverlay.bearing.<get-bearing>|<get-bearing>(){}[0]
+    final val bounds // eu.buney.maps/GroundOverlay.bounds|{}bounds[0]
+        final fun <get-bounds>(): eu.buney.maps/LatLngBounds // eu.buney.maps/GroundOverlay.bounds.<get-bounds>|<get-bounds>(){}[0]
+    final val gmsGroundOverlay // eu.buney.maps/GroundOverlay.gmsGroundOverlay|{}gmsGroundOverlay[0]
+        final fun <get-gmsGroundOverlay>(): GoogleMaps/GMSGroundOverlay // eu.buney.maps/GroundOverlay.gmsGroundOverlay.<get-gmsGroundOverlay>|<get-gmsGroundOverlay>(){}[0]
+    final val transparency // eu.buney.maps/GroundOverlay.transparency|{}transparency[0]
+        final fun <get-transparency>(): kotlin/Float // eu.buney.maps/GroundOverlay.transparency.<get-transparency>|<get-transparency>(){}[0]
+}
+
+final class eu.buney.maps/GroundOverlayPosition { // eu.buney.maps/GroundOverlayPosition|null[0]
+    final val height // eu.buney.maps/GroundOverlayPosition.height|{}height[0]
+        final fun <get-height>(): kotlin/Float? // eu.buney.maps/GroundOverlayPosition.height.<get-height>|<get-height>(){}[0]
+    final val latLngBounds // eu.buney.maps/GroundOverlayPosition.latLngBounds|{}latLngBounds[0]
+        final fun <get-latLngBounds>(): eu.buney.maps/LatLngBounds? // eu.buney.maps/GroundOverlayPosition.latLngBounds.<get-latLngBounds>|<get-latLngBounds>(){}[0]
+    final val location // eu.buney.maps/GroundOverlayPosition.location|{}location[0]
+        final fun <get-location>(): eu.buney.maps/LatLng? // eu.buney.maps/GroundOverlayPosition.location.<get-location>|<get-location>(){}[0]
+    final val width // eu.buney.maps/GroundOverlayPosition.width|{}width[0]
+        final fun <get-width>(): kotlin/Float? // eu.buney.maps/GroundOverlayPosition.width.<get-width>|<get-width>(){}[0]
+
+    final object Companion { // eu.buney.maps/GroundOverlayPosition.Companion|null[0]
+        final fun create(eu.buney.maps/LatLng, kotlin/Float, kotlin/Float? = ...): eu.buney.maps/GroundOverlayPosition // eu.buney.maps/GroundOverlayPosition.Companion.create|create(eu.buney.maps.LatLng;kotlin.Float;kotlin.Float?){}[0]
+        final fun create(eu.buney.maps/LatLngBounds): eu.buney.maps/GroundOverlayPosition // eu.buney.maps/GroundOverlayPosition.Companion.create|create(eu.buney.maps.LatLngBounds){}[0]
+    }
+}
+
+final class eu.buney.maps/LatLng { // eu.buney.maps/LatLng|null[0]
+    constructor <init>(kotlin/Double, kotlin/Double) // eu.buney.maps/LatLng.<init>|<init>(kotlin.Double;kotlin.Double){}[0]
+
+    final val latitude // eu.buney.maps/LatLng.latitude|{}latitude[0]
+        final fun <get-latitude>(): kotlin/Double // eu.buney.maps/LatLng.latitude.<get-latitude>|<get-latitude>(){}[0]
+    final val longitude // eu.buney.maps/LatLng.longitude|{}longitude[0]
+        final fun <get-longitude>(): kotlin/Double // eu.buney.maps/LatLng.longitude.<get-longitude>|<get-longitude>(){}[0]
+
+    final fun component1(): kotlin/Double // eu.buney.maps/LatLng.component1|component1(){}[0]
+    final fun component2(): kotlin/Double // eu.buney.maps/LatLng.component2|component2(){}[0]
+    final fun copy(kotlin/Double = ..., kotlin/Double = ...): eu.buney.maps/LatLng // eu.buney.maps/LatLng.copy|copy(kotlin.Double;kotlin.Double){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/LatLng.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // eu.buney.maps/LatLng.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // eu.buney.maps/LatLng.toString|toString(){}[0]
+}
+
+final class eu.buney.maps/LatLngBounds { // eu.buney.maps/LatLngBounds|null[0]
+    constructor <init>(eu.buney.maps/LatLng, eu.buney.maps/LatLng) // eu.buney.maps/LatLngBounds.<init>|<init>(eu.buney.maps.LatLng;eu.buney.maps.LatLng){}[0]
+
+    final val center // eu.buney.maps/LatLngBounds.center|{}center[0]
+        final fun <get-center>(): eu.buney.maps/LatLng // eu.buney.maps/LatLngBounds.center.<get-center>|<get-center>(){}[0]
+    final val northeast // eu.buney.maps/LatLngBounds.northeast|{}northeast[0]
+        final fun <get-northeast>(): eu.buney.maps/LatLng // eu.buney.maps/LatLngBounds.northeast.<get-northeast>|<get-northeast>(){}[0]
+    final val southwest // eu.buney.maps/LatLngBounds.southwest|{}southwest[0]
+        final fun <get-southwest>(): eu.buney.maps/LatLng // eu.buney.maps/LatLngBounds.southwest.<get-southwest>|<get-southwest>(){}[0]
+
+    final fun component1(): eu.buney.maps/LatLng // eu.buney.maps/LatLngBounds.component1|component1(){}[0]
+    final fun component2(): eu.buney.maps/LatLng // eu.buney.maps/LatLngBounds.component2|component2(){}[0]
+    final fun copy(eu.buney.maps/LatLng = ..., eu.buney.maps/LatLng = ...): eu.buney.maps/LatLngBounds // eu.buney.maps/LatLngBounds.copy|copy(eu.buney.maps.LatLng;eu.buney.maps.LatLng){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/LatLngBounds.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // eu.buney.maps/LatLngBounds.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // eu.buney.maps/LatLngBounds.toString|toString(){}[0]
+
+    final class Builder { // eu.buney.maps/LatLngBounds.Builder|null[0]
+        constructor <init>() // eu.buney.maps/LatLngBounds.Builder.<init>|<init>(){}[0]
+
+        final fun build(): eu.buney.maps/LatLngBounds // eu.buney.maps/LatLngBounds.Builder.build|build(){}[0]
+        final fun include(eu.buney.maps/LatLng): eu.buney.maps/LatLngBounds.Builder // eu.buney.maps/LatLngBounds.Builder.include|include(eu.buney.maps.LatLng){}[0]
+    }
+}
+
+final class eu.buney.maps/MapProperties { // eu.buney.maps/MapProperties|null[0]
+    constructor <init>(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., eu.buney.maps/MapType = ..., eu.buney.maps/MapStyleOptions? = ..., kotlin/Float = ..., kotlin/Float = ...) // eu.buney.maps/MapProperties.<init>|<init>(kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;eu.buney.maps.MapType;eu.buney.maps.MapStyleOptions?;kotlin.Float;kotlin.Float){}[0]
+
+    final val isBuildingEnabled // eu.buney.maps/MapProperties.isBuildingEnabled|{}isBuildingEnabled[0]
+        final fun <get-isBuildingEnabled>(): kotlin/Boolean // eu.buney.maps/MapProperties.isBuildingEnabled.<get-isBuildingEnabled>|<get-isBuildingEnabled>(){}[0]
+    final val isIndoorEnabled // eu.buney.maps/MapProperties.isIndoorEnabled|{}isIndoorEnabled[0]
+        final fun <get-isIndoorEnabled>(): kotlin/Boolean // eu.buney.maps/MapProperties.isIndoorEnabled.<get-isIndoorEnabled>|<get-isIndoorEnabled>(){}[0]
+    final val isMyLocationEnabled // eu.buney.maps/MapProperties.isMyLocationEnabled|{}isMyLocationEnabled[0]
+        final fun <get-isMyLocationEnabled>(): kotlin/Boolean // eu.buney.maps/MapProperties.isMyLocationEnabled.<get-isMyLocationEnabled>|<get-isMyLocationEnabled>(){}[0]
+    final val isTrafficEnabled // eu.buney.maps/MapProperties.isTrafficEnabled|{}isTrafficEnabled[0]
+        final fun <get-isTrafficEnabled>(): kotlin/Boolean // eu.buney.maps/MapProperties.isTrafficEnabled.<get-isTrafficEnabled>|<get-isTrafficEnabled>(){}[0]
+    final val mapStyleOptions // eu.buney.maps/MapProperties.mapStyleOptions|{}mapStyleOptions[0]
+        final fun <get-mapStyleOptions>(): eu.buney.maps/MapStyleOptions? // eu.buney.maps/MapProperties.mapStyleOptions.<get-mapStyleOptions>|<get-mapStyleOptions>(){}[0]
+    final val mapType // eu.buney.maps/MapProperties.mapType|{}mapType[0]
+        final fun <get-mapType>(): eu.buney.maps/MapType // eu.buney.maps/MapProperties.mapType.<get-mapType>|<get-mapType>(){}[0]
+    final val maxZoomPreference // eu.buney.maps/MapProperties.maxZoomPreference|{}maxZoomPreference[0]
+        final fun <get-maxZoomPreference>(): kotlin/Float // eu.buney.maps/MapProperties.maxZoomPreference.<get-maxZoomPreference>|<get-maxZoomPreference>(){}[0]
+    final val minZoomPreference // eu.buney.maps/MapProperties.minZoomPreference|{}minZoomPreference[0]
+        final fun <get-minZoomPreference>(): kotlin/Float // eu.buney.maps/MapProperties.minZoomPreference.<get-minZoomPreference>|<get-minZoomPreference>(){}[0]
+
+    final fun copy(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., eu.buney.maps/MapType = ..., eu.buney.maps/MapStyleOptions? = ..., kotlin/Float = ..., kotlin/Float = ...): eu.buney.maps/MapProperties // eu.buney.maps/MapProperties.copy|copy(kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;eu.buney.maps.MapType;eu.buney.maps.MapStyleOptions?;kotlin.Float;kotlin.Float){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/MapProperties.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // eu.buney.maps/MapProperties.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // eu.buney.maps/MapProperties.toString|toString(){}[0]
+}
+
+final class eu.buney.maps/MapStyleOptions { // eu.buney.maps/MapStyleOptions|null[0]
+    constructor <init>(GoogleMaps/GMSMapStyle) // eu.buney.maps/MapStyleOptions.<init>|<init>(GoogleMaps.GMSMapStyle){}[0]
+
+    final object Companion { // eu.buney.maps/MapStyleOptions.Companion|null[0]
+        final fun fromJson(kotlin/String): eu.buney.maps/MapStyleOptions // eu.buney.maps/MapStyleOptions.Companion.fromJson|fromJson(kotlin.String){}[0]
+    }
+}
+
+final class eu.buney.maps/MapUiSettings { // eu.buney.maps/MapUiSettings|null[0]
+    constructor <init>(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...) // eu.buney.maps/MapUiSettings.<init>|<init>(kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
+
+    final val compassEnabled // eu.buney.maps/MapUiSettings.compassEnabled|{}compassEnabled[0]
+        final fun <get-compassEnabled>(): kotlin/Boolean // eu.buney.maps/MapUiSettings.compassEnabled.<get-compassEnabled>|<get-compassEnabled>(){}[0]
+    final val indoorLevelPickerEnabled // eu.buney.maps/MapUiSettings.indoorLevelPickerEnabled|{}indoorLevelPickerEnabled[0]
+        final fun <get-indoorLevelPickerEnabled>(): kotlin/Boolean // eu.buney.maps/MapUiSettings.indoorLevelPickerEnabled.<get-indoorLevelPickerEnabled>|<get-indoorLevelPickerEnabled>(){}[0]
+    final val mapToolbarEnabled // eu.buney.maps/MapUiSettings.mapToolbarEnabled|{}mapToolbarEnabled[0]
+        final fun <get-mapToolbarEnabled>(): kotlin/Boolean // eu.buney.maps/MapUiSettings.mapToolbarEnabled.<get-mapToolbarEnabled>|<get-mapToolbarEnabled>(){}[0]
+    final val myLocationButtonEnabled // eu.buney.maps/MapUiSettings.myLocationButtonEnabled|{}myLocationButtonEnabled[0]
+        final fun <get-myLocationButtonEnabled>(): kotlin/Boolean // eu.buney.maps/MapUiSettings.myLocationButtonEnabled.<get-myLocationButtonEnabled>|<get-myLocationButtonEnabled>(){}[0]
+    final val rotationGesturesEnabled // eu.buney.maps/MapUiSettings.rotationGesturesEnabled|{}rotationGesturesEnabled[0]
+        final fun <get-rotationGesturesEnabled>(): kotlin/Boolean // eu.buney.maps/MapUiSettings.rotationGesturesEnabled.<get-rotationGesturesEnabled>|<get-rotationGesturesEnabled>(){}[0]
+    final val scrollGesturesEnabled // eu.buney.maps/MapUiSettings.scrollGesturesEnabled|{}scrollGesturesEnabled[0]
+        final fun <get-scrollGesturesEnabled>(): kotlin/Boolean // eu.buney.maps/MapUiSettings.scrollGesturesEnabled.<get-scrollGesturesEnabled>|<get-scrollGesturesEnabled>(){}[0]
+    final val scrollGesturesEnabledDuringRotateOrZoom // eu.buney.maps/MapUiSettings.scrollGesturesEnabledDuringRotateOrZoom|{}scrollGesturesEnabledDuringRotateOrZoom[0]
+        final fun <get-scrollGesturesEnabledDuringRotateOrZoom>(): kotlin/Boolean // eu.buney.maps/MapUiSettings.scrollGesturesEnabledDuringRotateOrZoom.<get-scrollGesturesEnabledDuringRotateOrZoom>|<get-scrollGesturesEnabledDuringRotateOrZoom>(){}[0]
+    final val tiltGesturesEnabled // eu.buney.maps/MapUiSettings.tiltGesturesEnabled|{}tiltGesturesEnabled[0]
+        final fun <get-tiltGesturesEnabled>(): kotlin/Boolean // eu.buney.maps/MapUiSettings.tiltGesturesEnabled.<get-tiltGesturesEnabled>|<get-tiltGesturesEnabled>(){}[0]
+    final val zoomControlsEnabled // eu.buney.maps/MapUiSettings.zoomControlsEnabled|{}zoomControlsEnabled[0]
+        final fun <get-zoomControlsEnabled>(): kotlin/Boolean // eu.buney.maps/MapUiSettings.zoomControlsEnabled.<get-zoomControlsEnabled>|<get-zoomControlsEnabled>(){}[0]
+    final val zoomGesturesEnabled // eu.buney.maps/MapUiSettings.zoomGesturesEnabled|{}zoomGesturesEnabled[0]
+        final fun <get-zoomGesturesEnabled>(): kotlin/Boolean // eu.buney.maps/MapUiSettings.zoomGesturesEnabled.<get-zoomGesturesEnabled>|<get-zoomGesturesEnabled>(){}[0]
+
+    final fun copy(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...): eu.buney.maps/MapUiSettings // eu.buney.maps/MapUiSettings.copy|copy(kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/MapUiSettings.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // eu.buney.maps/MapUiSettings.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // eu.buney.maps/MapUiSettings.toString|toString(){}[0]
+}
+
+final class eu.buney.maps/Marker { // eu.buney.maps/Marker|null[0]
+    constructor <init>(GoogleMaps/GMSMarker) // eu.buney.maps/Marker.<init>|<init>(GoogleMaps.GMSMarker){}[0]
+
+    final val gmsMarker // eu.buney.maps/Marker.gmsMarker|{}gmsMarker[0]
+        final fun <get-gmsMarker>(): GoogleMaps/GMSMarker // eu.buney.maps/Marker.gmsMarker.<get-gmsMarker>|<get-gmsMarker>(){}[0]
+    final val position // eu.buney.maps/Marker.position|{}position[0]
+        final fun <get-position>(): eu.buney.maps/LatLng // eu.buney.maps/Marker.position.<get-position>|<get-position>(){}[0]
+    final val snippet // eu.buney.maps/Marker.snippet|{}snippet[0]
+        final fun <get-snippet>(): kotlin/String? // eu.buney.maps/Marker.snippet.<get-snippet>|<get-snippet>(){}[0]
+    final val title // eu.buney.maps/Marker.title|{}title[0]
+        final fun <get-title>(): kotlin/String? // eu.buney.maps/Marker.title.<get-title>|<get-title>(){}[0]
+}
+
+final class eu.buney.maps/MarkerState { // eu.buney.maps/MarkerState|null[0]
+    constructor <init>(eu.buney.maps/LatLng = ...) // eu.buney.maps/MarkerState.<init>|<init>(eu.buney.maps.LatLng){}[0]
+
+    final var isDragging // eu.buney.maps/MarkerState.isDragging|{}isDragging[0]
+        final fun <get-isDragging>(): kotlin/Boolean // eu.buney.maps/MarkerState.isDragging.<get-isDragging>|<get-isDragging>(){}[0]
+    final var position // eu.buney.maps/MarkerState.position|{}position[0]
+        final fun <get-position>(): eu.buney.maps/LatLng // eu.buney.maps/MarkerState.position.<get-position>|<get-position>(){}[0]
+        final fun <set-position>(eu.buney.maps/LatLng) // eu.buney.maps/MarkerState.position.<set-position>|<set-position>(eu.buney.maps.LatLng){}[0]
+
+    final fun hideInfoWindow() // eu.buney.maps/MarkerState.hideInfoWindow|hideInfoWindow(){}[0]
+    final fun showInfoWindow() // eu.buney.maps/MarkerState.showInfoWindow|showInfoWindow(){}[0]
+
+    final object Companion { // eu.buney.maps/MarkerState.Companion|null[0]
+        final val Saver // eu.buney.maps/MarkerState.Companion.Saver|{}Saver[0]
+            final fun <get-Saver>(): androidx.compose.runtime.saveable/Saver<eu.buney.maps/MarkerState, *> // eu.buney.maps/MarkerState.Companion.Saver.<get-Saver>|<get-Saver>(){}[0]
+    }
+}
+
+final class eu.buney.maps/NativeTileOverlay // eu.buney.maps/NativeTileOverlay|null[0]
+
+final class eu.buney.maps/PointOfInterest { // eu.buney.maps/PointOfInterest|null[0]
+    constructor <init>(eu.buney.maps/LatLng, kotlin/String, kotlin/String) // eu.buney.maps/PointOfInterest.<init>|<init>(eu.buney.maps.LatLng;kotlin.String;kotlin.String){}[0]
+
+    final val latLng // eu.buney.maps/PointOfInterest.latLng|{}latLng[0]
+        final fun <get-latLng>(): eu.buney.maps/LatLng // eu.buney.maps/PointOfInterest.latLng.<get-latLng>|<get-latLng>(){}[0]
+    final val name // eu.buney.maps/PointOfInterest.name|{}name[0]
+        final fun <get-name>(): kotlin/String // eu.buney.maps/PointOfInterest.name.<get-name>|<get-name>(){}[0]
+    final val placeId // eu.buney.maps/PointOfInterest.placeId|{}placeId[0]
+        final fun <get-placeId>(): kotlin/String // eu.buney.maps/PointOfInterest.placeId.<get-placeId>|<get-placeId>(){}[0]
+
+    final fun component1(): eu.buney.maps/LatLng // eu.buney.maps/PointOfInterest.component1|component1(){}[0]
+    final fun component2(): kotlin/String // eu.buney.maps/PointOfInterest.component2|component2(){}[0]
+    final fun component3(): kotlin/String // eu.buney.maps/PointOfInterest.component3|component3(){}[0]
+    final fun copy(eu.buney.maps/LatLng = ..., kotlin/String = ..., kotlin/String = ...): eu.buney.maps/PointOfInterest // eu.buney.maps/PointOfInterest.copy|copy(eu.buney.maps.LatLng;kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/PointOfInterest.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // eu.buney.maps/PointOfInterest.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // eu.buney.maps/PointOfInterest.toString|toString(){}[0]
+}
+
+final class eu.buney.maps/Polygon { // eu.buney.maps/Polygon|null[0]
+    constructor <init>(GoogleMaps/GMSPolygon) // eu.buney.maps/Polygon.<init>|<init>(GoogleMaps.GMSPolygon){}[0]
+
+    final val gmsPolygon // eu.buney.maps/Polygon.gmsPolygon|{}gmsPolygon[0]
+        final fun <get-gmsPolygon>(): GoogleMaps/GMSPolygon // eu.buney.maps/Polygon.gmsPolygon.<get-gmsPolygon>|<get-gmsPolygon>(){}[0]
+    final val holes // eu.buney.maps/Polygon.holes|{}holes[0]
+        final fun <get-holes>(): kotlin.collections/List<kotlin.collections/List<eu.buney.maps/LatLng>> // eu.buney.maps/Polygon.holes.<get-holes>|<get-holes>(){}[0]
+    final val points // eu.buney.maps/Polygon.points|{}points[0]
+        final fun <get-points>(): kotlin.collections/List<eu.buney.maps/LatLng> // eu.buney.maps/Polygon.points.<get-points>|<get-points>(){}[0]
+}
+
+final class eu.buney.maps/Polyline { // eu.buney.maps/Polyline|null[0]
+    constructor <init>(GoogleMaps/GMSPolyline) // eu.buney.maps/Polyline.<init>|<init>(GoogleMaps.GMSPolyline){}[0]
+
+    final val gmsPolyline // eu.buney.maps/Polyline.gmsPolyline|{}gmsPolyline[0]
+        final fun <get-gmsPolyline>(): GoogleMaps/GMSPolyline // eu.buney.maps/Polyline.gmsPolyline.<get-gmsPolyline>|<get-gmsPolyline>(){}[0]
+    final val points // eu.buney.maps/Polyline.points|{}points[0]
+        final fun <get-points>(): kotlin.collections/List<eu.buney.maps/LatLng> // eu.buney.maps/Polyline.points.<get-points>|<get-points>(){}[0]
+}
+
+final class eu.buney.maps/ScreenPoint { // eu.buney.maps/ScreenPoint|null[0]
+    constructor <init>(kotlin/Float, kotlin/Float) // eu.buney.maps/ScreenPoint.<init>|<init>(kotlin.Float;kotlin.Float){}[0]
+
+    final val x // eu.buney.maps/ScreenPoint.x|{}x[0]
+        final fun <get-x>(): kotlin/Float // eu.buney.maps/ScreenPoint.x.<get-x>|<get-x>(){}[0]
+    final val y // eu.buney.maps/ScreenPoint.y|{}y[0]
+        final fun <get-y>(): kotlin/Float // eu.buney.maps/ScreenPoint.y.<get-y>|<get-y>(){}[0]
+
+    final fun component1(): kotlin/Float // eu.buney.maps/ScreenPoint.component1|component1(){}[0]
+    final fun component2(): kotlin/Float // eu.buney.maps/ScreenPoint.component2|component2(){}[0]
+    final fun copy(kotlin/Float = ..., kotlin/Float = ...): eu.buney.maps/ScreenPoint // eu.buney.maps/ScreenPoint.copy|copy(kotlin.Float;kotlin.Float){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/ScreenPoint.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // eu.buney.maps/ScreenPoint.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // eu.buney.maps/ScreenPoint.toString|toString(){}[0]
+}
+
+final class eu.buney.maps/StampStyle { // eu.buney.maps/StampStyle|null[0]
+    constructor <init>(eu.buney.maps/BitmapDescriptor) // eu.buney.maps/StampStyle.<init>|<init>(eu.buney.maps.BitmapDescriptor){}[0]
+
+    final val image // eu.buney.maps/StampStyle.image|{}image[0]
+        final fun <get-image>(): eu.buney.maps/BitmapDescriptor // eu.buney.maps/StampStyle.image.<get-image>|<get-image>(){}[0]
+}
+
+final class eu.buney.maps/StyleSpan { // eu.buney.maps/StyleSpan|null[0]
+    constructor <init>(eu.buney.maps/StrokeStyle, eu.buney.maps/StampStyle? = ..., kotlin/Double = ...) // eu.buney.maps/StyleSpan.<init>|<init>(eu.buney.maps.StrokeStyle;eu.buney.maps.StampStyle?;kotlin.Double){}[0]
+
+    final val segments // eu.buney.maps/StyleSpan.segments|{}segments[0]
+        final fun <get-segments>(): kotlin/Double // eu.buney.maps/StyleSpan.segments.<get-segments>|<get-segments>(){}[0]
+    final val stampStyle // eu.buney.maps/StyleSpan.stampStyle|{}stampStyle[0]
+        final fun <get-stampStyle>(): eu.buney.maps/StampStyle? // eu.buney.maps/StyleSpan.stampStyle.<get-stampStyle>|<get-stampStyle>(){}[0]
+    final val style // eu.buney.maps/StyleSpan.style|{}style[0]
+        final fun <get-style>(): eu.buney.maps/StrokeStyle // eu.buney.maps/StyleSpan.style.<get-style>|<get-style>(){}[0]
+
+    final fun copy(eu.buney.maps/StrokeStyle = ..., eu.buney.maps/StampStyle? = ..., kotlin/Double = ...): eu.buney.maps/StyleSpan // eu.buney.maps/StyleSpan.copy|copy(eu.buney.maps.StrokeStyle;eu.buney.maps.StampStyle?;kotlin.Double){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/StyleSpan.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // eu.buney.maps/StyleSpan.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // eu.buney.maps/StyleSpan.toString|toString(){}[0]
+
+    final object Companion { // eu.buney.maps/StyleSpan.Companion|null[0]
+        final fun gradient(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, kotlin/Double = ...): eu.buney.maps/StyleSpan // eu.buney.maps/StyleSpan.Companion.gradient|gradient(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;kotlin.Double){}[0]
+        final fun solidColor(androidx.compose.ui.graphics/Color, kotlin/Double = ...): eu.buney.maps/StyleSpan // eu.buney.maps/StyleSpan.Companion.solidColor|solidColor(androidx.compose.ui.graphics.Color;kotlin.Double){}[0]
+    }
+}
+
+final class eu.buney.maps/Tile { // eu.buney.maps/Tile|null[0]
+    constructor <init>(platform.UIKit/UIImage) // eu.buney.maps/Tile.<init>|<init>(platform.UIKit.UIImage){}[0]
+
+    final val uiImage // eu.buney.maps/Tile.uiImage|{}uiImage[0]
+        final fun <get-uiImage>(): platform.UIKit/UIImage // eu.buney.maps/Tile.uiImage.<get-uiImage>|<get-uiImage>(){}[0]
+}
+
+final class eu.buney.maps/TileOverlayState { // eu.buney.maps/TileOverlayState|null[0]
+    constructor <init>() // eu.buney.maps/TileOverlayState.<init>|<init>(){}[0]
+
+    final fun clearTileCache() // eu.buney.maps/TileOverlayState.clearTileCache|clearTileCache(){}[0]
+}
+
+sealed class eu.buney.maps/CameraUpdate { // eu.buney.maps/CameraUpdate|null[0]
+    final class NewCameraPosition : eu.buney.maps/CameraUpdate { // eu.buney.maps/CameraUpdate.NewCameraPosition|null[0]
+        constructor <init>(eu.buney.maps/CameraPosition) // eu.buney.maps/CameraUpdate.NewCameraPosition.<init>|<init>(eu.buney.maps.CameraPosition){}[0]
+
+        final val position // eu.buney.maps/CameraUpdate.NewCameraPosition.position|{}position[0]
+            final fun <get-position>(): eu.buney.maps/CameraPosition // eu.buney.maps/CameraUpdate.NewCameraPosition.position.<get-position>|<get-position>(){}[0]
+
+        final fun component1(): eu.buney.maps/CameraPosition // eu.buney.maps/CameraUpdate.NewCameraPosition.component1|component1(){}[0]
+        final fun copy(eu.buney.maps/CameraPosition = ...): eu.buney.maps/CameraUpdate.NewCameraPosition // eu.buney.maps/CameraUpdate.NewCameraPosition.copy|copy(eu.buney.maps.CameraPosition){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/CameraUpdate.NewCameraPosition.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // eu.buney.maps/CameraUpdate.NewCameraPosition.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // eu.buney.maps/CameraUpdate.NewCameraPosition.toString|toString(){}[0]
+    }
+
+    final class NewLatLngBounds : eu.buney.maps/CameraUpdate { // eu.buney.maps/CameraUpdate.NewLatLngBounds|null[0]
+        constructor <init>(eu.buney.maps/LatLngBounds, kotlin/Int) // eu.buney.maps/CameraUpdate.NewLatLngBounds.<init>|<init>(eu.buney.maps.LatLngBounds;kotlin.Int){}[0]
+
+        final val bounds // eu.buney.maps/CameraUpdate.NewLatLngBounds.bounds|{}bounds[0]
+            final fun <get-bounds>(): eu.buney.maps/LatLngBounds // eu.buney.maps/CameraUpdate.NewLatLngBounds.bounds.<get-bounds>|<get-bounds>(){}[0]
+        final val padding // eu.buney.maps/CameraUpdate.NewLatLngBounds.padding|{}padding[0]
+            final fun <get-padding>(): kotlin/Int // eu.buney.maps/CameraUpdate.NewLatLngBounds.padding.<get-padding>|<get-padding>(){}[0]
+
+        final fun component1(): eu.buney.maps/LatLngBounds // eu.buney.maps/CameraUpdate.NewLatLngBounds.component1|component1(){}[0]
+        final fun component2(): kotlin/Int // eu.buney.maps/CameraUpdate.NewLatLngBounds.component2|component2(){}[0]
+        final fun copy(eu.buney.maps/LatLngBounds = ..., kotlin/Int = ...): eu.buney.maps/CameraUpdate.NewLatLngBounds // eu.buney.maps/CameraUpdate.NewLatLngBounds.copy|copy(eu.buney.maps.LatLngBounds;kotlin.Int){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/CameraUpdate.NewLatLngBounds.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // eu.buney.maps/CameraUpdate.NewLatLngBounds.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // eu.buney.maps/CameraUpdate.NewLatLngBounds.toString|toString(){}[0]
+    }
+
+    final class NewLatLngZoom : eu.buney.maps/CameraUpdate { // eu.buney.maps/CameraUpdate.NewLatLngZoom|null[0]
+        constructor <init>(eu.buney.maps/LatLng, kotlin/Float) // eu.buney.maps/CameraUpdate.NewLatLngZoom.<init>|<init>(eu.buney.maps.LatLng;kotlin.Float){}[0]
+
+        final val latLng // eu.buney.maps/CameraUpdate.NewLatLngZoom.latLng|{}latLng[0]
+            final fun <get-latLng>(): eu.buney.maps/LatLng // eu.buney.maps/CameraUpdate.NewLatLngZoom.latLng.<get-latLng>|<get-latLng>(){}[0]
+        final val zoom // eu.buney.maps/CameraUpdate.NewLatLngZoom.zoom|{}zoom[0]
+            final fun <get-zoom>(): kotlin/Float // eu.buney.maps/CameraUpdate.NewLatLngZoom.zoom.<get-zoom>|<get-zoom>(){}[0]
+
+        final fun component1(): eu.buney.maps/LatLng // eu.buney.maps/CameraUpdate.NewLatLngZoom.component1|component1(){}[0]
+        final fun component2(): kotlin/Float // eu.buney.maps/CameraUpdate.NewLatLngZoom.component2|component2(){}[0]
+        final fun copy(eu.buney.maps/LatLng = ..., kotlin/Float = ...): eu.buney.maps/CameraUpdate.NewLatLngZoom // eu.buney.maps/CameraUpdate.NewLatLngZoom.copy|copy(eu.buney.maps.LatLng;kotlin.Float){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/CameraUpdate.NewLatLngZoom.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // eu.buney.maps/CameraUpdate.NewLatLngZoom.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // eu.buney.maps/CameraUpdate.NewLatLngZoom.toString|toString(){}[0]
+    }
+}
+
+sealed class eu.buney.maps/Cap { // eu.buney.maps/Cap|null[0]
+    final object Butt : eu.buney.maps/Cap { // eu.buney.maps/Cap.Butt|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/Cap.Butt.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // eu.buney.maps/Cap.Butt.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // eu.buney.maps/Cap.Butt.toString|toString(){}[0]
+    }
+
+    final object Round : eu.buney.maps/Cap { // eu.buney.maps/Cap.Round|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/Cap.Round.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // eu.buney.maps/Cap.Round.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // eu.buney.maps/Cap.Round.toString|toString(){}[0]
+    }
+
+    final object Square : eu.buney.maps/Cap { // eu.buney.maps/Cap.Square|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/Cap.Square.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // eu.buney.maps/Cap.Square.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // eu.buney.maps/Cap.Square.toString|toString(){}[0]
+    }
+}
+
+sealed class eu.buney.maps/PatternItem { // eu.buney.maps/PatternItem|null[0]
+    final class Dash : eu.buney.maps/PatternItem { // eu.buney.maps/PatternItem.Dash|null[0]
+        constructor <init>(kotlin/Float) // eu.buney.maps/PatternItem.Dash.<init>|<init>(kotlin.Float){}[0]
+
+        final val length // eu.buney.maps/PatternItem.Dash.length|{}length[0]
+            final fun <get-length>(): kotlin/Float // eu.buney.maps/PatternItem.Dash.length.<get-length>|<get-length>(){}[0]
+
+        final fun component1(): kotlin/Float // eu.buney.maps/PatternItem.Dash.component1|component1(){}[0]
+        final fun copy(kotlin/Float = ...): eu.buney.maps/PatternItem.Dash // eu.buney.maps/PatternItem.Dash.copy|copy(kotlin.Float){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/PatternItem.Dash.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // eu.buney.maps/PatternItem.Dash.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // eu.buney.maps/PatternItem.Dash.toString|toString(){}[0]
+    }
+
+    final class Gap : eu.buney.maps/PatternItem { // eu.buney.maps/PatternItem.Gap|null[0]
+        constructor <init>(kotlin/Float) // eu.buney.maps/PatternItem.Gap.<init>|<init>(kotlin.Float){}[0]
+
+        final val length // eu.buney.maps/PatternItem.Gap.length|{}length[0]
+            final fun <get-length>(): kotlin/Float // eu.buney.maps/PatternItem.Gap.length.<get-length>|<get-length>(){}[0]
+
+        final fun component1(): kotlin/Float // eu.buney.maps/PatternItem.Gap.component1|component1(){}[0]
+        final fun copy(kotlin/Float = ...): eu.buney.maps/PatternItem.Gap // eu.buney.maps/PatternItem.Gap.copy|copy(kotlin.Float){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/PatternItem.Gap.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // eu.buney.maps/PatternItem.Gap.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // eu.buney.maps/PatternItem.Gap.toString|toString(){}[0]
+    }
+
+    final object Dot : eu.buney.maps/PatternItem { // eu.buney.maps/PatternItem.Dot|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/PatternItem.Dot.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // eu.buney.maps/PatternItem.Dot.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // eu.buney.maps/PatternItem.Dot.toString|toString(){}[0]
+    }
+}
+
+sealed class eu.buney.maps/StrokeStyle { // eu.buney.maps/StrokeStyle|null[0]
+    final class Gradient : eu.buney.maps/StrokeStyle { // eu.buney.maps/StrokeStyle.Gradient|null[0]
+        constructor <init>(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color) // eu.buney.maps/StrokeStyle.Gradient.<init>|<init>(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+
+        final val fromColor // eu.buney.maps/StrokeStyle.Gradient.fromColor|{}fromColor[0]
+            final fun <get-fromColor>(): androidx.compose.ui.graphics/Color // eu.buney.maps/StrokeStyle.Gradient.fromColor.<get-fromColor>|<get-fromColor>(){}[0]
+        final val toColor // eu.buney.maps/StrokeStyle.Gradient.toColor|{}toColor[0]
+            final fun <get-toColor>(): androidx.compose.ui.graphics/Color // eu.buney.maps/StrokeStyle.Gradient.toColor.<get-toColor>|<get-toColor>(){}[0]
+
+        final fun component1(): androidx.compose.ui.graphics/Color // eu.buney.maps/StrokeStyle.Gradient.component1|component1(){}[0]
+        final fun component2(): androidx.compose.ui.graphics/Color // eu.buney.maps/StrokeStyle.Gradient.component2|component2(){}[0]
+        final fun copy(androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ...): eu.buney.maps/StrokeStyle.Gradient // eu.buney.maps/StrokeStyle.Gradient.copy|copy(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/StrokeStyle.Gradient.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // eu.buney.maps/StrokeStyle.Gradient.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // eu.buney.maps/StrokeStyle.Gradient.toString|toString(){}[0]
+    }
+
+    final class SolidColor : eu.buney.maps/StrokeStyle { // eu.buney.maps/StrokeStyle.SolidColor|null[0]
+        constructor <init>(androidx.compose.ui.graphics/Color) // eu.buney.maps/StrokeStyle.SolidColor.<init>|<init>(androidx.compose.ui.graphics.Color){}[0]
+
+        final val color // eu.buney.maps/StrokeStyle.SolidColor.color|{}color[0]
+            final fun <get-color>(): androidx.compose.ui.graphics/Color // eu.buney.maps/StrokeStyle.SolidColor.color.<get-color>|<get-color>(){}[0]
+
+        final fun component1(): androidx.compose.ui.graphics/Color // eu.buney.maps/StrokeStyle.SolidColor.component1|component1(){}[0]
+        final fun copy(androidx.compose.ui.graphics/Color = ...): eu.buney.maps/StrokeStyle.SolidColor // eu.buney.maps/StrokeStyle.SolidColor.copy|copy(androidx.compose.ui.graphics.Color){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps/StrokeStyle.SolidColor.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // eu.buney.maps/StrokeStyle.SolidColor.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // eu.buney.maps/StrokeStyle.SolidColor.toString|toString(){}[0]
+    }
+}
+
+final object eu.buney.maps/BitmapDescriptorFactory { // eu.buney.maps/BitmapDescriptorFactory|null[0]
+    final fun fromBytes(kotlin/ByteArray, kotlin/Int, kotlin/Int): eu.buney.maps/BitmapDescriptor // eu.buney.maps/BitmapDescriptorFactory.fromBytes|fromBytes(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
+    final fun fromEncodedImage(kotlin/ByteArray): eu.buney.maps/BitmapDescriptor // eu.buney.maps/BitmapDescriptorFactory.fromEncodedImage|fromEncodedImage(kotlin.ByteArray){}[0]
+}
+
+final object eu.buney.maps/CameraUpdateFactory { // eu.buney.maps/CameraUpdateFactory|null[0]
+    final fun newCameraPosition(eu.buney.maps/CameraPosition): eu.buney.maps/CameraUpdate // eu.buney.maps/CameraUpdateFactory.newCameraPosition|newCameraPosition(eu.buney.maps.CameraPosition){}[0]
+    final fun newLatLngBounds(eu.buney.maps/LatLngBounds, kotlin/Int): eu.buney.maps/CameraUpdate // eu.buney.maps/CameraUpdateFactory.newLatLngBounds|newLatLngBounds(eu.buney.maps.LatLngBounds;kotlin.Int){}[0]
+    final fun newLatLngZoom(eu.buney.maps/LatLng, kotlin/Float): eu.buney.maps/CameraUpdate // eu.buney.maps/CameraUpdateFactory.newLatLngZoom|newLatLngZoom(eu.buney.maps.LatLng;kotlin.Float){}[0]
+}
+
+final object eu.buney.maps/TileFactory { // eu.buney.maps/TileFactory|null[0]
+    final fun fromBytes(kotlin/ByteArray, kotlin/Int, kotlin/Int): eu.buney.maps/Tile // eu.buney.maps/TileFactory.fromBytes|fromBytes(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
+    final fun fromEncodedImage(kotlin/ByteArray, kotlin/Int, kotlin/Int): eu.buney.maps/Tile // eu.buney.maps/TileFactory.fromEncodedImage|fromEncodedImage(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
+}
+
+final val eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_array$stableprop // eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_array$stableprop|#static{}eu_buney_maps_kmp_maps_compose_generated_resources_Res_array$stableprop[0]
+final val eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_drawable$stableprop // eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_drawable$stableprop|#static{}eu_buney_maps_kmp_maps_compose_generated_resources_Res_drawable$stableprop[0]
+final val eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_font$stableprop // eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_font$stableprop|#static{}eu_buney_maps_kmp_maps_compose_generated_resources_Res_font$stableprop[0]
+final val eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_plurals$stableprop // eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_plurals$stableprop|#static{}eu_buney_maps_kmp_maps_compose_generated_resources_Res_plurals$stableprop[0]
+final val eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_string$stableprop // eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_string$stableprop|#static{}eu_buney_maps_kmp_maps_compose_generated_resources_Res_string$stableprop[0]
+final val eu.buney.maps/currentCameraPositionState // eu.buney.maps/currentCameraPositionState|{}currentCameraPositionState[0]
+    final fun <get-currentCameraPositionState>(androidx.compose.runtime/Composer?, kotlin/Int): eu.buney.maps/CameraPositionState // eu.buney.maps/currentCameraPositionState.<get-currentCameraPositionState>|<get-currentCameraPositionState>(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final val eu.buney.maps/eu_buney_maps_BitmapDescriptor$stableprop // eu.buney.maps/eu_buney_maps_BitmapDescriptor$stableprop|#static{}eu_buney_maps_BitmapDescriptor$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_BitmapDescriptorFactory$stableprop // eu.buney.maps/eu_buney_maps_BitmapDescriptorFactory$stableprop|#static{}eu_buney_maps_BitmapDescriptorFactory$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_CameraPosition$stableprop // eu.buney.maps/eu_buney_maps_CameraPosition$stableprop|#static{}eu_buney_maps_CameraPosition$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_CameraPositionState$stableprop // eu.buney.maps/eu_buney_maps_CameraPositionState$stableprop|#static{}eu_buney_maps_CameraPositionState$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_CameraUpdate$stableprop // eu.buney.maps/eu_buney_maps_CameraUpdate$stableprop|#static{}eu_buney_maps_CameraUpdate$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_CameraUpdateFactory$stableprop // eu.buney.maps/eu_buney_maps_CameraUpdateFactory$stableprop|#static{}eu_buney_maps_CameraUpdateFactory$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_CameraUpdate_NewCameraPosition$stableprop // eu.buney.maps/eu_buney_maps_CameraUpdate_NewCameraPosition$stableprop|#static{}eu_buney_maps_CameraUpdate_NewCameraPosition$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_CameraUpdate_NewLatLngBounds$stableprop // eu.buney.maps/eu_buney_maps_CameraUpdate_NewLatLngBounds$stableprop|#static{}eu_buney_maps_CameraUpdate_NewLatLngBounds$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_CameraUpdate_NewLatLngZoom$stableprop // eu.buney.maps/eu_buney_maps_CameraUpdate_NewLatLngZoom$stableprop|#static{}eu_buney_maps_CameraUpdate_NewLatLngZoom$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_Cap$stableprop // eu.buney.maps/eu_buney_maps_Cap$stableprop|#static{}eu_buney_maps_Cap$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_Cap_Butt$stableprop // eu.buney.maps/eu_buney_maps_Cap_Butt$stableprop|#static{}eu_buney_maps_Cap_Butt$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_Cap_Round$stableprop // eu.buney.maps/eu_buney_maps_Cap_Round$stableprop|#static{}eu_buney_maps_Cap_Round$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_Cap_Square$stableprop // eu.buney.maps/eu_buney_maps_Cap_Square$stableprop|#static{}eu_buney_maps_Cap_Square$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_Circle$stableprop // eu.buney.maps/eu_buney_maps_Circle$stableprop|#static{}eu_buney_maps_Circle$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_GroundOverlay$stableprop // eu.buney.maps/eu_buney_maps_GroundOverlay$stableprop|#static{}eu_buney_maps_GroundOverlay$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_GroundOverlayPosition$stableprop // eu.buney.maps/eu_buney_maps_GroundOverlayPosition$stableprop|#static{}eu_buney_maps_GroundOverlayPosition$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_LatLng$stableprop // eu.buney.maps/eu_buney_maps_LatLng$stableprop|#static{}eu_buney_maps_LatLng$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_LatLngBounds$stableprop // eu.buney.maps/eu_buney_maps_LatLngBounds$stableprop|#static{}eu_buney_maps_LatLngBounds$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_LatLngBounds_Builder$stableprop // eu.buney.maps/eu_buney_maps_LatLngBounds_Builder$stableprop|#static{}eu_buney_maps_LatLngBounds_Builder$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_MapProperties$stableprop // eu.buney.maps/eu_buney_maps_MapProperties$stableprop|#static{}eu_buney_maps_MapProperties$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_MapStyleOptions$stableprop // eu.buney.maps/eu_buney_maps_MapStyleOptions$stableprop|#static{}eu_buney_maps_MapStyleOptions$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_MapUiSettings$stableprop // eu.buney.maps/eu_buney_maps_MapUiSettings$stableprop|#static{}eu_buney_maps_MapUiSettings$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_Marker$stableprop // eu.buney.maps/eu_buney_maps_Marker$stableprop|#static{}eu_buney_maps_Marker$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_MarkerState$stableprop // eu.buney.maps/eu_buney_maps_MarkerState$stableprop|#static{}eu_buney_maps_MarkerState$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_NativeTileOverlay$stableprop // eu.buney.maps/eu_buney_maps_NativeTileOverlay$stableprop|#static{}eu_buney_maps_NativeTileOverlay$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_PatternItem$stableprop // eu.buney.maps/eu_buney_maps_PatternItem$stableprop|#static{}eu_buney_maps_PatternItem$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_PatternItem_Dash$stableprop // eu.buney.maps/eu_buney_maps_PatternItem_Dash$stableprop|#static{}eu_buney_maps_PatternItem_Dash$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_PatternItem_Dot$stableprop // eu.buney.maps/eu_buney_maps_PatternItem_Dot$stableprop|#static{}eu_buney_maps_PatternItem_Dot$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_PatternItem_Gap$stableprop // eu.buney.maps/eu_buney_maps_PatternItem_Gap$stableprop|#static{}eu_buney_maps_PatternItem_Gap$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_PointOfInterest$stableprop // eu.buney.maps/eu_buney_maps_PointOfInterest$stableprop|#static{}eu_buney_maps_PointOfInterest$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_Polygon$stableprop // eu.buney.maps/eu_buney_maps_Polygon$stableprop|#static{}eu_buney_maps_Polygon$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_Polyline$stableprop // eu.buney.maps/eu_buney_maps_Polyline$stableprop|#static{}eu_buney_maps_Polyline$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_ScreenPoint$stableprop // eu.buney.maps/eu_buney_maps_ScreenPoint$stableprop|#static{}eu_buney_maps_ScreenPoint$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_StampStyle$stableprop // eu.buney.maps/eu_buney_maps_StampStyle$stableprop|#static{}eu_buney_maps_StampStyle$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_StrokeStyle$stableprop // eu.buney.maps/eu_buney_maps_StrokeStyle$stableprop|#static{}eu_buney_maps_StrokeStyle$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_StrokeStyle_Gradient$stableprop // eu.buney.maps/eu_buney_maps_StrokeStyle_Gradient$stableprop|#static{}eu_buney_maps_StrokeStyle_Gradient$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_StrokeStyle_SolidColor$stableprop // eu.buney.maps/eu_buney_maps_StrokeStyle_SolidColor$stableprop|#static{}eu_buney_maps_StrokeStyle_SolidColor$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_StyleSpan$stableprop // eu.buney.maps/eu_buney_maps_StyleSpan$stableprop|#static{}eu_buney_maps_StyleSpan$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_Tile$stableprop // eu.buney.maps/eu_buney_maps_Tile$stableprop|#static{}eu_buney_maps_Tile$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_TileFactory$stableprop // eu.buney.maps/eu_buney_maps_TileFactory$stableprop|#static{}eu_buney_maps_TileFactory$stableprop[0]
+final val eu.buney.maps/eu_buney_maps_TileOverlayState$stableprop // eu.buney.maps/eu_buney_maps_TileOverlayState$stableprop|#static{}eu_buney_maps_TileOverlayState$stableprop[0]
+
+final fun eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_array$stableprop_getter(): kotlin/Int // eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_array$stableprop_getter|eu_buney_maps_kmp_maps_compose_generated_resources_Res_array$stableprop_getter(){}[0]
+final fun eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_drawable$stableprop_getter(): kotlin/Int // eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_drawable$stableprop_getter|eu_buney_maps_kmp_maps_compose_generated_resources_Res_drawable$stableprop_getter(){}[0]
+final fun eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_font$stableprop_getter(): kotlin/Int // eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_font$stableprop_getter|eu_buney_maps_kmp_maps_compose_generated_resources_Res_font$stableprop_getter(){}[0]
+final fun eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_plurals$stableprop_getter(): kotlin/Int // eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_plurals$stableprop_getter|eu_buney_maps_kmp_maps_compose_generated_resources_Res_plurals$stableprop_getter(){}[0]
+final fun eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_string$stableprop_getter(): kotlin/Int // eu.buney.maps.kmp_maps_compose.generated.resources/eu_buney_maps_kmp_maps_compose_generated_resources_Res_string$stableprop_getter|eu_buney_maps_kmp_maps_compose_generated_resources_Res_string$stableprop_getter(){}[0]
+final fun eu.buney.maps/Circle(eu.buney.maps/LatLng, kotlin/Boolean, androidx.compose.ui.graphics/Color, kotlin/Double, androidx.compose.ui.graphics/Color, kotlin.collections/List<eu.buney.maps/PatternItem>?, kotlin/Float, kotlin/Any?, kotlin/Boolean, kotlin/Float, kotlin/Function1<eu.buney.maps/Circle, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // eu.buney.maps/Circle|Circle(eu.buney.maps.LatLng;kotlin.Boolean;androidx.compose.ui.graphics.Color;kotlin.Double;androidx.compose.ui.graphics.Color;kotlin.collections.List<eu.buney.maps.PatternItem>?;kotlin.Float;kotlin.Any?;kotlin.Boolean;kotlin.Float;kotlin.Function1<eu.buney.maps.Circle,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun eu.buney.maps/GoogleMap(androidx.compose.ui/Modifier?, eu.buney.maps/CameraPositionState?, eu.buney.maps/MapProperties?, eu.buney.maps/MapUiSettings?, androidx.compose.foundation.layout/PaddingValues?, kotlin/Function1<eu.buney.maps/LatLng, kotlin/Unit>?, kotlin/Function1<eu.buney.maps/LatLng, kotlin/Unit>?, kotlin/Function1<eu.buney.maps/PointOfInterest, kotlin/Unit>?, kotlin/Function0<kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // eu.buney.maps/GoogleMap|GoogleMap(androidx.compose.ui.Modifier?;eu.buney.maps.CameraPositionState?;eu.buney.maps.MapProperties?;eu.buney.maps.MapUiSettings?;androidx.compose.foundation.layout.PaddingValues?;kotlin.Function1<eu.buney.maps.LatLng,kotlin.Unit>?;kotlin.Function1<eu.buney.maps.LatLng,kotlin.Unit>?;kotlin.Function1<eu.buney.maps.PointOfInterest,kotlin.Unit>?;kotlin.Function0<kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun eu.buney.maps/GroundOverlay(eu.buney.maps/GroundOverlayPosition, eu.buney.maps/BitmapDescriptor, androidx.compose.ui.geometry/Offset, kotlin/Float, kotlin/Boolean, kotlin/Any?, kotlin/Float, kotlin/Boolean, kotlin/Float, kotlin/Function1<eu.buney.maps/GroundOverlay, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // eu.buney.maps/GroundOverlay|GroundOverlay(eu.buney.maps.GroundOverlayPosition;eu.buney.maps.BitmapDescriptor;androidx.compose.ui.geometry.Offset;kotlin.Float;kotlin.Boolean;kotlin.Any?;kotlin.Float;kotlin.Boolean;kotlin.Float;kotlin.Function1<eu.buney.maps.GroundOverlay,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun eu.buney.maps/MapEffect(kotlin/Any?, kotlin.coroutines/SuspendFunction2<kotlinx.coroutines/CoroutineScope, GoogleMaps/GMSMapView, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int) // eu.buney.maps/MapEffect|MapEffect(kotlin.Any?;kotlin.coroutines.SuspendFunction2<kotlinx.coroutines.CoroutineScope,GoogleMaps.GMSMapView,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun eu.buney.maps/MapEffect(kotlin/Any?, kotlin/Any?, kotlin.coroutines/SuspendFunction2<kotlinx.coroutines/CoroutineScope, GoogleMaps/GMSMapView, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int) // eu.buney.maps/MapEffect|MapEffect(kotlin.Any?;kotlin.Any?;kotlin.coroutines.SuspendFunction2<kotlinx.coroutines.CoroutineScope,GoogleMaps.GMSMapView,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun eu.buney.maps/MapEffect(kotlin/Any?, kotlin/Any?, kotlin/Any?, kotlin.coroutines/SuspendFunction2<kotlinx.coroutines/CoroutineScope, GoogleMaps/GMSMapView, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int) // eu.buney.maps/MapEffect|MapEffect(kotlin.Any?;kotlin.Any?;kotlin.Any?;kotlin.coroutines.SuspendFunction2<kotlinx.coroutines.CoroutineScope,GoogleMaps.GMSMapView,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun eu.buney.maps/MapEffect(kotlin/Array<out kotlin/Any?>..., kotlin.coroutines/SuspendFunction2<kotlinx.coroutines/CoroutineScope, GoogleMaps/GMSMapView, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int) // eu.buney.maps/MapEffect|MapEffect(kotlin.Array<out|kotlin.Any?>...;kotlin.coroutines.SuspendFunction2<kotlinx.coroutines.CoroutineScope,GoogleMaps.GMSMapView,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun eu.buney.maps/Marker(eu.buney.maps/MarkerState?, kotlin/String?, kotlin/Float, androidx.compose.ui.geometry/Offset, kotlin/Boolean, kotlin/Boolean, eu.buney.maps/BitmapDescriptor?, androidx.compose.ui.geometry/Offset, kotlin/Float, kotlin/String?, kotlin/Any?, kotlin/String?, kotlin/Boolean, kotlin/Float, kotlin/Function1<eu.buney.maps/Marker, kotlin/Boolean>?, kotlin/Function1<eu.buney.maps/Marker, kotlin/Unit>?, kotlin/Function1<eu.buney.maps/Marker, kotlin/Unit>?, kotlin/Function1<eu.buney.maps/Marker, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // eu.buney.maps/Marker|Marker(eu.buney.maps.MarkerState?;kotlin.String?;kotlin.Float;androidx.compose.ui.geometry.Offset;kotlin.Boolean;kotlin.Boolean;eu.buney.maps.BitmapDescriptor?;androidx.compose.ui.geometry.Offset;kotlin.Float;kotlin.String?;kotlin.Any?;kotlin.String?;kotlin.Boolean;kotlin.Float;kotlin.Function1<eu.buney.maps.Marker,kotlin.Boolean>?;kotlin.Function1<eu.buney.maps.Marker,kotlin.Unit>?;kotlin.Function1<eu.buney.maps.Marker,kotlin.Unit>?;kotlin.Function1<eu.buney.maps.Marker,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun eu.buney.maps/MarkerComposable(kotlin/Array<out kotlin/Any>..., eu.buney.maps/MarkerState?, kotlin/String?, kotlin/Float, androidx.compose.ui.geometry/Offset, kotlin/Boolean, kotlin/Boolean, androidx.compose.ui.geometry/Offset, kotlin/Float, kotlin/String?, kotlin/Any?, kotlin/String?, kotlin/Boolean, kotlin/Float, kotlin/Function1<eu.buney.maps/Marker, kotlin/Boolean>?, kotlin/Function1<eu.buney.maps/Marker, kotlin/Unit>?, kotlin/Function1<eu.buney.maps/Marker, kotlin/Unit>?, kotlin/Function1<eu.buney.maps/Marker, kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // eu.buney.maps/MarkerComposable|MarkerComposable(kotlin.Array<out|kotlin.Any>...;eu.buney.maps.MarkerState?;kotlin.String?;kotlin.Float;androidx.compose.ui.geometry.Offset;kotlin.Boolean;kotlin.Boolean;androidx.compose.ui.geometry.Offset;kotlin.Float;kotlin.String?;kotlin.Any?;kotlin.String?;kotlin.Boolean;kotlin.Float;kotlin.Function1<eu.buney.maps.Marker,kotlin.Boolean>?;kotlin.Function1<eu.buney.maps.Marker,kotlin.Unit>?;kotlin.Function1<eu.buney.maps.Marker,kotlin.Unit>?;kotlin.Function1<eu.buney.maps.Marker,kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun eu.buney.maps/MarkerInfoWindow(eu.buney.maps/MarkerState?, kotlin/String?, kotlin/Float, androidx.compose.ui.geometry/Offset, kotlin/Boolean, kotlin/Boolean, eu.buney.maps/BitmapDescriptor?, androidx.compose.ui.geometry/Offset, kotlin/Float, kotlin/String?, kotlin/Any?, kotlin/String?, kotlin/Boolean, kotlin/Float, kotlin/Function1<eu.buney.maps/Marker, kotlin/Boolean>?, kotlin/Function1<eu.buney.maps/Marker, kotlin/Unit>?, kotlin/Function1<eu.buney.maps/Marker, kotlin/Unit>?, kotlin/Function1<eu.buney.maps/Marker, kotlin/Unit>?, kotlin/Function3<eu.buney.maps/Marker, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // eu.buney.maps/MarkerInfoWindow|MarkerInfoWindow(eu.buney.maps.MarkerState?;kotlin.String?;kotlin.Float;androidx.compose.ui.geometry.Offset;kotlin.Boolean;kotlin.Boolean;eu.buney.maps.BitmapDescriptor?;androidx.compose.ui.geometry.Offset;kotlin.Float;kotlin.String?;kotlin.Any?;kotlin.String?;kotlin.Boolean;kotlin.Float;kotlin.Function1<eu.buney.maps.Marker,kotlin.Boolean>?;kotlin.Function1<eu.buney.maps.Marker,kotlin.Unit>?;kotlin.Function1<eu.buney.maps.Marker,kotlin.Unit>?;kotlin.Function1<eu.buney.maps.Marker,kotlin.Unit>?;kotlin.Function3<eu.buney.maps.Marker,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun eu.buney.maps/MarkerInfoWindowContent(eu.buney.maps/MarkerState?, kotlin/String?, kotlin/Float, androidx.compose.ui.geometry/Offset, kotlin/Boolean, kotlin/Boolean, eu.buney.maps/BitmapDescriptor?, androidx.compose.ui.geometry/Offset, kotlin/Float, kotlin/String?, kotlin/Any?, kotlin/String?, kotlin/Boolean, kotlin/Float, kotlin/Function1<eu.buney.maps/Marker, kotlin/Boolean>?, kotlin/Function1<eu.buney.maps/Marker, kotlin/Unit>?, kotlin/Function1<eu.buney.maps/Marker, kotlin/Unit>?, kotlin/Function1<eu.buney.maps/Marker, kotlin/Unit>?, kotlin/Function3<eu.buney.maps/Marker, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // eu.buney.maps/MarkerInfoWindowContent|MarkerInfoWindowContent(eu.buney.maps.MarkerState?;kotlin.String?;kotlin.Float;androidx.compose.ui.geometry.Offset;kotlin.Boolean;kotlin.Boolean;eu.buney.maps.BitmapDescriptor?;androidx.compose.ui.geometry.Offset;kotlin.Float;kotlin.String?;kotlin.Any?;kotlin.String?;kotlin.Boolean;kotlin.Float;kotlin.Function1<eu.buney.maps.Marker,kotlin.Boolean>?;kotlin.Function1<eu.buney.maps.Marker,kotlin.Unit>?;kotlin.Function1<eu.buney.maps.Marker,kotlin.Unit>?;kotlin.Function1<eu.buney.maps.Marker,kotlin.Unit>?;kotlin.Function3<eu.buney.maps.Marker,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun eu.buney.maps/Polygon(kotlin.collections/List<eu.buney.maps/LatLng>, kotlin/Boolean, androidx.compose.ui.graphics/Color, kotlin/Boolean, kotlin.collections/List<kotlin.collections/List<eu.buney.maps/LatLng>>?, androidx.compose.ui.graphics/Color, eu.buney.maps/JointType?, kotlin.collections/List<eu.buney.maps/PatternItem>?, kotlin/Float, kotlin/Any?, kotlin/Boolean, kotlin/Float, kotlin/Function1<eu.buney.maps/Polygon, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // eu.buney.maps/Polygon|Polygon(kotlin.collections.List<eu.buney.maps.LatLng>;kotlin.Boolean;androidx.compose.ui.graphics.Color;kotlin.Boolean;kotlin.collections.List<kotlin.collections.List<eu.buney.maps.LatLng>>?;androidx.compose.ui.graphics.Color;eu.buney.maps.JointType?;kotlin.collections.List<eu.buney.maps.PatternItem>?;kotlin.Float;kotlin.Any?;kotlin.Boolean;kotlin.Float;kotlin.Function1<eu.buney.maps.Polygon,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun eu.buney.maps/Polyline(kotlin.collections/List<eu.buney.maps/LatLng>, kotlin.collections/List<eu.buney.maps/StyleSpan>, kotlin/Boolean, eu.buney.maps/Cap?, kotlin/Boolean, eu.buney.maps/JointType?, kotlin.collections/List<eu.buney.maps/PatternItem>?, eu.buney.maps/Cap?, kotlin/Any?, kotlin/Boolean, kotlin/Float, kotlin/Float, kotlin/Function1<eu.buney.maps/Polyline, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // eu.buney.maps/Polyline|Polyline(kotlin.collections.List<eu.buney.maps.LatLng>;kotlin.collections.List<eu.buney.maps.StyleSpan>;kotlin.Boolean;eu.buney.maps.Cap?;kotlin.Boolean;eu.buney.maps.JointType?;kotlin.collections.List<eu.buney.maps.PatternItem>?;eu.buney.maps.Cap?;kotlin.Any?;kotlin.Boolean;kotlin.Float;kotlin.Float;kotlin.Function1<eu.buney.maps.Polyline,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun eu.buney.maps/Polyline(kotlin.collections/List<eu.buney.maps/LatLng>, kotlin/Boolean, androidx.compose.ui.graphics/Color, eu.buney.maps/Cap?, kotlin/Boolean, eu.buney.maps/JointType?, kotlin.collections/List<eu.buney.maps/PatternItem>?, eu.buney.maps/Cap?, kotlin/Any?, kotlin/Boolean, kotlin/Float, kotlin/Float, kotlin/Function1<eu.buney.maps/Polyline, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // eu.buney.maps/Polyline|Polyline(kotlin.collections.List<eu.buney.maps.LatLng>;kotlin.Boolean;androidx.compose.ui.graphics.Color;eu.buney.maps.Cap?;kotlin.Boolean;eu.buney.maps.JointType?;kotlin.collections.List<eu.buney.maps.PatternItem>?;eu.buney.maps.Cap?;kotlin.Any?;kotlin.Boolean;kotlin.Float;kotlin.Float;kotlin.Function1<eu.buney.maps.Polyline,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun eu.buney.maps/TileOverlay(eu.buney.maps/TileProvider, eu.buney.maps/TileOverlayState?, kotlin/Boolean, kotlin/Float, kotlin/Boolean, kotlin/Float, kotlin/Function1<eu.buney.maps/NativeTileOverlay, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // eu.buney.maps/TileOverlay|TileOverlay(eu.buney.maps.TileProvider;eu.buney.maps.TileOverlayState?;kotlin.Boolean;kotlin.Float;kotlin.Boolean;kotlin.Float;kotlin.Function1<eu.buney.maps.NativeTileOverlay,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun eu.buney.maps/captureComposableToUIImage(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>): platform.UIKit/UIImage // eu.buney.maps/captureComposableToUIImage|captureComposableToUIImage(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]
+final fun eu.buney.maps/eu_buney_maps_BitmapDescriptor$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_BitmapDescriptor$stableprop_getter|eu_buney_maps_BitmapDescriptor$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_BitmapDescriptorFactory$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_BitmapDescriptorFactory$stableprop_getter|eu_buney_maps_BitmapDescriptorFactory$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_CameraPosition$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_CameraPosition$stableprop_getter|eu_buney_maps_CameraPosition$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_CameraPositionState$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_CameraPositionState$stableprop_getter|eu_buney_maps_CameraPositionState$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_CameraUpdate$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_CameraUpdate$stableprop_getter|eu_buney_maps_CameraUpdate$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_CameraUpdateFactory$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_CameraUpdateFactory$stableprop_getter|eu_buney_maps_CameraUpdateFactory$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_CameraUpdate_NewCameraPosition$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_CameraUpdate_NewCameraPosition$stableprop_getter|eu_buney_maps_CameraUpdate_NewCameraPosition$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_CameraUpdate_NewLatLngBounds$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_CameraUpdate_NewLatLngBounds$stableprop_getter|eu_buney_maps_CameraUpdate_NewLatLngBounds$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_CameraUpdate_NewLatLngZoom$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_CameraUpdate_NewLatLngZoom$stableprop_getter|eu_buney_maps_CameraUpdate_NewLatLngZoom$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_Cap$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_Cap$stableprop_getter|eu_buney_maps_Cap$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_Cap_Butt$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_Cap_Butt$stableprop_getter|eu_buney_maps_Cap_Butt$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_Cap_Round$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_Cap_Round$stableprop_getter|eu_buney_maps_Cap_Round$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_Cap_Square$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_Cap_Square$stableprop_getter|eu_buney_maps_Cap_Square$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_Circle$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_Circle$stableprop_getter|eu_buney_maps_Circle$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_GroundOverlay$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_GroundOverlay$stableprop_getter|eu_buney_maps_GroundOverlay$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_GroundOverlayPosition$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_GroundOverlayPosition$stableprop_getter|eu_buney_maps_GroundOverlayPosition$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_LatLng$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_LatLng$stableprop_getter|eu_buney_maps_LatLng$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_LatLngBounds$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_LatLngBounds$stableprop_getter|eu_buney_maps_LatLngBounds$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_LatLngBounds_Builder$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_LatLngBounds_Builder$stableprop_getter|eu_buney_maps_LatLngBounds_Builder$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_MapProperties$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_MapProperties$stableprop_getter|eu_buney_maps_MapProperties$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_MapStyleOptions$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_MapStyleOptions$stableprop_getter|eu_buney_maps_MapStyleOptions$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_MapUiSettings$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_MapUiSettings$stableprop_getter|eu_buney_maps_MapUiSettings$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_Marker$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_Marker$stableprop_getter|eu_buney_maps_Marker$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_MarkerState$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_MarkerState$stableprop_getter|eu_buney_maps_MarkerState$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_NativeTileOverlay$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_NativeTileOverlay$stableprop_getter|eu_buney_maps_NativeTileOverlay$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_PatternItem$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_PatternItem$stableprop_getter|eu_buney_maps_PatternItem$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_PatternItem_Dash$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_PatternItem_Dash$stableprop_getter|eu_buney_maps_PatternItem_Dash$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_PatternItem_Dot$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_PatternItem_Dot$stableprop_getter|eu_buney_maps_PatternItem_Dot$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_PatternItem_Gap$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_PatternItem_Gap$stableprop_getter|eu_buney_maps_PatternItem_Gap$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_PointOfInterest$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_PointOfInterest$stableprop_getter|eu_buney_maps_PointOfInterest$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_Polygon$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_Polygon$stableprop_getter|eu_buney_maps_Polygon$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_Polyline$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_Polyline$stableprop_getter|eu_buney_maps_Polyline$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_ScreenPoint$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_ScreenPoint$stableprop_getter|eu_buney_maps_ScreenPoint$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_StampStyle$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_StampStyle$stableprop_getter|eu_buney_maps_StampStyle$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_StrokeStyle$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_StrokeStyle$stableprop_getter|eu_buney_maps_StrokeStyle$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_StrokeStyle_Gradient$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_StrokeStyle_Gradient$stableprop_getter|eu_buney_maps_StrokeStyle_Gradient$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_StrokeStyle_SolidColor$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_StrokeStyle_SolidColor$stableprop_getter|eu_buney_maps_StrokeStyle_SolidColor$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_StyleSpan$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_StyleSpan$stableprop_getter|eu_buney_maps_StyleSpan$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_Tile$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_Tile$stableprop_getter|eu_buney_maps_Tile$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_TileFactory$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_TileFactory$stableprop_getter|eu_buney_maps_TileFactory$stableprop_getter(){}[0]
+final fun eu.buney.maps/eu_buney_maps_TileOverlayState$stableprop_getter(): kotlin/Int // eu.buney.maps/eu_buney_maps_TileOverlayState$stableprop_getter|eu_buney_maps_TileOverlayState$stableprop_getter(){}[0]
+final fun eu.buney.maps/rememberBitmapDescriptor(org.jetbrains.compose.resources/DrawableResource, androidx.compose.runtime/Composer?, kotlin/Int): eu.buney.maps/BitmapDescriptor // eu.buney.maps/rememberBitmapDescriptor|rememberBitmapDescriptor(org.jetbrains.compose.resources.DrawableResource;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun eu.buney.maps/rememberCameraPositionState(kotlin/Function1<eu.buney.maps/CameraPositionState, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): eu.buney.maps/CameraPositionState // eu.buney.maps/rememberCameraPositionState|rememberCameraPositionState(kotlin.Function1<eu.buney.maps.CameraPositionState,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun eu.buney.maps/rememberComposeBitmapDescriptor(kotlin/Array<out kotlin/Any>..., kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int): eu.buney.maps/BitmapDescriptor // eu.buney.maps/rememberComposeBitmapDescriptor|rememberComposeBitmapDescriptor(kotlin.Array<out|kotlin.Any>...;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun eu.buney.maps/rememberMarkerState(kotlin/String?, eu.buney.maps/LatLng?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): eu.buney.maps/MarkerState // eu.buney.maps/rememberMarkerState|rememberMarkerState(kotlin.String?;eu.buney.maps.LatLng?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun eu.buney.maps/rememberTileOverlayState(androidx.compose.runtime/Composer?, kotlin/Int): eu.buney.maps/TileOverlayState // eu.buney.maps/rememberTileOverlayState|rememberTileOverlayState(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun eu.buney.maps/rememberUpdatedMarkerState(eu.buney.maps/LatLng?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): eu.buney.maps/MarkerState // eu.buney.maps/rememberUpdatedMarkerState|rememberUpdatedMarkerState(eu.buney.maps.LatLng?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]

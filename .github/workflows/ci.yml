@@ -1,48 +1,134 @@
 name: CI
 
+# Builds every branch and publishes per-commit snapshots from the ones that own a -SNAPSHOT
+# coordinate: dev, and release/* until its final bump. Releases are cut from tags by
+# release.yml; PRs build but never publish.
 on:
-  push:
-    branches: [ main, dev ]
   pull_request:
-    branches: [ main, dev ]
-  workflow_dispatch:
-    inputs:
-      publish:
-        description: 'Publish to Maven Central'
-        required: false
-        default: false
-        type: boolean
+    branches: [dev, main, 'release/**']
+  push:
+    branches: [dev, main, 'release/**']
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   build:
     name: Build All Platforms
     runs-on: macos-latest
+    timeout-minutes: 60
+
+    env:
+      # Snapshots go to Central's snapshot repository, which takes the same Portal token as
+      # a release. No signing key here on purpose: vanniktech only requires signatures for
+      # non-SNAPSHOT versions, and a fork PR cannot read secrets at all.
+      ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+      ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '17'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v6
 
-      - name: Build and Publish to Maven Local
-        run: ./gradlew publishToMavenLocal --no-configuration-cache
-        env:
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+      # Builds exactly what a release publishes — AAR, klibs, metadata, POMs — and nothing else.
+      # `assemble` would additionally link a debug and a release framework per Apple target, which
+      # no consumer receives and which dominated the job (36 of 46 min on the first run).
+      #
+      # The version is forced to a snapshot: signatures are required for every other version, and
+      # no key is available here — a fork PR cannot read secrets, and a release branch would
+      # otherwise fail this step on the very PR that ships it. Publishing uses the real version.
+      - name: Build publishable artifacts
+        run: >
+          ./gradlew
+          :kmp-maps-compose:publishToMavenLocal
+          :kmp-maps-compose-utils:publishToMavenLocal
+          -PmapsComposeVersion=ci-SNAPSHOT
+          --parallel --build-cache --no-configuration-cache --stacktrace
 
-      - name: Publish to Maven Central
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true'
-        run: ./gradlew publishToMavenCentral --no-configuration-cache
-        env:
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+      # Fails when the public ABI of either module drifts from the dumps in api/. Regenerate
+      # with `./gradlew updateKotlinAbi` and review the diff as part of the change.
+      - name: Binary compatibility (ABI)
+        run: >
+          ./gradlew
+          :kmp-maps-compose:checkKotlinAbi
+          :kmp-maps-compose-utils:checkKotlinAbi
+          --parallel --build-cache --configuration-cache --stacktrace
+
+      # The sample is the only consumer in the repo, so it is what catches an API change that
+      # compiles in isolation but breaks callers. Linking its framework costs ~12 min and only
+      # adds whole-graph symbol checking, so pull requests compile and pushes link.
+      - name: Build sample apps
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            ios=:sample:shared:compileKotlinIosSimulatorArm64
+          else
+            ios=:sample:shared:linkDebugFrameworkIosSimulatorArm64
+          fi
+          ./gradlew :sample:androidApp:assembleDebug "$ios" \
+            --parallel --build-cache --configuration-cache --stacktrace
+
+      # publishSafe keeps the build machine out of `linkerOpts`, the only manifest options a
+      # consumer's linker reads. `libraryPaths` and the `compilerOpts` headers stay absolute by
+      # design, so only linkerOpts is checked. See issue #10.
+      - name: Check klibs carry no build-machine paths
+        run: |
+          set -euo pipefail
+          leaked=0
+          while IFS= read -r manifest; do
+            if grep -qE '^linkerOpts=.*(/Users/runner|/Applications/Xcode)' "$manifest"; then
+              echo "::error file=$manifest::klib linkerOpts contains build-machine paths"
+              grep -nE '^linkerOpts=' "$manifest"
+              leaked=1
+            fi
+          done < <(find . -path '*/main/cinterop/*/default/manifest' -not -path './.git/*')
+          exit $leaked
+
+      # Publish gate: dev always; release/* only while still -SNAPSHOT (once it pins the final
+      # version, that coordinate belongs to the tag). PRs and main never publish.
+      - name: Determine snapshot-publish gate
+        id: gate
+        if: github.event_name == 'push'
+        run: |
+          set -euo pipefail
+          ref="${{ github.ref }}"
+          is_snapshot=false
+          if grep -qE '^kmp-maps-compose[[:space:]]*=[[:space:]]*"[^"]*-SNAPSHOT"' gradle/libs.versions.toml; then
+            is_snapshot=true
+          fi
+          publish=false
+          case "$ref" in
+            refs/heads/dev) [ "$is_snapshot" = true ] && publish=true ;;
+            refs/heads/release/*) [ "$is_snapshot" = true ] && publish=true ;;
+          esac
+          echo "publish=$publish" >> "$GITHUB_OUTPUT"
+          echo "gate: ref=$ref is_snapshot=$is_snapshot -> publish=$publish"
+
+      # Both modules in one invocation so they land as one snapshot set.
+      - name: Publish SNAPSHOT to Maven Central
+        if: steps.gate.outputs.publish == 'true'
+        run: >
+          ./gradlew
+          :kmp-maps-compose:publishToMavenCentral
+          :kmp-maps-compose-utils:publishToMavenCentral
+          --parallel --build-cache --no-configuration-cache --stacktrace
+
+      - name: Summary
+        if: steps.gate.outputs.publish == 'true'
+        run: |
+          set -euo pipefail
+          V=$(awk -F'"' '/^kmp-maps-compose[[:space:]]*=[[:space:]]*"/{print $2; exit}' gradle/libs.versions.toml)
+          echo "### Published \`$V\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- eu.buney.maps:{kmp-maps-compose,kmp-maps-compose-utils} -> https://central.sonatype.com/repository/maven-snapshots/" >> "$GITHUB_STEP_SUMMARY"

@@ -9,12 +9,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.UiComposable
 import com.google.maps.android.compose.GoogleMap as AndroidGoogleMap
 import com.google.maps.android.compose.MapProperties as GoogleMapProperties
 import com.google.maps.android.compose.MapType as GoogleMapType
 import com.google.maps.android.compose.MapUiSettings as GoogleMapUiSettings
 
 @Composable
+@UiComposable
 actual fun GoogleMap(
     modifier: Modifier,
     cameraPositionState: CameraPositionState,

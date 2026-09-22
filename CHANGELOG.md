@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.7.0
+
+Based on [android-maps-compose 8.3.0](https://github.com/googlemaps/android-maps-compose).
+
+**SDK Versions:**
+- Google Maps iOS SDK: 10.15.0
+- Google Play Services Maps: 20.0.0
+
+**Requires:** Kotlin 2.4.20, `compileSdk` 37
+
+### Breaking Changes
+
+- **Kotlin 2.4.20 required** - the iOS artifacts are klibs, whose ABI version follows the compiler that produced them, so a consumer on Kotlin 2.3.x cannot read them (`incompatible ABI version`). Pinning the language version does not help: the cinterop klibs carry the compiler's version regardless. Upgrading Kotlin alongside this release is not optional
+- **`compileSdk` 37 required** - Compose Multiplatform 1.12.1 resolves androidx.compose 1.12.1, whose AAR metadata demands it. The published modules declare it as their `minCompileSdk`
+- **iOS x86_64 (Intel simulator) dropped** - only `iosArm64` and `iosSimulatorArm64` are published. Intel Macs are no longer a supported simulator host
+- **Public types are no longer data classes** - `StyleSpan`, `Group`, `ElementTransition`, `TransitionPlan`, `VisualElement.ClusterElement` and `VisualElement.ItemElement` are plain classes now, so `componentN()` destructuring is gone and `copy()` remains only on `StyleSpan`. Structural equality is unchanged — `equals`/`hashCode` are hand-written. A data class publishes its whole property list in the ABI, so adding one property later would break every consumer; see [Public API challenges in Kotlin](https://jakewharton.com/public-api-challenges-in-kotlin/)
+- **Clustering quadtree internals are internal** - `clustering.algo.Bounds` and `clustering.algo.Point` were public by accident and are no longer part of the API
+
+### Bug Fixes
+
+- **Published klibs no longer carry build-machine paths** - every release so far shipped cinterop manifests whose `linkerOpts` named the CI runner's directories, so consumers saw `ld: warning: search path ... not found` on every iOS link. spm4Kmp 1.9.6-beta2 adds `publishSafe`, which keeps them out, and CI now fails if they come back (#10, #20)
+
+### Other Changes
+
+- Updated Kotlin to 2.4.20, Compose Multiplatform to 1.12.1, AGP to 9.4.1, Gradle to 9.7.1, androidx-core to 1.19.0, Google Maps iOS SDK to 10.15.0
+- `GoogleMap` is annotated `@UiComposable`, which silences applier-target warnings at call sites
+- The public ABI of both modules is now dumped under `api/` and checked on every build
+
 ## 0.6.1
 
 Based on [android-maps-compose 8.3.0](https://github.com/googlemaps/android-maps-compose).

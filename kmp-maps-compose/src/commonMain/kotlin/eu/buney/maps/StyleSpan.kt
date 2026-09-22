@@ -15,8 +15,11 @@ import androidx.compose.ui.graphics.Color
  *                   When set, the stamp image is rendered on top of the stroke.
  * @param segments The number of segments this span covers. Must be > 0.
  *                 Defaults to 1.0. Can be fractional to cover partial segments.
+ *
+ * Note: intentionally a class and not a data class, so a later property stays binary
+ * compatible. See https://jakewharton.com/public-api-challenges-in-kotlin/
  */
-data class StyleSpan(
+class StyleSpan(
     val style: StrokeStyle,
     val stampStyle: StampStyle? = null,
     val segments: Double = 1.0
@@ -24,6 +27,27 @@ data class StyleSpan(
     init {
         require(segments > 0) { "segments must be greater than 0, was: $segments" }
     }
+
+    fun copy(
+        style: StrokeStyle = this.style,
+        stampStyle: StampStyle? = this.stampStyle,
+        segments: Double = this.segments,
+    ): StyleSpan = StyleSpan(style, stampStyle, segments)
+
+    override fun equals(other: Any?): Boolean = other is StyleSpan &&
+        style == other.style &&
+        stampStyle == other.stampStyle &&
+        segments == other.segments
+
+    override fun hashCode(): Int {
+        var result = style.hashCode()
+        result = 31 * result + stampStyle.hashCode()
+        result = 31 * result + segments.hashCode()
+        return result
+    }
+
+    override fun toString(): String =
+        "StyleSpan(style=$style, stampStyle=$stampStyle, segments=$segments)"
 
     companion object {
         /**

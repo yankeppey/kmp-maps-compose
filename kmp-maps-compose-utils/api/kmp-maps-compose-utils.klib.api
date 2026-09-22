@@ -47,10 +47,6 @@ sealed interface <#A: out kotlin/Any, #B: out kotlin/Any> eu.buney.maps.utils.cl
         final val size // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.size|{}size[0]
             final fun <get-size>(): kotlin/Int // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.size.<get-size>|<get-size>(){}[0]
 
-        final fun component1(): #A1 // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.component1|component1(){}[0]
-        final fun component2(): kotlin.collections/Set<#B1> // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.component2|component2(){}[0]
-        final fun component3(): kotlin/Int // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.component3|component3(){}[0]
-        final fun copy(#A1 = ..., kotlin.collections/Set<#B1> = ..., kotlin/Int = ...): eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement<#A1, #B1> // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.copy|copy(1:0;kotlin.collections.Set<1:1>;kotlin.Int){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // eu.buney.maps.utils.clustering.transition/VisualElement.ClusterElement.toString|toString(){}[0]
@@ -62,8 +58,6 @@ sealed interface <#A: out kotlin/Any, #B: out kotlin/Any> eu.buney.maps.utils.cl
         final val item // eu.buney.maps.utils.clustering.transition/VisualElement.ItemElement.item|{}item[0]
             final fun <get-item>(): #B1 // eu.buney.maps.utils.clustering.transition/VisualElement.ItemElement.item.<get-item>|<get-item>(){}[0]
 
-        final fun component1(): #B1 // eu.buney.maps.utils.clustering.transition/VisualElement.ItemElement.component1|component1(){}[0]
-        final fun copy(#B1 = ...): eu.buney.maps.utils.clustering.transition/VisualElement.ItemElement<#A1, #B1> // eu.buney.maps.utils.clustering.transition/VisualElement.ItemElement.copy|copy(1:1){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps.utils.clustering.transition/VisualElement.ItemElement.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // eu.buney.maps.utils.clustering.transition/VisualElement.ItemElement.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // eu.buney.maps.utils.clustering.transition/VisualElement.ItemElement.toString|toString(){}[0]
@@ -108,10 +102,6 @@ final class <#A: kotlin/Any, #B: kotlin/Any, #C: kotlin/Any?> eu.buney.maps.util
     final val to // eu.buney.maps.utils.clustering.transition/ElementTransition.to|{}to[0]
         final fun <get-to>(): #C // eu.buney.maps.utils.clustering.transition/ElementTransition.to.<get-to>|<get-to>(){}[0]
 
-    final fun component1(): eu.buney.maps.utils.clustering.transition/VisualElement<#A, #B> // eu.buney.maps.utils.clustering.transition/ElementTransition.component1|component1(){}[0]
-    final fun component2(): #C // eu.buney.maps.utils.clustering.transition/ElementTransition.component2|component2(){}[0]
-    final fun component3(): #C // eu.buney.maps.utils.clustering.transition/ElementTransition.component3|component3(){}[0]
-    final fun copy(eu.buney.maps.utils.clustering.transition/VisualElement<#A, #B> = ..., #C = ..., #C = ...): eu.buney.maps.utils.clustering.transition/ElementTransition<#A, #B, #C> // eu.buney.maps.utils.clustering.transition/ElementTransition.copy|copy(eu.buney.maps.utils.clustering.transition.VisualElement<1:0,1:1>;1:2;1:2){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps.utils.clustering.transition/ElementTransition.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // eu.buney.maps.utils.clustering.transition/ElementTransition.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // eu.buney.maps.utils.clustering.transition/ElementTransition.toString|toString(){}[0]
@@ -133,10 +123,6 @@ final class <#A: kotlin/Any, #B: kotlin/Any, #C: kotlin/Any?> eu.buney.maps.util
     final val stable // eu.buney.maps.utils.clustering.transition/TransitionPlan.stable|{}stable[0]
         final fun <get-stable>(): kotlin.collections/List<eu.buney.maps.utils.clustering.transition/ElementTransition<#A, #B, #C>> // eu.buney.maps.utils.clustering.transition/TransitionPlan.stable.<get-stable>|<get-stable>(){}[0]
 
-    final fun component1(): kotlin.collections/List<eu.buney.maps.utils.clustering.transition/ElementTransition<#A, #B, #C>> // eu.buney.maps.utils.clustering.transition/TransitionPlan.component1|component1(){}[0]
-    final fun component2(): kotlin.collections/List<eu.buney.maps.utils.clustering.transition/ElementTransition<#A, #B, #C>> // eu.buney.maps.utils.clustering.transition/TransitionPlan.component2|component2(){}[0]
-    final fun component3(): kotlin.collections/List<eu.buney.maps.utils.clustering.transition/ElementTransition<#A, #B, #C>> // eu.buney.maps.utils.clustering.transition/TransitionPlan.component3|component3(){}[0]
-    final fun copy(kotlin.collections/List<eu.buney.maps.utils.clustering.transition/ElementTransition<#A, #B, #C>> = ..., kotlin.collections/List<eu.buney.maps.utils.clustering.transition/ElementTransition<#A, #B, #C>> = ..., kotlin.collections/List<eu.buney.maps.utils.clustering.transition/ElementTransition<#A, #B, #C>> = ...): eu.buney.maps.utils.clustering.transition/TransitionPlan<#A, #B, #C> // eu.buney.maps.utils.clustering.transition/TransitionPlan.copy|copy(kotlin.collections.List<eu.buney.maps.utils.clustering.transition.ElementTransition<1:0,1:1,1:2>>;kotlin.collections.List<eu.buney.maps.utils.clustering.transition.ElementTransition<1:0,1:1,1:2>>;kotlin.collections.List<eu.buney.maps.utils.clustering.transition.ElementTransition<1:0,1:1,1:2>>){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps.utils.clustering.transition/TransitionPlan.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // eu.buney.maps.utils.clustering.transition/TransitionPlan.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // eu.buney.maps.utils.clustering.transition/TransitionPlan.toString|toString(){}[0]
@@ -150,9 +136,6 @@ final class <#A: kotlin/Any, #B: kotlin/Any> eu.buney.maps.utils.clustering.tran
     final val key // eu.buney.maps.utils.clustering.transition/Group.key|{}key[0]
         final fun <get-key>(): #A // eu.buney.maps.utils.clustering.transition/Group.key.<get-key>|<get-key>(){}[0]
 
-    final fun component1(): #A // eu.buney.maps.utils.clustering.transition/Group.component1|component1(){}[0]
-    final fun component2(): kotlin.collections/Set<#B> // eu.buney.maps.utils.clustering.transition/Group.component2|component2(){}[0]
-    final fun copy(#A = ..., kotlin.collections/Set<#B> = ...): eu.buney.maps.utils.clustering.transition/Group<#A, #B> // eu.buney.maps.utils.clustering.transition/Group.copy|copy(1:0;kotlin.collections.Set<1:1>){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps.utils.clustering.transition/Group.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // eu.buney.maps.utils.clustering.transition/Group.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // eu.buney.maps.utils.clustering.transition/Group.toString|toString(){}[0]
@@ -173,61 +156,13 @@ final class <#A: kotlin/Any, #B: kotlin/Any> eu.buney.maps.utils.clustering.tran
     }
 }
 
-final class eu.buney.maps.utils.clustering.algo/Bounds { // eu.buney.maps.utils.clustering.algo/Bounds|null[0]
-    constructor <init>(kotlin/Double, kotlin/Double, kotlin/Double, kotlin/Double) // eu.buney.maps.utils.clustering.algo/Bounds.<init>|<init>(kotlin.Double;kotlin.Double;kotlin.Double;kotlin.Double){}[0]
-
-    final val maxX // eu.buney.maps.utils.clustering.algo/Bounds.maxX|{}maxX[0]
-        final fun <get-maxX>(): kotlin/Double // eu.buney.maps.utils.clustering.algo/Bounds.maxX.<get-maxX>|<get-maxX>(){}[0]
-    final val maxY // eu.buney.maps.utils.clustering.algo/Bounds.maxY|{}maxY[0]
-        final fun <get-maxY>(): kotlin/Double // eu.buney.maps.utils.clustering.algo/Bounds.maxY.<get-maxY>|<get-maxY>(){}[0]
-    final val midX // eu.buney.maps.utils.clustering.algo/Bounds.midX|{}midX[0]
-        final fun <get-midX>(): kotlin/Double // eu.buney.maps.utils.clustering.algo/Bounds.midX.<get-midX>|<get-midX>(){}[0]
-    final val midY // eu.buney.maps.utils.clustering.algo/Bounds.midY|{}midY[0]
-        final fun <get-midY>(): kotlin/Double // eu.buney.maps.utils.clustering.algo/Bounds.midY.<get-midY>|<get-midY>(){}[0]
-    final val minX // eu.buney.maps.utils.clustering.algo/Bounds.minX|{}minX[0]
-        final fun <get-minX>(): kotlin/Double // eu.buney.maps.utils.clustering.algo/Bounds.minX.<get-minX>|<get-minX>(){}[0]
-    final val minY // eu.buney.maps.utils.clustering.algo/Bounds.minY|{}minY[0]
-        final fun <get-minY>(): kotlin/Double // eu.buney.maps.utils.clustering.algo/Bounds.minY.<get-minY>|<get-minY>(){}[0]
-
-    final fun component1(): kotlin/Double // eu.buney.maps.utils.clustering.algo/Bounds.component1|component1(){}[0]
-    final fun component2(): kotlin/Double // eu.buney.maps.utils.clustering.algo/Bounds.component2|component2(){}[0]
-    final fun component3(): kotlin/Double // eu.buney.maps.utils.clustering.algo/Bounds.component3|component3(){}[0]
-    final fun component4(): kotlin/Double // eu.buney.maps.utils.clustering.algo/Bounds.component4|component4(){}[0]
-    final fun contains(eu.buney.maps.utils.clustering.algo/Bounds): kotlin/Boolean // eu.buney.maps.utils.clustering.algo/Bounds.contains|contains(eu.buney.maps.utils.clustering.algo.Bounds){}[0]
-    final fun contains(eu.buney.maps.utils.clustering.algo/Point): kotlin/Boolean // eu.buney.maps.utils.clustering.algo/Bounds.contains|contains(eu.buney.maps.utils.clustering.algo.Point){}[0]
-    final fun contains(kotlin/Double, kotlin/Double): kotlin/Boolean // eu.buney.maps.utils.clustering.algo/Bounds.contains|contains(kotlin.Double;kotlin.Double){}[0]
-    final fun copy(kotlin/Double = ..., kotlin/Double = ..., kotlin/Double = ..., kotlin/Double = ...): eu.buney.maps.utils.clustering.algo/Bounds // eu.buney.maps.utils.clustering.algo/Bounds.copy|copy(kotlin.Double;kotlin.Double;kotlin.Double;kotlin.Double){}[0]
-    final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps.utils.clustering.algo/Bounds.equals|equals(kotlin.Any?){}[0]
-    final fun hashCode(): kotlin/Int // eu.buney.maps.utils.clustering.algo/Bounds.hashCode|hashCode(){}[0]
-    final fun intersects(eu.buney.maps.utils.clustering.algo/Bounds): kotlin/Boolean // eu.buney.maps.utils.clustering.algo/Bounds.intersects|intersects(eu.buney.maps.utils.clustering.algo.Bounds){}[0]
-    final fun toString(): kotlin/String // eu.buney.maps.utils.clustering.algo/Bounds.toString|toString(){}[0]
-}
-
-final class eu.buney.maps.utils.clustering.algo/Point { // eu.buney.maps.utils.clustering.algo/Point|null[0]
-    constructor <init>(kotlin/Double, kotlin/Double) // eu.buney.maps.utils.clustering.algo/Point.<init>|<init>(kotlin.Double;kotlin.Double){}[0]
-
-    final val x // eu.buney.maps.utils.clustering.algo/Point.x|{}x[0]
-        final fun <get-x>(): kotlin/Double // eu.buney.maps.utils.clustering.algo/Point.x.<get-x>|<get-x>(){}[0]
-    final val y // eu.buney.maps.utils.clustering.algo/Point.y|{}y[0]
-        final fun <get-y>(): kotlin/Double // eu.buney.maps.utils.clustering.algo/Point.y.<get-y>|<get-y>(){}[0]
-
-    final fun component1(): kotlin/Double // eu.buney.maps.utils.clustering.algo/Point.component1|component1(){}[0]
-    final fun component2(): kotlin/Double // eu.buney.maps.utils.clustering.algo/Point.component2|component2(){}[0]
-    final fun copy(kotlin/Double = ..., kotlin/Double = ...): eu.buney.maps.utils.clustering.algo/Point // eu.buney.maps.utils.clustering.algo/Point.copy|copy(kotlin.Double;kotlin.Double){}[0]
-    final fun equals(kotlin/Any?): kotlin/Boolean // eu.buney.maps.utils.clustering.algo/Point.equals|equals(kotlin.Any?){}[0]
-    final fun hashCode(): kotlin/Int // eu.buney.maps.utils.clustering.algo/Point.hashCode|hashCode(){}[0]
-    final fun toString(): kotlin/String // eu.buney.maps.utils.clustering.algo/Point.toString|toString(){}[0]
-}
-
 final class eu.buney.maps.utils.wms/WmsTileProvider : eu.buney.maps/TileProvider { // eu.buney.maps.utils.wms/WmsTileProvider|null[0]
     constructor <init>(kotlin/Function5<kotlin/Double, kotlin/Double, kotlin/Double, kotlin/Double, kotlin/Int, kotlin/String>, kotlin/Int = ..., kotlin/Int = ...) // eu.buney.maps.utils.wms/WmsTileProvider.<init>|<init>(kotlin.Function5<kotlin.Double,kotlin.Double,kotlin.Double,kotlin.Double,kotlin.Int,kotlin.String>;kotlin.Int;kotlin.Int){}[0]
 
     final fun getTile(kotlin/Int, kotlin/Int, kotlin/Int): eu.buney.maps/Tile? // eu.buney.maps.utils.wms/WmsTileProvider.getTile|getTile(kotlin.Int;kotlin.Int;kotlin.Int){}[0]
 }
 
-final val eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_Bounds$stableprop // eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_Bounds$stableprop|#static{}eu_buney_maps_utils_clustering_algo_Bounds$stableprop[0]
 final val eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_NonHierarchicalDistanceBasedAlgorithm$stableprop // eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_NonHierarchicalDistanceBasedAlgorithm$stableprop|#static{}eu_buney_maps_utils_clustering_algo_NonHierarchicalDistanceBasedAlgorithm$stableprop[0]
-final val eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_Point$stableprop // eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_Point$stableprop|#static{}eu_buney_maps_utils_clustering_algo_Point$stableprop[0]
 final val eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_ElementTransition$stableprop // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_ElementTransition$stableprop|#static{}eu_buney_maps_utils_clustering_transition_ElementTransition$stableprop[0]
 final val eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_Group$stableprop // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_Group$stableprop|#static{}eu_buney_maps_utils_clustering_transition_Group$stableprop[0]
 final val eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_GroupedSnapshot$stableprop // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_GroupedSnapshot$stableprop|#static{}eu_buney_maps_utils_clustering_transition_GroupedSnapshot$stableprop[0]
@@ -245,9 +180,7 @@ final fun <#A: eu.buney.maps.utils.clustering/ClusterItem> eu.buney.maps.utils.c
 final fun <#A: eu.buney.maps.utils.clustering/ClusterItem> eu.buney.maps.utils.clustering/rememberClusterManager(eu.buney.maps.utils.clustering/ClusterAlgorithm<#A>?, kotlin.coroutines/CoroutineContext?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): eu.buney.maps.utils.clustering/ClusterManager<#A> // eu.buney.maps.utils.clustering/rememberClusterManager|rememberClusterManager(eu.buney.maps.utils.clustering.ClusterAlgorithm<0:0>?;kotlin.coroutines.CoroutineContext?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<eu.buney.maps.utils.clustering.ClusterItem>}[0]
 final fun <#A: kotlin/Any, #B: kotlin/Any, #C: kotlin/Any?> eu.buney.maps.utils.clustering.transition/rememberTransitionPlan(eu.buney.maps.utils.clustering.transition/GroupedSnapshot<#A, #B>, eu.buney.maps.utils.clustering.transition/TransitionResolver<#A, #B, #C>, androidx.compose.runtime/Composer?, kotlin/Int): eu.buney.maps.utils.clustering.transition/TransitionPlan<#A, #B, #C> // eu.buney.maps.utils.clustering.transition/rememberTransitionPlan|rememberTransitionPlan(eu.buney.maps.utils.clustering.transition.GroupedSnapshot<0:0,0:1>;eu.buney.maps.utils.clustering.transition.TransitionResolver<0:0,0:1,0:2>;androidx.compose.runtime.Composer?;kotlin.Int){0§<kotlin.Any>;1§<kotlin.Any>;2§<kotlin.Any?>}[0]
 final fun <#A: kotlin/Any, #B: kotlin/Any> eu.buney.maps.utils.clustering.transition/AnimatedGroupedMarkers(eu.buney.maps.utils.clustering.transition/TransitionPlan<#A, #B, eu.buney.maps/LatLng>, androidx.compose.animation.core/FiniteAnimationSpec<kotlin/Float>?, androidx.compose.animation.core/FiniteAnimationSpec<kotlin/Float>?, kotlin/Function6<#A, kotlin.collections/Set<#B>, kotlin/Int, eu.buney.maps/LatLng, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, kotlin/Function4<#B, eu.buney.maps/LatLng, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // eu.buney.maps.utils.clustering.transition/AnimatedGroupedMarkers|AnimatedGroupedMarkers(eu.buney.maps.utils.clustering.transition.TransitionPlan<0:0,0:1,eu.buney.maps.LatLng>;androidx.compose.animation.core.FiniteAnimationSpec<kotlin.Float>?;androidx.compose.animation.core.FiniteAnimationSpec<kotlin.Float>?;kotlin.Function6<0:0,kotlin.collections.Set<0:1>,kotlin.Int,eu.buney.maps.LatLng,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;kotlin.Function4<0:1,eu.buney.maps.LatLng,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<kotlin.Any>;1§<kotlin.Any>}[0]
-final fun eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_Bounds$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_Bounds$stableprop_getter|eu_buney_maps_utils_clustering_algo_Bounds$stableprop_getter(){}[0]
 final fun eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_NonHierarchicalDistanceBasedAlgorithm$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_NonHierarchicalDistanceBasedAlgorithm$stableprop_getter|eu_buney_maps_utils_clustering_algo_NonHierarchicalDistanceBasedAlgorithm$stableprop_getter(){}[0]
-final fun eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_Point$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.clustering.algo/eu_buney_maps_utils_clustering_algo_Point$stableprop_getter|eu_buney_maps_utils_clustering_algo_Point$stableprop_getter(){}[0]
 final fun eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_ElementTransition$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_ElementTransition$stableprop_getter|eu_buney_maps_utils_clustering_transition_ElementTransition$stableprop_getter(){}[0]
 final fun eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_Group$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_Group$stableprop_getter|eu_buney_maps_utils_clustering_transition_Group$stableprop_getter(){}[0]
 final fun eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_GroupedSnapshot$stableprop_getter(): kotlin/Int // eu.buney.maps.utils.clustering.transition/eu_buney_maps_utils_clustering_transition_GroupedSnapshot$stableprop_getter|eu_buney_maps_utils_clustering_transition_GroupedSnapshot$stableprop_getter(){}[0]

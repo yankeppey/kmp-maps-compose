@@ -56,30 +56,6 @@ public final class eu/buney/maps/utils/clustering/ComposableSingletons$Clusterin
 	public final fun getLambda$946861323$eu_buney_maps_kmp_maps_compose_utils ()Lkotlin/jvm/functions/Function4;
 }
 
-public final class eu/buney/maps/utils/clustering/algo/Bounds {
-	public static final field $stable I
-	public fun <init> (DDDD)V
-	public final fun component1 ()D
-	public final fun component2 ()D
-	public final fun component3 ()D
-	public final fun component4 ()D
-	public final fun contains (DD)Z
-	public final fun contains (Leu/buney/maps/utils/clustering/algo/Bounds;)Z
-	public final fun contains (Leu/buney/maps/utils/clustering/algo/Point;)Z
-	public final fun copy (DDDD)Leu/buney/maps/utils/clustering/algo/Bounds;
-	public static synthetic fun copy$default (Leu/buney/maps/utils/clustering/algo/Bounds;DDDDILjava/lang/Object;)Leu/buney/maps/utils/clustering/algo/Bounds;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getMaxX ()D
-	public final fun getMaxY ()D
-	public final fun getMidX ()D
-	public final fun getMidY ()D
-	public final fun getMinX ()D
-	public final fun getMinY ()D
-	public fun hashCode ()I
-	public final fun intersects (Leu/buney/maps/utils/clustering/algo/Bounds;)Z
-	public fun toString ()Ljava/lang/String;
-}
-
 public final class eu/buney/maps/utils/clustering/algo/NonHierarchicalDistanceBasedAlgorithm : eu/buney/maps/utils/clustering/ClusterAlgorithm {
 	public static final field $stable I
 	public static final field Companion Leu/buney/maps/utils/clustering/algo/NonHierarchicalDistanceBasedAlgorithm$Companion;
@@ -92,20 +68,6 @@ public final class eu/buney/maps/utils/clustering/algo/NonHierarchicalDistanceBa
 public final class eu/buney/maps/utils/clustering/algo/NonHierarchicalDistanceBasedAlgorithm$Companion {
 }
 
-public final class eu/buney/maps/utils/clustering/algo/Point {
-	public static final field $stable I
-	public fun <init> (DD)V
-	public final fun component1 ()D
-	public final fun component2 ()D
-	public final fun copy (DD)Leu/buney/maps/utils/clustering/algo/Point;
-	public static synthetic fun copy$default (Leu/buney/maps/utils/clustering/algo/Point;DDILjava/lang/Object;)Leu/buney/maps/utils/clustering/algo/Point;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getX ()D
-	public final fun getY ()D
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public final class eu/buney/maps/utils/clustering/transition/AnimatedGroupedMarkersKt {
 	public static final fun AnimatedGroupedMarkers (Leu/buney/maps/utils/clustering/transition/TransitionPlan;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;Lkotlin/jvm/functions/Function6;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;II)V
 }
@@ -113,11 +75,6 @@ public final class eu/buney/maps/utils/clustering/transition/AnimatedGroupedMark
 public final class eu/buney/maps/utils/clustering/transition/ElementTransition {
 	public static final field $stable I
 	public fun <init> (Leu/buney/maps/utils/clustering/transition/VisualElement;Ljava/lang/Object;Ljava/lang/Object;)V
-	public final fun component1 ()Leu/buney/maps/utils/clustering/transition/VisualElement;
-	public final fun component2 ()Ljava/lang/Object;
-	public final fun component3 ()Ljava/lang/Object;
-	public final fun copy (Leu/buney/maps/utils/clustering/transition/VisualElement;Ljava/lang/Object;Ljava/lang/Object;)Leu/buney/maps/utils/clustering/transition/ElementTransition;
-	public static synthetic fun copy$default (Leu/buney/maps/utils/clustering/transition/ElementTransition;Leu/buney/maps/utils/clustering/transition/VisualElement;Ljava/lang/Object;Ljava/lang/Object;ILjava/lang/Object;)Leu/buney/maps/utils/clustering/transition/ElementTransition;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getElement ()Leu/buney/maps/utils/clustering/transition/VisualElement;
 	public final fun getFrom ()Ljava/lang/Object;
@@ -129,10 +86,6 @@ public final class eu/buney/maps/utils/clustering/transition/ElementTransition {
 public final class eu/buney/maps/utils/clustering/transition/Group {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/Object;Ljava/util/Set;)V
-	public final fun component1 ()Ljava/lang/Object;
-	public final fun component2 ()Ljava/util/Set;
-	public final fun copy (Ljava/lang/Object;Ljava/util/Set;)Leu/buney/maps/utils/clustering/transition/Group;
-	public static synthetic fun copy$default (Leu/buney/maps/utils/clustering/transition/Group;Ljava/lang/Object;Ljava/util/Set;ILjava/lang/Object;)Leu/buney/maps/utils/clustering/transition/Group;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getItems ()Ljava/util/Set;
 	public final fun getKey ()Ljava/lang/Object;
@@ -162,11 +115,6 @@ public final class eu/buney/maps/utils/clustering/transition/MembershipResolver 
 public final class eu/buney/maps/utils/clustering/transition/TransitionPlan {
 	public static final field $stable I
 	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
-	public final fun component1 ()Ljava/util/List;
-	public final fun component2 ()Ljava/util/List;
-	public final fun component3 ()Ljava/util/List;
-	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/util/List;)Leu/buney/maps/utils/clustering/transition/TransitionPlan;
-	public static synthetic fun copy$default (Leu/buney/maps/utils/clustering/transition/TransitionPlan;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Leu/buney/maps/utils/clustering/transition/TransitionPlan;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getEntering ()Ljava/util/List;
 	public final fun getExiting ()Ljava/util/List;
@@ -190,11 +138,6 @@ public final class eu/buney/maps/utils/clustering/transition/VisualElement$Clust
 	public static final field $stable I
 	public fun <init> (Ljava/lang/Object;Ljava/util/Set;I)V
 	public synthetic fun <init> (Ljava/lang/Object;Ljava/util/Set;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/Object;
-	public final fun component2 ()Ljava/util/Set;
-	public final fun component3 ()I
-	public final fun copy (Ljava/lang/Object;Ljava/util/Set;I)Leu/buney/maps/utils/clustering/transition/VisualElement$ClusterElement;
-	public static synthetic fun copy$default (Leu/buney/maps/utils/clustering/transition/VisualElement$ClusterElement;Ljava/lang/Object;Ljava/util/Set;IILjava/lang/Object;)Leu/buney/maps/utils/clustering/transition/VisualElement$ClusterElement;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getItems ()Ljava/util/Set;
 	public final fun getKey ()Ljava/lang/Object;
@@ -206,9 +149,6 @@ public final class eu/buney/maps/utils/clustering/transition/VisualElement$Clust
 public final class eu/buney/maps/utils/clustering/transition/VisualElement$ItemElement : eu/buney/maps/utils/clustering/transition/VisualElement {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/Object;)V
-	public final fun component1 ()Ljava/lang/Object;
-	public final fun copy (Ljava/lang/Object;)Leu/buney/maps/utils/clustering/transition/VisualElement$ItemElement;
-	public static synthetic fun copy$default (Leu/buney/maps/utils/clustering/transition/VisualElement$ItemElement;Ljava/lang/Object;ILjava/lang/Object;)Leu/buney/maps/utils/clustering/transition/VisualElement$ItemElement;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getItem ()Ljava/lang/Object;
 	public fun hashCode ()I

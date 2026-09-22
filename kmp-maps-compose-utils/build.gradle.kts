@@ -20,6 +20,10 @@ version = providers.gradleProperty("mapsComposeVersion")
     .getOrElse(libs.versions.kmp.maps.compose.get())
 
 kotlin {
+    // Golden ABI dumps under api/ gate unintended public API changes; updateKotlinAbi refreshes them.
+    @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
+    abiValidation()
+
     androidLibrary {
         namespace = "eu.buney.maps.utils"
         compileSdk = 37

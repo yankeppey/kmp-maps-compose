@@ -3,7 +3,7 @@ package eu.buney.maps.utils.clustering.algo
 /**
  * Represents an area in the cartesian plane.
  */
-data class Bounds(
+internal data class Bounds(
     val minX: Double,
     val maxX: Double,
     val minY: Double,

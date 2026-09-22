@@ -31,7 +31,21 @@ class GroupedSnapshot<G : Any, I : Any>(
     }
 }
 
-data class Group<G : Any, I : Any>(
+/**
+ * A group of items sharing one key.
+ *
+ * Note: intentionally a class and not a data class, so a later property stays binary
+ * compatible. See https://jakewharton.com/public-api-challenges-in-kotlin/
+ */
+class Group<G : Any, I : Any>(
     val key: G,
     val items: Set<I>
-)
+) {
+    override fun equals(other: Any?): Boolean = other is Group<*, *> &&
+        key == other.key &&
+        items == other.items
+
+    override fun hashCode(): Int = 31 * key.hashCode() + items.hashCode()
+
+    override fun toString(): String = "Group(key=$key, items=$items)"
+}

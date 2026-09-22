@@ -45,11 +45,16 @@ jobs:
       # Builds exactly what a release publishes — AAR, klibs, metadata, POMs — and nothing else.
       # `assemble` would additionally link a debug and a release framework per Apple target, which
       # no consumer receives and which dominated the job (36 of 46 min on the first run).
+      #
+      # The version is forced to a snapshot: signatures are required for every other version, and
+      # no key is available here — a fork PR cannot read secrets, and a release branch would
+      # otherwise fail this step on the very PR that ships it. Publishing uses the real version.
       - name: Build publishable artifacts
         run: >
           ./gradlew
           :kmp-maps-compose:publishToMavenLocal
           :kmp-maps-compose-utils:publishToMavenLocal
+          -PmapsComposeVersion=ci-SNAPSHOT
           --parallel --build-cache --no-configuration-cache --stacktrace
 
       # Fails when the public ABI of either module drifts from the dumps in api/. Regenerate

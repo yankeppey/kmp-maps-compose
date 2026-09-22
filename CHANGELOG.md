@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.6.1
+
+Based on [android-maps-compose 8.3.0](https://github.com/googlemaps/android-maps-compose).
+
+**SDK Versions:**
+- Google Maps iOS SDK: 10.8.0
+- Google Play Services Maps: 20.0.0
+
+### Bug Fixes
+
+- **iOS: Fix `newLatLngBounds` padding interpretation** - `CameraUpdateFactory.newLatLngBounds` takes padding in physical pixels (Android SDK convention), but on iOS the value was passed unscaled to `cameraForBounds:insets:`, which expects points. On 2-3x displays the effective padding was inflated by the screen scale, and when the insets exceeded the viewport the SDK silently fell back to minimum zoom, showing the whole world. The padding is now converted via the view's display scale, so the same value produces the same visual result on both platforms. If you previously worked around this by pre-dividing the padding on iOS, remove the workaround (#12)
+
 ## 0.6.0
 
 Based on [android-maps-compose 8.3.0](https://github.com/googlemaps/android-maps-compose).
